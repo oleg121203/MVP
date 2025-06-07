@@ -93,14 +93,14 @@ export default function Dashboard() {
               <VStack spacing={3} align="stretch">
                 <Box p={2} bg="background.light" borderRadius="md">
                   <Flex align="center">
-                    <FaLightbulb color="#008080" size={16} style={{ marginRight: '8px' }} />
+                    <Box as={FaLightbulb} color="#008080" boxSize={4} mr={2} />
                     <Text fontWeight="bold">Energy Efficiency Tip</Text>
                   </Flex>
                   <Text fontSize="sm">Adjust duct sizes for optimal airflow and reduced energy loss.</Text>
                 </Box>
                 <Box p={2} bg="background.light" borderRadius="md">
                   <Flex align="center">
-                    <FaLightbulb color="#008080" size={16} style={{ marginRight: '8px' }} />
+                    <Box as={FaLightbulb} color="#008080" boxSize={4} mr={2} />
                     <Text fontWeight="bold">Maintenance Alert</Text>
                   </Flex>
                   <Text fontSize="sm">Check air filters in Zone 3 - potential clog detected.</Text>
@@ -122,8 +122,8 @@ export default function Dashboard() {
           <Heading as="h2" size="md" mb={4}>{t('dashboard.tools.title')}</Heading>
           <Divider mb={4} />
           <Flex wrap="wrap" gap={4}>
-            <Button leftIcon={<FaCalculator />} variant="secondary">{t('dashboard.tools.calculator')}</Button>
-            <Button leftIcon={<FaFolder />} variant="secondary">{t('dashboard.tools.newProject')}</Button>
+            <Button leftIcon={<Box as={FaCalculator} />} variant="secondary">{t('dashboard.tools.calculator')}</Button>
+            <Button leftIcon={<Box as={FaFolder} />} variant="secondary">{t('dashboard.tools.newProject')}</Button>
           </Flex>
         </Box>
 
@@ -134,7 +134,7 @@ export default function Dashboard() {
               <Heading as="h2" size="md">{t('dashboard.customize.title')}</Heading>
               <Text fontSize="sm" color="text.secondary">{t('dashboard.customize.subtitle')}</Text>
             </Box>
-            <IconButton aria-label={t('dashboard.customize.settings')} icon={<FaCog />} variant="secondary" />
+            <IconButton aria-label={t('dashboard.customize.settings')} icon={<Box as={FaCog} />} variant="secondary" />
           </Flex>
         </Box>
       </Box>

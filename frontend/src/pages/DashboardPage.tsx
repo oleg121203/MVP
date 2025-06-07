@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, VStack, Heading, SimpleGrid, Flex, IconButton, Divider, Icon, Button } from '@chakra-ui/react';
+import { Box, Text, VStack, Heading, SimpleGrid, Flex, IconButton, Divider, Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaProjectDiagram, FaCalculator, FaRobot, FaCog } from 'react-icons/fa';
@@ -98,14 +98,14 @@ const DashboardPage: React.FC = () => {
         <Divider mb={4} />
         <Flex wrap="wrap" gap={4} mb={8} justify={{ base: 'center', md: 'flex-start' }}>
           <Link to="/calculators">
-            <Button leftIcon={<FaCalculator />} variant="primary" size={{ base: 'sm', md: 'md' }}>{t('dashboard.tools.calculator')}</Button>
+            <Button leftIcon={<Box as={FaCalculator} />} variant="primary" size={{ base: 'sm', md: 'md' }}>{t('dashboard.tools.calculator')}</Button>
           </Link>
-          <Button leftIcon={<FaProjectDiagram />} variant="secondary" size={{ base: 'sm', md: 'md' }}>{t('dashboard.tools.newProject')}</Button>
+          <Button leftIcon={<Box as={FaProjectDiagram} />} variant="secondary" size={{ base: 'sm', md: 'md' }}>{t('dashboard.tools.newProject')}</Button>
         </Flex>
 
         {/* Customization Options */}
         <Flex justify="flex-end">
-          <IconButton aria-label={t('dashboard.settings')} icon={<FaCog />} variant="outline" size={{ base: 'sm', md: 'md' }} />
+          <IconButton aria-label={t('dashboard.settings')} icon={<Box as={FaCog} />} variant="outline" size={{ base: 'sm', md: 'md' }} />
         </Flex>
       </Box>
     </MainLayout>

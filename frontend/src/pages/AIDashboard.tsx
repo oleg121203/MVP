@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Flex, Heading, Text, Button, Input, VStack, Icon, Select, useToast, Spinner, UnorderedList, ListItem, Stack } from '@chakra-ui/react';
+import { Box, Flex, Heading, Text, Button, Input, VStack, Select, useToast, Spinner, UnorderedList, ListItem, Stack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { FaComment, FaMagic, FaChartLine, FaUser, FaRobot, FaPaperPlane } from 'react-icons/fa';
 import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
+import ChakraIcon from '../components/common/ChakraIcon';
 import { AnalysisResults, ProjectInsights, ChatMessage } from '../types/api';
 
 const AIDashboard: React.FC = () => {
@@ -190,7 +191,7 @@ const AIDashboard: React.FC = () => {
           {/* AI Chat Interface - Sidebar */}
           <Box flex={{ base: '1', md: '0.3' }} bg="white" p={4} borderRadius="lg" boxShadow="md" height={{ md: 'calc(100vh - 200px)' }} display="flex" flexDirection="column">
             <Flex align="center" mb={4}>
-              <Icon as={FaComment} boxSize={6} color="brand.primary" mr={2} />
+              <ChakraIcon icon={FaComment} boxSize={6} color="brand.primary" mr={2} />
               <Heading as="h2" size="md" color="brand.dark">{t('aiDashboard.chat.title')}</Heading>
             </Flex>
             <Text fontSize="sm" mb={4} color="text.secondary">{t('aiDashboard.chat.description')}</Text>
@@ -198,7 +199,7 @@ const AIDashboard: React.FC = () => {
               {chatMessages.map((msg, index) => (
                 <Flex key={index} direction="column" mb={2} align={msg.role === 'user' ? 'flex-end' : 'flex-start'}>
                   <Flex align="center" mb={1}>
-                    <Icon as={msg.role === 'user' ? FaUser : FaRobot} boxSize={4} color={msg.role === 'user' ? 'blue.500' : 'green.500'} mr={1} />
+                    <ChakraIcon icon={msg.role === 'user' ? FaUser : FaRobot} boxSize={4} color={msg.role === 'user' ? 'blue.500' : 'green.500'} mr={1} />
                     <Text fontSize="xs" color="text.secondary">{msg.role === 'user' ? t('aiDashboard.chat.you') : t('aiDashboard.chat.ai')}</Text>
                   </Flex>
                   <Box bg={msg.role === 'user' ? 'blue.50' : 'green.50'} p={2} borderRadius="md" maxW="80%">
@@ -208,7 +209,7 @@ const AIDashboard: React.FC = () => {
               ))}
               {isChatLoading && (
                 <Flex align="center" mb={2}>
-                  <Icon as={FaRobot} boxSize={4} color="green.500" mr={1} />
+                  <ChakraIcon icon={FaRobot} boxSize={4} color="green.500" mr={1} />
                   <Text fontSize="xs" color="text.secondary">{t('aiDashboard.chat.ai')}</Text>
                   <Text fontSize="sm" ml={2} color="text.secondary">{t('aiDashboard.chat.typing')}</Text>
                 </Flex>
@@ -226,7 +227,7 @@ const AIDashboard: React.FC = () => {
                 onClick={handleChatSend}
                 isLoading={isChatLoading}
                 loadingText={t('aiDashboard.chat.sending')}
-                leftIcon={<FaPaperPlane />}
+                leftIcon={<Box as={FaPaperPlane} />}
                 variant="primary"
               >
                 {t('aiDashboard.chat.send')}
@@ -239,7 +240,7 @@ const AIDashboard: React.FC = () => {
             {/* AI Generation Tool */}
             <Card p={{ base: 4, md: 6 }} boxShadow="md">
               <Flex align="center" mb={4}>
-                <Icon as={FaMagic} boxSize={6} color="brand.primary" mr={2} />
+                <ChakraIcon icon={FaMagic} boxSize={6} color="brand.primary" mr={2} />
                 <Heading as="h2" size="md" color="brand.dark">{t('aiDashboard.generation.title')}</Heading>
               </Flex>
               <Text fontSize="sm" mb={4} color="text.secondary">{t('aiDashboard.generation.description')}</Text>
@@ -270,7 +271,7 @@ const AIDashboard: React.FC = () => {
             {/* Project-Specific AI Insights */}
             <Card p={{ base: 4, md: 6 }} boxShadow="md">
               <Flex align="center" mb={4}>
-                <Icon as={FaChartLine} boxSize={6} color="brand.primary" mr={2} />
+                <ChakraIcon icon={FaChartLine} boxSize={6} color="brand.primary" mr={2} />
                 <Heading as="h2" size="md" color="brand.dark">{t('aiDashboard.insights.title')}</Heading>
               </Flex>
               <Text fontSize="sm" mb={4} color="text.secondary">{t('aiDashboard.insights.description')}</Text>

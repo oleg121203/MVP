@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Flex, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Link as ChakraLink, Text, useBreakpointValue, Icon } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Link as ChakraLink, Text, useBreakpointValue } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { FaHome, FaCalculator, FaFolder, FaRobot, FaCog } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -33,7 +33,7 @@ const Navigation: React.FC = () => {
       {navItems.map((item) => (
         <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
           <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
-            <Icon as={item.icon} mr={3} />
+            <Box as={item.icon} mr={3} />
             <Text>{item.label}</Text>
           </ChakraLink>
         </Link>
@@ -70,7 +70,7 @@ const Navigation: React.FC = () => {
           {navItems.map((item) => (
             <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
               <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
-                <Icon as={item.icon} mr={2} />
+                <Box as={item.icon} mr={2} />
                 <Text>{item.label}</Text>
               </ChakraLink>
             </Link>

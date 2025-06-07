@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Text, VStack, Heading, SimpleGrid, Flex, Input, Button, Divider, Icon, InputGroup, InputLeftElement, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import { Box, Text, VStack, Heading, SimpleGrid, Flex, Input, Button, Divider, InputGroup, InputLeftElement, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaCalculator, FaSearch, FaLifeRing } from 'react-icons/fa';
 import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
+import ChakraIcon from '../components/common/ChakraIcon';
 
 const CalculatorsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ const CalculatorsPage: React.FC = () => {
         <Flex direction={{ base: 'column', md: 'row' }} gap={4} mb={8} align="center" maxW="container.lg" mx="auto">
           <InputGroup flex={1}>
             <InputLeftElement pointerEvents="none">
-              <FaSearch color="gray.300" />
+              <Box as={FaSearch} color="gray.300" />
             </InputLeftElement>
             <Input 
               placeholder={t('calculators.searchPlaceholder')} 
@@ -30,7 +31,7 @@ const CalculatorsPage: React.FC = () => {
           </InputGroup>
           <Button 
             variant="outline" 
-            leftIcon={<FaLifeRing />} 
+            leftIcon={<Box as={FaLifeRing} />} 
             borderRadius="full"
             size={{ base: 'sm', md: 'md' }}
           >
@@ -55,7 +56,7 @@ const CalculatorsPage: React.FC = () => {
                     <>
                       <Card p={{ base: 4, md: 6 }} _hover={{ boxShadow: 'md' }} transition="box-shadow 0.2s">
                         <Flex align="center" mb={3}>
-                          <Icon as={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
+                          <ChakraIcon icon={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
                           <Heading as="h3" size="md">{t('calculators.items.airVelocity')}</Heading>
                         </Flex>
                         <Text mb={4} fontSize={{ base: 'sm', md: 'md' }}>{t('calculators.descriptions.airVelocity')}</Text>
@@ -65,7 +66,7 @@ const CalculatorsPage: React.FC = () => {
                       </Card>
                       <Card p={{ base: 4, md: 6 }} _hover={{ boxShadow: 'md' }} transition="box-shadow 0.2s">
                         <Flex align="center" mb={3}>
-                          <Icon as={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
+                          <ChakraIcon icon={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
                           <Heading as="h3" size="md">{t('calculators.items.airflowRate')}</Heading>
                         </Flex>
                         <Text mb={4} fontSize={{ base: 'sm', md: 'md' }}>{t('calculators.descriptions.airflowRate')}</Text>
@@ -81,7 +82,7 @@ const CalculatorsPage: React.FC = () => {
                     <>
                       <Card p={{ base: 4, md: 6 }} _hover={{ boxShadow: 'md' }} transition="box-shadow 0.2s">
                         <Flex align="center" mb={3}>
-                          <Icon as={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
+                          <ChakraIcon icon={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
                           <Heading as="h3" size="md">{t('calculators.items.ductSize')}</Heading>
                         </Flex>
                         <Text mb={4} fontSize={{ base: 'sm', md: 'md' }}>{t('calculators.descriptions.ductSize')}</Text>
@@ -91,7 +92,7 @@ const CalculatorsPage: React.FC = () => {
                       </Card>
                       <Card p={{ base: 4, md: 6 }} _hover={{ boxShadow: 'md' }} transition="box-shadow 0.2s">
                         <Flex align="center" mb={3}>
-                          <Icon as={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
+                          <ChakraIcon icon={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
                           <Heading as="h3" size="md">{t('calculators.items.pressureLoss')}</Heading>
                         </Flex>
                         <Text mb={4} fontSize={{ base: 'sm', md: 'md' }}>{t('calculators.descriptions.pressureLoss')}</Text>
@@ -107,7 +108,7 @@ const CalculatorsPage: React.FC = () => {
                     <>
                       <Card p={{ base: 4, md: 6 }} _hover={{ boxShadow: 'md' }} transition="box-shadow 0.2s">
                         <Flex align="center" mb={3}>
-                          <Icon as={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
+                          <ChakraIcon icon={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
                           <Heading as="h3" size="md">{t('calculators.items.energyConsumption')}</Heading>
                         </Flex>
                         <Text mb={4} fontSize={{ base: 'sm', md: 'md' }}>{t('calculators.descriptions.energyConsumption')}</Text>
@@ -117,7 +118,7 @@ const CalculatorsPage: React.FC = () => {
                       </Card>
                       <Card p={{ base: 4, md: 6 }} _hover={{ boxShadow: 'md' }} transition="box-shadow 0.2s">
                         <Flex align="center" mb={3}>
-                          <Icon as={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
+                          <ChakraIcon icon={FaCalculator} color="brand.primary" mr={2} boxSize={{ base: 5, md: 6 }} />
                           <Heading as="h3" size="md">{t('calculators.items.heatLoad')}</Heading>
                         </Flex>
                         <Text mb={4} fontSize={{ base: 'sm', md: 'md' }}>{t('calculators.descriptions.heatLoad')}</Text>

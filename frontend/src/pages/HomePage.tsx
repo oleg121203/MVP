@@ -1,10 +1,11 @@
 import React from 'react';
-import { Box, Text, VStack, Button, Heading, Image, SimpleGrid, Icon, Flex } from '@chakra-ui/react';
+import { Box, Text, VStack, Button, Heading, Image, SimpleGrid, Flex } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaCalculator, FaChartLine, FaLightbulb, FaRocket } from 'react-icons/fa';
 import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
+import ChakraIcon from '../components/common/ChakraIcon';
 
 const HomePage: React.FC = () => {
   const { t } = useTranslation();
@@ -17,10 +18,10 @@ const HomePage: React.FC = () => {
         <Text fontSize={{ base: 'lg', md: 'xl' }} maxW={{ base: '90%', md: 'container.md' }} mx="auto" mb={8} color="text.secondary" lineHeight="tall">{t('ventai.hero.subtitle')}</Text>
         <Flex justify="center" gap={4} wrap="wrap" mb={6}>
           <Link to="/calculators">
-            <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<FaCalculator />}>{t('ventai.hero.cta')}</Button>
+            <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<Box as={FaCalculator} />}>{t('ventai.hero.cta')}</Button>
           </Link>
           <Link to="/projects">
-            <Button variant="outline" size={{ base: 'md', md: 'lg' }} leftIcon={<FaRocket />}>{t('ventai.hero.secondaryCta')}</Button>
+            <Button variant="outline" size={{ base: 'md', md: 'lg' }} leftIcon={<Box as={FaRocket} />}>{t('ventai.hero.secondaryCta')}</Button>
           </Link>
         </Flex>
         <Image src="/assets/hero-ventilation.svg" alt={t('ventai.hero.imageAlt')} maxH={{ base: '300px', md: '450px' }} mt={{ base: 6, md: 10 }} mx="auto" borderRadius="lg" boxShadow="lg" />
@@ -32,17 +33,17 @@ const HomePage: React.FC = () => {
         <Text fontSize={{ base: 'md', md: 'lg' }} textAlign="center" maxW="container.md" mx="auto" mb={{ base: 8, md: 12 }} color="text.secondary">{t('ventai.capabilities.subtitle')}</Text>
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 6, md: 8 }} maxW="container.lg" mx="auto">
           <Card p={{ base: 6, md: 8 }} textAlign="center" boxShadow="md" _hover={{ boxShadow: 'lg', transform: 'translateY(-5px)' }} transition="all 0.3s ease">
-            <Icon as={FaCalculator} boxSize={{ base: 10, md: 12 }} color="brand.primary" mb={4} />
+            <ChakraIcon icon={FaCalculator} boxSize={{ base: 10, md: 12 }} color="brand.primary" mb={4} />
             <Heading as="h3" size="md" mb={3} color="brand.dark">{t('ventai.capabilities.calculators.title')}</Heading>
             <Text fontSize={{ base: 'sm', md: 'md' }} color="text.secondary">{t('ventai.capabilities.calculators.description')}</Text>
           </Card>
           <Card p={{ base: 6, md: 8 }} textAlign="center" boxShadow="md" _hover={{ boxShadow: 'lg', transform: 'translateY(-5px)' }} transition="all 0.3s ease">
-            <Icon as={FaChartLine} boxSize={{ base: 10, md: 12 }} color="brand.primary" mb={4} />
+            <ChakraIcon icon={FaChartLine} boxSize={{ base: 10, md: 12 }} color="brand.primary" mb={4} />
             <Heading as="h3" size="md" mb={3} color="brand.dark">{t('ventai.capabilities.dashboard.title')}</Heading>
             <Text fontSize={{ base: 'sm', md: 'md' }} color="text.secondary">{t('ventai.capabilities.dashboard.description')}</Text>
           </Card>
           <Card p={{ base: 6, md: 8 }} textAlign="center" boxShadow="md" _hover={{ boxShadow: 'lg', transform: 'translateY(-5px)' }} transition="all 0.3s ease">
-            <Icon as={FaLightbulb} boxSize={{ base: 10, md: 12 }} color="brand.primary" mb={4} />
+            <ChakraIcon icon={FaLightbulb} boxSize={{ base: 10, md: 12 }} color="brand.primary" mb={4} />
             <Heading as="h3" size="md" mb={3} color="brand.dark">{t('ventai.capabilities.aiInsights.title')}</Heading>
             <Text fontSize={{ base: 'sm', md: 'md' }} color="text.secondary">{t('ventai.capabilities.aiInsights.description')}</Text>
           </Card>
@@ -59,7 +60,7 @@ const HomePage: React.FC = () => {
         <Heading as="h2" size={{ base: 'lg', md: 'xl' }} mb={6} color="brand.dark" fontWeight="bold">{t('ventai.onboarding.title')}</Heading>
         <Text fontSize={{ base: 'md', md: 'lg' }} maxW={{ base: '90%', md: 'container.md' }} mx="auto" mb={8} color="text.secondary">{t('ventai.onboarding.subtitle')}</Text>
         <Link to="/onboarding">
-          <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<FaRocket />}>{t('ventai.onboarding.cta')}</Button>
+          <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<Box as={FaRocket} />}>{t('ventai.onboarding.cta')}</Button>
         </Link>
       </Box>
 
@@ -83,7 +84,7 @@ const HomePage: React.FC = () => {
         <Heading as="h2" size={{ base: 'lg', md: 'xl' }} mb={6} color="brand.dark" fontWeight="bold">{t('ventai.cta.title')}</Heading>
         <Text fontSize={{ base: 'md', md: 'lg' }} maxW={{ base: '90%', md: 'container.md' }} mx="auto" mb={8} color="text.secondary">{t('ventai.cta.subtitle')}</Text>
         <Link to="/signup">
-          <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<FaRocket />}>{t('ventai.cta.button')}</Button>
+          <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<Box as={FaRocket} />}>{t('ventai.cta.button')}</Button>
         </Link>
       </Box>
 
