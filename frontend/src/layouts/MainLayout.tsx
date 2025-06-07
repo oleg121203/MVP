@@ -3,6 +3,7 @@ import { Box, Flex, VStack, HStack, Text, IconButton, useDisclosure, Drawer, Dra
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
+import Navigation from '../components/common/Navigation';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -54,6 +55,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title = 'VentAI' }) =
           </DrawerBody>
         </DrawerContent>
       </Drawer>
+
+      {/* Navigation */}
+      <Navigation />
 
       {/* Main Content */}
       <Box as="main" flex="1" p={4} overflowY="auto">
