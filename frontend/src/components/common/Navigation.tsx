@@ -1,87 +1,79 @@
-import React from 'react';
-import { Box, Flex, IconButton, Menu, MenuButton, MenuList, MenuItem, useDisclosure, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Link as ChakraLink } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { Box, Flex, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Link as ChakraLink, Text, useBreakpointValue } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
+import { FaHome, FaCalculator, FaFolder, FaRobot, FaCog } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaCalculator, FaProjectDiagram, FaRobot, FaCog } from 'react-icons/fa';
 
 const Navigation: React.FC = () => {
   const { t } = useTranslation();
-  const location = useLocation();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
+  const onOpen = () => setIsOpen(true);
 
+  // Use responsive breakpoint to determine if mobile view
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  // Navigation items
   const navItems = [
-    { label: t('navigation.home'), path: '/', icon: <FaHome /> },
-    { label: t('navigation.calculators'), path: '/calculators', icon: <FaCalculator /> },
-    { label: t('navigation.projects'), path: '/projects', icon: <FaProjectDiagram /> },
-    { label: t('navigation.aiInsights'), path: '/ai-insights', icon: <FaRobot /> },
-    { label: t('navigation.settings'), path: '/settings', icon: <FaCog /> },
+    { to: '/', icon: FaHome, label: t('nav.home') },
+    { to: '/calculators', icon: FaCalculator, label: t('nav.calculators') },
+    { to: '/projects', icon: FaFolder, label: t('nav.projects') },
+    { to: '/project-management', icon: FaFolder, label: t('nav.projectManagement') },
+    { to: '/ai-insights', icon: FaRobot, label: t('nav.aiInsights') },
+    { to: '/settings', icon: FaCog, label: t('nav.settings') },
   ];
+
+  // Navigation content to reuse in both desktop and mobile views
+  const navContent = (
+    <VStack spacing={4} align="stretch">
+      {navItems.map((item) => (
+        <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
+          <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
+            <item.icon style={{ marginRight: '0.75rem' }} />
+            <Text>{item.label}</Text>
+          </ChakraLink>
+        </Link>
+      ))}
+    </VStack>
+  );
 
   return (
     <Box>
-      {/* Desktop Navigation */}
-      <Flex display={{ base: 'none', md: 'flex' }} align="center" justify="space-between" bg="brand.background" boxShadow="sm" p={4}>
-        <Flex align="center" gap={6} ml={6}>
-          {navItems.map((item) => (
-            <ChakraLink
-              as={Link}
-              to={item.path}
-              key={item.path}
-              fontWeight={location.pathname === item.path ? 'bold' : 'normal'}
-              color={location.pathname === item.path ? 'brand.primary' : 'text.primary'}
-              display="flex"
-              alignItems="center"
-              gap={2}
-              _hover={{ color: 'brand.primary', textDecoration: 'none' }}
-            >
-              {item.icon}
-              {item.label}
-            </ChakraLink>
-          ))}
-        </Flex>
-      </Flex>
-
-      {/* Mobile Navigation */}
-      <Flex display={{ base: 'flex', md: 'none' }} align="center" justify="space-between" bg="brand.background" boxShadow="sm" p={4}>
-        <Menu>
-          <MenuButton
-            as={IconButton}
-            aria-label={t('navigation.menu')}
+      {/* Mobile View - Hamburger Menu with Drawer */}
+      {isMobile ? (
+        <>
+          <IconButton
             icon={<HamburgerIcon />}
-            variant="outline"
             onClick={onOpen}
+            variant="outline"
+            aria-label={t('nav.openMenu')}
+            size="md"
           />
           <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
             <DrawerOverlay />
             <DrawerContent>
               <DrawerCloseButton />
-              <DrawerHeader>{t('navigation.title')}</DrawerHeader>
+              <DrawerHeader>{t('nav.menu')}</DrawerHeader>
               <DrawerBody>
-                <VStack spacing={4} align="stretch">
-                  {navItems.map((item) => (
-                    <ChakraLink
-                      as={Link}
-                      to={item.path}
-                      key={item.path}
-                      fontWeight={location.pathname === item.path ? 'bold' : 'normal'}
-                      color={location.pathname === item.path ? 'brand.primary' : 'text.primary'}
-                      display="flex"
-                      alignItems="center"
-                      gap={2}
-                      _hover={{ color: 'brand.primary', textDecoration: 'none' }}
-                      onClick={onClose}
-                    >
-                      {item.icon}
-                      {item.label}
-                    </ChakraLink>
-                  ))}
-                </VStack>
+                {navContent}
               </DrawerBody>
             </DrawerContent>
           </Drawer>
-        </Menu>
-      </Flex>
+        </>
+      ) : (
+        /* Desktop View - Horizontal Navigation */
+        <Flex as="nav" gap={6} align="center">
+          {navItems.map((item) => (
+            <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
+              <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
+                <item.icon style={{ marginRight: '0.5rem' }} />
+                <Text>{item.label}</Text>
+              </ChakraLink>
+            </Link>
+          ))}
+        </Flex>
+      )}
     </Box>
   );
 };
