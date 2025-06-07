@@ -12,3 +12,13 @@
 
 - **Removed:**
   - Obsolete and redundant files from the root directory.
+
+### [Unreleased]
+
+#### Added
+- **AI-01**: Implemented AI Dashboard with unified interface for AI chat, content generation, and project-specific insights.
+
+#### Changed
+- Updated `Navigation.tsx` to include link to AI Dashboard.
+- Updated `App.tsx` to include route for AI Dashboard.
+- Updated `MASTER_PLAN.md` to reflect progress on AI-01.
