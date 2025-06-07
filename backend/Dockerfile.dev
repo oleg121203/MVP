@@ -32,4 +32,4 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
     CMD wget -qO- http://localhost:8000/health || exit 1
 
 # Command to run the application with auto-reload
-CMD ["python", "src/fastapi_app/main.py", "--reload"]
+CMD ["uvicorn", "src.fastapi_app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

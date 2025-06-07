@@ -9,7 +9,7 @@ class HVACOptimizer:
 
     def _load_model(self):
         try:
-            return load("ai/models/hvac_model.joblib")
+            return load("src/fastapi_app/ai/models/hvac_model.joblib")
         except:
             # Initialize new model if none exists
             return GradientBoostingRegressor(n_estimators=100)

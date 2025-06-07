@@ -10,7 +10,7 @@ class ProjectAnalysisService:
 
     def _load_model(self) -> GradientBoostingRegressor:
         try:
-            return load("ai/models/project_analysis_model.joblib")
+            return load("src/fastapi_app/ai/models/project_analysis_model.joblib")
         except Exception as e:
             # Initialize new model if none exists
             return GradientBoostingRegressor(n_estimators=100)

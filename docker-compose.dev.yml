@@ -57,7 +57,7 @@ services:
       - ./backend:/app
     ports:
       - "8000:8000"
-    command: ["sh", "-c", "pip install -r requirements.txt && python src/fastapi_app/main.py --reload"]
+    command: ["sh", "-c", "pip install -r requirements.txt && uvicorn src.fastapi_app.main:app --host 0.0.0.0 --port 8000 --reload"]
     depends_on:
       db:
         condition: service_healthy

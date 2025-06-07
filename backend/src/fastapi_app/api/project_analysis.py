@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Body
 from typing import Dict, List
 
-from ai.project_analysis_service import ProjectAnalysisService
+from ..ai.project_analysis_service import ProjectAnalysisService
 
 router = APIRouter()
 project_analysis_service = ProjectAnalysisService()

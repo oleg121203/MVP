@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ai.optimization_service import HVACOptimizer
+from ..ai.optimization_service import HVACOptimizer
 from pydantic import BaseModel
 
 router = APIRouter()
