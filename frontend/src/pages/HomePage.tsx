@@ -18,10 +18,10 @@ const HomePage: React.FC = () => {
         <Text fontSize={{ base: 'lg', md: 'xl' }} maxW={{ base: '90%', md: 'container.md' }} mx="auto" mb={8} color="text.secondary" lineHeight="tall">{t('ventai.hero.subtitle')}</Text>
         <Flex justify="center" gap={4} wrap="wrap" mb={6}>
           <Link to="/calculators">
-            <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<Box as={FaCalculator} />}>{t('ventai.hero.cta')}</Button>
+            <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<ChakraIcon icon={FaCalculator} />}>{t('ventai.hero.cta')}</Button>
           </Link>
           <Link to="/projects">
-            <Button variant="outline" size={{ base: 'md', md: 'lg' }} leftIcon={<Box as={FaRocket} />}>{t('ventai.hero.secondaryCta')}</Button>
+            <Button variant="outline" size={{ base: 'md', md: 'lg' }} leftIcon={<ChakraIcon icon={FaRocket} />}>{t('ventai.hero.secondaryCta')}</Button>
           </Link>
         </Flex>
         <Image src="/assets/hero-ventilation.svg" alt={t('ventai.hero.imageAlt')} maxH={{ base: '300px', md: '450px' }} mt={{ base: 6, md: 10 }} mx="auto" borderRadius="lg" boxShadow="lg" />
@@ -60,7 +60,7 @@ const HomePage: React.FC = () => {
         <Heading as="h2" size={{ base: 'lg', md: 'xl' }} mb={6} color="brand.dark" fontWeight="bold">{t('ventai.onboarding.title')}</Heading>
         <Text fontSize={{ base: 'md', md: 'lg' }} maxW={{ base: '90%', md: 'container.md' }} mx="auto" mb={8} color="text.secondary">{t('ventai.onboarding.subtitle')}</Text>
         <Link to="/onboarding">
-          <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<Box as={FaRocket} />}>{t('ventai.onboarding.cta')}</Button>
+          <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<ChakraIcon icon={FaRocket} />}>{t('ventai.onboarding.cta')}</Button>
         </Link>
       </Box>
 
@@ -84,7 +84,7 @@ const HomePage: React.FC = () => {
         <Heading as="h2" size={{ base: 'lg', md: 'xl' }} mb={6} color="brand.dark" fontWeight="bold">{t('ventai.cta.title')}</Heading>
         <Text fontSize={{ base: 'md', md: 'lg' }} maxW={{ base: '90%', md: 'container.md' }} mx="auto" mb={8} color="text.secondary">{t('ventai.cta.subtitle')}</Text>
         <Link to="/signup">
-          <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<Box as={FaRocket} />}>{t('ventai.cta.button')}</Button>
+          <Button variant="primary" size={{ base: 'md', md: 'lg' }} leftIcon={<ChakraIcon icon={FaRocket} />}>{t('ventai.cta.button')}</Button>
         </Link>
       </Box>
 

@@ -227,7 +227,7 @@ const AIDashboard: React.FC = () => {
                 onClick={handleChatSend}
                 isLoading={isChatLoading}
                 loadingText={t('aiDashboard.chat.sending')}
-                leftIcon={<Box as={FaPaperPlane} />}
+                leftIcon={<ChakraIcon icon={FaPaperPlane} />}
                 variant="primary"
               >
                 {t('aiDashboard.chat.send')}

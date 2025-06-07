@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { FaProjectDiagram, FaCalculator, FaRobot, FaCog } from 'react-icons/fa';
 import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
+import ChakraIcon from '../components/common/ChakraIcon';
 import ThreeScene from '../components/ThreeScene';
 import AIChatInterface from '../components/AIChatInterface';
 
@@ -98,14 +99,14 @@ const DashboardPage: React.FC = () => {
         <Divider mb={4} />
         <Flex wrap="wrap" gap={4} mb={8} justify={{ base: 'center', md: 'flex-start' }}>
           <Link to="/calculators">
-            <Button leftIcon={<Box as={FaCalculator} />} variant="primary" size={{ base: 'sm', md: 'md' }}>{t('dashboard.tools.calculator')}</Button>
+            <Button leftIcon={<ChakraIcon icon={FaCalculator} />} variant="primary" size={{ base: 'sm', md: 'md' }}>{t('dashboard.tools.calculator')}</Button>
           </Link>
-          <Button leftIcon={<Box as={FaProjectDiagram} />} variant="secondary" size={{ base: 'sm', md: 'md' }}>{t('dashboard.tools.newProject')}</Button>
+          <Button leftIcon={<ChakraIcon icon={FaProjectDiagram} />} variant="secondary" size={{ base: 'sm', md: 'md' }}>{t('dashboard.tools.newProject')}</Button>
         </Flex>
 
         {/* Customization Options */}
         <Flex justify="flex-end">
-          <IconButton aria-label={t('dashboard.settings')} icon={<Box as={FaCog} />} variant="outline" size={{ base: 'sm', md: 'md' }} />
+          <IconButton aria-label={t('dashboard.settings')} icon={<ChakraIcon icon={FaCog} />} variant="outline" size={{ base: 'sm', md: 'md' }} />
         </Flex>
       </Box>
     </MainLayout>

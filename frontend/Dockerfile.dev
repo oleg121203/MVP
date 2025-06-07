@@ -1,0 +1,44 @@
+# Development Dockerfile for React frontend
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Create a non-root user
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -S appuser -u 1001 -G appgroup
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies with legacy peer deps to handle React version conflicts
+RUN npm install --legacy-peer-deps
+
+# Copy the rest of the application
+COPY . .
+
+# Create cache directories and set proper permissions AFTER copying files
+RUN mkdir -p /tmp/.cache && \
+    mkdir -p /tmp/home && \
+    mkdir -p /tmp/.eslintcache && \
+    mkdir -p /app/node_modules/.cache && \
+    mkdir -p /app/.eslintcache && \
+    chown -R appuser:appgroup /app && \
+    chown -R appuser:appgroup /tmp/.cache && \
+    chown -R appuser:appgroup /tmp/home && \
+    chown -R appuser:appgroup /tmp/.eslintcache && \
+    chmod -R 755 /app/node_modules/.cache && \
+    chown -R appuser:appgroup /app/.eslintcache
+
+# Set cache directories to writable locations
+ENV npm_config_cache /tmp/.cache
+ENV HOME /tmp/home
+ENV ESLINT_CACHE_LOCATION /tmp/.eslintcache
+
+# Switch to non-root user
+USER appuser
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start the development server
+CMD ["npm", "start"]

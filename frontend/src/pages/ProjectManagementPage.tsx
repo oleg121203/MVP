@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { FaFolder, FaPlus, FaEdit, FaShareAlt, FaFileExport, FaComment, FaFilter } from 'react-icons/fa';
 import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
+import ChakraIcon from '../components/common/ChakraIcon';
 
 const ProjectManagementPage: React.FC = () => {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ const ProjectManagementPage: React.FC = () => {
         {/* Header Section */}
         <Heading as="h1" size={{ base: 'lg', md: 'xl' }} mb={2}>{t('projectManagement.welcome')}</Heading>
         <Text fontSize={{ base: 'md', md: 'lg' }} color="text.secondary" mb={6}>{t('projectManagement.subtitle')}</Text>
-        <Button leftIcon={<Box as={FaPlus} />} variant="primary" mb={6} onClick={onOpen} size={{ base: 'sm', md: 'md' }}>{t('projectManagement.createNew')}</Button>
+        <Button leftIcon={<ChakraIcon icon={FaPlus} />} variant="primary" mb={6} onClick={onOpen} size={{ base: 'sm', md: 'md' }}>{t('projectManagement.createNew')}</Button>
 
         {/* Main Content Area */}
         <Flex direction={{ base: 'column', md: 'row' }} gap={6} mb={8}>
@@ -39,7 +40,7 @@ const ProjectManagementPage: React.FC = () => {
           <Box w={{ base: 'full', md: '250px' }} mb={{ base: 4, md: 0 }}>
             <Flex justify="space-between" align="center" mb={4}>
               <Heading as="h2" size="md">{t('projectManagement.projects.title')}</Heading>
-              <Button leftIcon={<Box as={FaFilter} />} variant="outline" size="sm" onClick={() => { /* Filter toggle logic */ }}>{t('projectManagement.projects.filter')}</Button>
+              <Button leftIcon={<ChakraIcon icon={FaFilter} />} variant="outline" size="sm" onClick={() => { /* Filter toggle logic */ }}>{t('projectManagement.projects.filter')}</Button>
             </Flex>
             <Divider mb={4} />
             <Box mb={4}>
@@ -138,7 +139,7 @@ const ProjectManagementPage: React.FC = () => {
               <Box textAlign="center" p={{ base: 6, md: 10 }}>
                 <Heading as="h2" size="md" mb={4}>{t('projectManagement.noProjectSelected.title')}</Heading>
                 <Text mb={4}>{t('projectManagement.noProjectSelected.message')}</Text>
-                <Button leftIcon={<Box as={FaPlus} />} variant="primary" onClick={onOpen}>{t('projectManagement.createNew')}</Button>
+                <Button leftIcon={<ChakraIcon icon={FaPlus} />} variant="primary" onClick={onOpen}>{t('projectManagement.createNew')}</Button>
               </Box>
             )}
           </Box>
@@ -158,11 +159,11 @@ const ProjectManagementPage: React.FC = () => {
                 <Button variant="link" color="brand.primary" size="sm" mb={3}>{t('projectManagement.collaboration.invite')}</Button>
                 <Heading as="h3" size="sm" mb={2}>{t('projectManagement.collaboration.share')}</Heading>
                 <Flex wrap="wrap" gap={2} mb={3}>
-                  <Button leftIcon={<Box as={FaFileExport} />} variant="outline" size="sm">{t('projectManagement.collaboration.export')}</Button>
-                  <Button leftIcon={<Box as={FaShareAlt} />} variant="outline" size="sm">{t('projectManagement.collaboration.link')}</Button>
+                  <Button leftIcon={<ChakraIcon icon={FaFileExport} />} variant="outline" size="sm">{t('projectManagement.collaboration.export')}</Button>
+                  <Button leftIcon={<ChakraIcon icon={FaShareAlt} />} variant="outline" size="sm">{t('projectManagement.collaboration.link')}</Button>
                 </Flex>
                 <Heading as="h3" size="sm" mb={2}>{t('projectManagement.collaboration.comments')}</Heading>
-                <Button leftIcon={<Box as={FaComment} />} variant="outline" size="sm">{t('projectManagement.collaboration.viewComments')}</Button>
+                <Button leftIcon={<ChakraIcon icon={FaComment} />} variant="outline" size="sm">{t('projectManagement.collaboration.viewComments')}</Button>
               </Card>
             </Box>
           )}

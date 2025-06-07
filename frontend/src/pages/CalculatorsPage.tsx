@@ -19,7 +19,7 @@ const CalculatorsPage: React.FC = () => {
         <Flex direction={{ base: 'column', md: 'row' }} gap={4} mb={8} align="center" maxW="container.lg" mx="auto">
           <InputGroup flex={1}>
             <InputLeftElement pointerEvents="none">
-              <Box as={FaSearch} color="gray.300" />
+              <ChakraIcon icon={FaSearch} color="gray.300" />
             </InputLeftElement>
             <Input 
               placeholder={t('calculators.searchPlaceholder')} 
@@ -31,7 +31,7 @@ const CalculatorsPage: React.FC = () => {
           </InputGroup>
           <Button 
             variant="outline" 
-            leftIcon={<Box as={FaLifeRing} />} 
+            leftIcon={<ChakraIcon icon={FaLifeRing} />} 
             borderRadius="full"
             size={{ base: 'sm', md: 'md' }}
           >

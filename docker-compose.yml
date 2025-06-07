@@ -52,8 +52,8 @@ services:
       REDIS_URL: redis://redis:6379/0
       ENVIRONMENT: production
       # PYTHONDONTWRITEBYTECODE, PYTHONUNBUFFERED, and PATH are set in Dockerfile
-    volumes:
-      - ./backend:/app # For development; consider removing for pure production image-based deployments
+    # volumes:
+    #   - ./backend:/app # Commented out for production - this overwrites the built image
     ports:
       - "8000:8000"
     command: ["python", "-m", "uvicorn", "src.fastapi_app.main:app", "--host", "0.0.0.0", "--port", "8000"]
@@ -73,7 +73,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     image: ventai-frontend:latest
     container_name: ventai-frontend
     restart: unless-stopped

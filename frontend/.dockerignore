@@ -1,0 +1,12 @@
+# .dockerignore for frontend
+node_modules
+npm-debug.log
+build
+.git
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+coverage
+.nyc_output
+.eslintcache

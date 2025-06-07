@@ -5,6 +5,7 @@ import { FaHome, FaCalculator, FaFolder, FaRobot, FaCog } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
+import ChakraIcon from './ChakraIcon';
 
 const Navigation: React.FC = () => {
   const { t } = useTranslation();
@@ -33,7 +34,7 @@ const Navigation: React.FC = () => {
       {navItems.map((item) => (
         <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
           <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
-            <Box as={item.icon} mr={3} />
+            <ChakraIcon icon={item.icon} mr={3} />
             <Text>{item.label}</Text>
           </ChakraLink>
         </Link>
@@ -70,7 +71,7 @@ const Navigation: React.FC = () => {
           {navItems.map((item) => (
             <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
               <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
-                <Box as={item.icon} mr={2} />
+                <ChakraIcon icon={item.icon} mr={2} />
                 <Text>{item.label}</Text>
               </ChakraLink>
             </Link>
