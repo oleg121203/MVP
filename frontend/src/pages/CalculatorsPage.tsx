@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Text, VStack, SimpleGrid, Heading, Input, Select, Flex, IconButton, Divider, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import { Box, Text, VStack, SimpleGrid, Heading, Input, InputGroup, InputLeftElement, Select, Flex, IconButton, Divider, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaSave, FaQuestionCircle } from 'react-icons/fa';
@@ -22,13 +22,16 @@ const CalculatorsPage: React.FC = () => {
 
         {/* Search and Filter */}
         <Flex direction={{ base: 'column', md: 'row' }} gap={4} mb={8} align="center" maxW="container.lg" mx="auto">
-          <Input 
-            placeholder={t('calculators.searchPlaceholder')} 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
-            leftIcon={<FaSearch />} 
-            flex={1}
-          />
+          <InputGroup flex={1}>
+            <InputLeftElement pointerEvents="none">
+              <FaSearch />
+            </InputLeftElement>
+            <Input 
+              placeholder={t('calculators.searchPlaceholder')} 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
+            />
+          </InputGroup>
           <Select 
             value={categoryFilter} 
             onChange={(e) => setCategoryFilter(e.target.value)}
