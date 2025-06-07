@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import CalculatorsPage from './pages/CalculatorsPage';
 import DashboardPage from './pages/DashboardPage';
+import AIDashboard from './pages/AIDashboard';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -29,6 +30,11 @@ function App() {
         <Route path="/dashboard" element={
           <MainLayout>
             <DashboardPage />
+          </MainLayout>
+        } />
+        <Route path="/ai-dashboard" element={
+          <MainLayout>
+            <AIDashboard />
           </MainLayout>
         } />
         <Route path="*" element={

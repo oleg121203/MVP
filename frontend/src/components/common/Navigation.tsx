@@ -18,8 +18,10 @@ const Navigation: React.FC = () => {
   const navItems = [
     { to: '/', icon: FaHome, label: t('nav.home') },
     { to: '/calculators', icon: FaCalculator, label: t('nav.calculators') },
+    { to: '/dashboard', icon: FaHome, label: t('nav.dashboard') },
     { to: '/projects', icon: FaFolder, label: t('nav.projects') },
     { to: '/project-management', icon: FaFolder, label: t('nav.projectManagement') },
+    { to: '/ai-dashboard', icon: FaRobot, label: t('nav.aiDashboard') },
     { to: '/ai-insights', icon: FaRobot, label: t('nav.aiInsights') },
     { to: '/settings', icon: FaCog, label: t('nav.settings') },
   ];
