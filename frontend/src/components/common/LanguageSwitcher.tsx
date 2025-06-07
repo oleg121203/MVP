@@ -12,10 +12,10 @@ const LanguageSwitcher: React.FC = () => {
   };
 
   return (
-    <Select 
-      value={currentLanguage} 
-      onChange={handleLanguageChange} 
-      size="sm" 
+    <Select
+      value={currentLanguage}
+      onChange={handleLanguageChange}
+      size="sm"
       width="auto"
       aria-label={t('language')}
     >
