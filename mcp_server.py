@@ -626,11 +626,19 @@ async def main():
                 self.send_header('Content-type', 'application/json')
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
+                
+                # Get capabilities from server
+                import asyncio
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                caps = loop.run_until_complete(server.get_capabilities())
+                loop.close()
+                
                 health_status = {
                     "status": "healthy",
                     "mcp_server": "running",
                     "ai_providers": server.ai_manager.get_available_providers(),
-                    "capabilities": len(capabilities['tools']),
+                    "capabilities": len(caps['tools']),
                     "timestamp": asyncio.get_event_loop().time()
                 }
                 self.wfile.write(json.dumps(health_status, indent=2).encode())
@@ -662,7 +670,15 @@ async def main():
                 self.send_header('Content-type', 'application/json')
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
-                self.wfile.write(json.dumps(capabilities, indent=2).encode())
+                
+                # Get capabilities from server
+                import asyncio
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                caps = loop.run_until_complete(server.get_capabilities())
+                loop.close()
+                
+                self.wfile.write(json.dumps(caps, indent=2).encode())
             else:
                 self.send_response(404)
                 self.send_header('Content-type', 'application/json')

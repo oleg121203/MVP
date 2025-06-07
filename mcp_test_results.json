@@ -1,0 +1,140 @@
+{
+  "total_tests": 19,
+  "passed_tests": 13,
+  "failed_tests": 6,
+  "test_details": [
+    {
+      "test": "MCP Server Health",
+      "status": "PASS",
+      "details": "Status: healthy, AI providers: 0",
+      "error": "",
+      "timestamp": 1749324119.2424471
+    },
+    {
+      "test": "Backend Health",
+      "status": "FAIL",
+      "details": "",
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /docs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1042e9450>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "timestamp": 1749324119.2434509
+    },
+    {
+      "test": "MCP Endpoint /health",
+      "status": "PASS",
+      "details": "Response OK",
+      "error": "",
+      "timestamp": 1749324119.246594
+    },
+    {
+      "test": "MCP Endpoint /status",
+      "status": "PASS",
+      "details": "Response OK",
+      "error": "",
+      "timestamp": 1749324119.2487612
+    },
+    {
+      "test": "MCP Endpoint /capabilities",
+      "status": "PASS",
+      "details": "Tools available: 10",
+      "error": "",
+      "timestamp": 1749324119.250964
+    },
+    {
+      "test": "AI Providers Status",
+      "status": "PASS",
+      "details": "0/4 providers available",
+      "error": "",
+      "timestamp": 1749324119.253202
+    },
+    {
+      "test": "AI Provider ollama",
+      "status": "FAIL",
+      "details": "",
+      "error": "Not available",
+      "timestamp": 1749324119.253216
+    },
+    {
+      "test": "AI Provider gemini",
+      "status": "FAIL",
+      "details": "",
+      "error": "Not available",
+      "timestamp": 1749324119.2532248
+    },
+    {
+      "test": "AI Provider openai",
+      "status": "FAIL",
+      "details": "",
+      "error": "Not available",
+      "timestamp": 1749324119.253231
+    },
+    {
+      "test": "AI Provider anthropic",
+      "status": "FAIL",
+      "details": "",
+      "error": "Not available",
+      "timestamp": 1749324119.2532392
+    },
+    {
+      "test": "MCP Tool hvac_optimize",
+      "status": "PASS",
+      "details": "Tool available: HVAC optimization for office",
+      "error": "",
+      "timestamp": 1749324119.36023
+    },
+    {
+      "test": "MCP Tool ai_hvac_analyze",
+      "status": "PASS",
+      "details": "Tool available: AI HVAC analysis",
+      "error": "",
+      "timestamp": 1749324119.468787
+    },
+    {
+      "test": "MCP Tool ai_providers_status",
+      "status": "PASS",
+      "details": "Tool available: AI providers status check",
+      "error": "",
+      "timestamp": 1749324119.581944
+    },
+    {
+      "test": "MCP Tool get_project_status",
+      "status": "PASS",
+      "details": "Tool available: Project status check",
+      "error": "",
+      "timestamp": 1749324119.6986182
+    },
+    {
+      "test": "Environment Configuration",
+      "status": "PASS",
+      "details": "0/6 services configured",
+      "error": "",
+      "timestamp": 1749324119.7062778
+    },
+    {
+      "test": "Docker MCP Server",
+      "status": "PASS",
+      "details": "MCP server running in container",
+      "error": "",
+      "timestamp": 1749324119.710751
+    },
+    {
+      "test": "Docker Networking",
+      "status": "FAIL",
+      "details": "",
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /docs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x104308050>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "timestamp": 1749324119.713063
+    },
+    {
+      "test": "Response Time Health",
+      "status": "PASS",
+      "details": "0.003s",
+      "error": "",
+      "timestamp": 1749324119.7166011
+    },
+    {
+      "test": "Response Time Status",
+      "status": "PASS",
+      "details": "0.004s",
+      "error": "",
+      "timestamp": 1749324119.720714
+    }
+  ]
+}
