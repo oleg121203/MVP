@@ -40,7 +40,7 @@ services:
   # Backend for development (with auto-reload)
   backend:
     build:
-      context: ../../backend
+      context: ./backend
       dockerfile: Dockerfile
     container_name: ventai-backend-dev
     image: ventai-backend-dev:latest
@@ -57,7 +57,7 @@ services:
       - /app/__pycache__
     ports:
       - "8000:8000"
-    command: ["./venv/bin/python", "src/fastapi_app/main.py", "--reload"]
+    command: []
     depends_on:
       db:
         condition: service_healthy
@@ -78,23 +78,22 @@ services:
       dockerfile: Dockerfile.dev
     container_name: ventai-frontend-dev
     image: ventai-frontend-dev:latest
-    working_dir: /app
+    ports:
+      - "3000:3000"
     environment:
+      - NODE_ENV=development
       - REACT_APP_API_URL=http://host.docker.internal:8000
       - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=development
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    ports:
-      - "3001:3001"
-    command: ["npm", "run", "dev"]
+      - /Users/olegkizyma/workspaces/MVP/ventai-app/frontend:/app
+      - frontend_node_modules:/app/node_modules
     depends_on:
       - backend
     networks:
       - ventai-dev-network
+    command: ["npm", "start", "--", "--port", "3000"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -102,6 +101,8 @@ services:
 volumes:
   postgres_dev_data:
     name: ventai_postgres_dev_data
+  frontend_node_modules:
+    name: frontend_node_modules
 
 networks:
   ventai-dev-network:
