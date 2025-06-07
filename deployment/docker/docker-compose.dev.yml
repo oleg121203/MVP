@@ -40,8 +40,8 @@ services:
   # Backend for development (with auto-reload)
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
+      context: ../../backend
+      dockerfile: Dockerfile
     container_name: ventai-backend-dev
     image: ventai-backend-dev:latest
     working_dir: /app

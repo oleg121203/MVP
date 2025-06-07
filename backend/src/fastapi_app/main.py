@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api import ai
+from api import ai, project_analysis
 
 app = FastAPI()
 
@@ -15,6 +15,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(ai.router, prefix="/api/ai")
+app.include_router(project_analysis.router, prefix="/api/project-analysis")
 
 
 @app.get("/")

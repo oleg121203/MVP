@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Flex, Heading, Text, Button, Input, VStack, Icon, Select, useToast } from '@chakra-ui/react';
+import { Box, Flex, Heading, Text, Button, Input, VStack, Icon, Select, useToast, Spinner, UnorderedList, ListItem, Stack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { FaComment, FaMagic, FaChartLine, FaUser, FaRobot, FaPaperPlane } from 'react-icons/fa';
 import MainLayout from '../layouts/MainLayout';
@@ -66,6 +66,118 @@ const AIDashboard: React.FC = () => {
       setProjectInsights(null);
     }
   }, [selectedProject]);
+
+  // Automated Project Analysis Section
+  const ProjectAnalysis = () => {
+    const [selectedProject, setSelectedProject] = useState<string | null>(null);
+    const [analysisResults, setAnalysisResults] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const toast = useToast();
+
+    const handleProjectSelect = async (projectId: string) => {
+      setSelectedProject(projectId);
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Fetch project data (simulated for now, replace with actual API call to get project details)
+        const projectData = projects.find(p => p.id === projectId);
+        if (!projectData) {
+          throw new Error("Project not found");
+        }
+
+        // Call backend API for analysis
+        const response = await fetch("http://localhost:8000/api/project-analysis/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            area: projectData.area || 1000, // Default values for demonstration
+            occupancy: projectData.occupancy || 50,
+            climate_zone: projectData.climateZone || "Temperate",
+            system_type: projectData.systemType || "Split System",
+            energy_consumption: projectData.energyConsumption || 1200,
+            ventilation_rate: projectData.ventilationRate || 0.3,
+            noise_level: projectData.noiseLevel || 50
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setAnalysisResults(data);
+      } catch (err) {
+        setError("Failed to fetch analysis results. Please try again.");
+        toast({
+          title: "Error",
+          description: "Could not load project analysis.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    return (
+      <Box bg="white" p={6} borderRadius="lg" shadow="md" mb={6}>
+        <Heading size="md" mb={4}>Project Analysis</Heading>
+        <Select 
+          placeholder="Select a project for analysis" 
+          onChange={(e) => handleProjectSelect(e.target.value)}
+          mb={4}
+        >
+          {projects.map(project => (
+            <option key={project.id} value={project.id}>{project.name}</option>
+          ))}
+        </Select>
+        {isLoading && <Spinner />}
+        {error && !isLoading && <Text color="red.500">{error}</Text>}
+        {analysisResults && !isLoading && !error && (
+          <Box>
+            <Text fontWeight="bold">Compliance Status: {analysisResults.compliance_status}</Text>
+            {analysisResults.compliance_issues && analysisResults.compliance_issues.length > 0 && (
+              <Box mt={2}>
+                <Text fontWeight="bold">Issues:</Text>
+                <UnorderedList>
+                  {analysisResults.compliance_issues.map((issue: string, index: number) => (
+                    <ListItem key={index}>{issue}</ListItem>
+                  ))}
+                </UnorderedList>
+              </Box>
+            )}
+            {analysisResults.recommendations && (
+              <Box mt={4}>
+                <Text fontWeight="bold">Recommendations:</Text>
+                {analysisResults.recommendations.optimal_system_type && (
+                  <Text>Optimal System Type: {analysisResults.recommendations.optimal_system_type}</Text>
+                )}
+                {analysisResults.recommendations.energy_savings_potential && (
+                  <Text>Energy Savings Potential: {analysisResults.recommendations.energy_savings_potential} kWh</Text>
+                )}
+                {analysisResults.recommendations.priority_actions && analysisResults.recommendations.priority_actions.length > 0 && (
+                  <>
+                    <Text fontWeight="bold" mt={2}>Priority Actions:</Text>
+                    <UnorderedList>
+                      {analysisResults.recommendations.priority_actions.map((action: string, index: number) => (
+                        <ListItem key={index}>{action}</ListItem>
+                      ))}
+                    </UnorderedList>
+                  </>
+                )}
+              </Box>
+            )}
+          </Box>
+        )}
+      </Box>
+    );
+  };
 
   return (
     <MainLayout title={t('aiDashboard.title')}>
@@ -184,6 +296,9 @@ const AIDashboard: React.FC = () => {
                 <Text fontSize="sm" color="text.secondary">{t('aiDashboard.insights.noProjectSelected')}</Text>
               )}
             </Card>
+
+            {/* Automated Project Analysis */}
+            <ProjectAnalysis />
           </VStack>
         </Flex>
       </Box>

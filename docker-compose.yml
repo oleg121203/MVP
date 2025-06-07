@@ -30,7 +30,7 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: /Users/olegkizyma/workspaces/MVP/ventai-app/backend
     image: ventai-backend:latest
     container_name: ventai-backend
     env_file:
