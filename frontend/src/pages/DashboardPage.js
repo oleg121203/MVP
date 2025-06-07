@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Card, Button } from '../components/ui';
+import AIDashboard from './AIDashboard';
+import { useLocalization } from '../context/LocalizationContext';
 import './DashboardPage.css';
 
 // Імпортуємо API_BASE_URL з apiService
@@ -12,6 +14,7 @@ const DashboardPage = () => {
   const { user, token } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
+  const { t } = useLocalization();
 
   const [recentProjects, setRecentProjects] = useState([]);
   const [stats, setStats] = useState({
@@ -61,7 +64,8 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-container">
-      <h1>Welcome to Vent.AI Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('dashboard.title')}</h1>
+      <AIDashboard />
       <p className="dashboard-subtitle">
         Your central hub for HVAC project management and market research
       </p>

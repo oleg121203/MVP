@@ -1,0 +1,6 @@
+{
+  "domain": "your-tenant.us.auth0.com",
+  "clientId": "your-client-id",
+  "audience": "https://ventai-api",
+  "apiOrigin": "http://localhost:8000"
+}

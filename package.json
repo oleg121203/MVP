@@ -8,14 +8,14 @@
     "backend"
   ],
   "scripts": {
-    "install:all": "npm install && cd frontend && npm install && cd ../backend && pip install -r requirements.txt",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && venv/bin/pip install -r requirements.txt",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "dev:frontend": "cd frontend && npm start",
-    "dev:backend": "cd backend/src && python main.py",
+    "dev:frontend": "cd frontend && PORT=3002 npm start",
+    "dev:backend": "cd backend && ./venv/bin/python src/main.py",
     "build": "cd frontend && npm run build",
     "test": "npm run test:frontend && npm run test:backend",
     "test:frontend": "cd frontend && npm test",
-    "test:backend": "cd backend && python -m pytest",
+    "test:backend": "cd backend && venv/bin/python -m pytest",
     "docker:dev": "docker-compose -f deployment/docker/docker-compose.dev.yml up",
     "docker:prod": "docker-compose -f deployment/docker/docker-compose.prod.yml up -d",
     "setup": "../.workspace/workflow-manager.sh setup complete",

@@ -1,64 +1,144 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import uaTranslations from '../locales/ua.json';
-import enTranslations from '../locales/en.json';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+// Ukrainian translations
+const uk = {
+  nav: {
+    dashboard: 'Панель управління',
+    calculators: 'Калькулятори',
+    projects: 'Проекти',
+    login: 'Увійти',
+    account: 'Обліковий запис',
+    logout: 'Вийти',
+    marketResearch: 'Дослідження ринку',
+    admin: 'Адміністратор'
+  },
+  footer: {
+    rights: 'Усі права захищені.'
+  },
+  calculators: {
+    title: 'HVAC Калькулятори',
+    airExchange: 'Розрахунок повітрообміну',
+    ductSizing: 'Розмір повітроводів',
+    smokeRemoval: 'Розрахунок димовидалення',
+    ductArea: 'Площа повітроводів',
+    waterHeater: 'Водонагрівач'
+  },
+  dashboard: {
+    title: 'AI Панель управління',
+    description: 'Автоматизований аналіз та оптимізація ваших проектів за допомогою AI.',
+    loading: 'Завантаження...',
+    insights: 'AI Інсайти',
+    recentProjects: 'Останні проекти',
+    projectName: 'Назва проекту',
+    status: 'Статус',
+    compliance: 'Відповідність нормам',
+    costSavings: 'Економія витрат',
+    automationPanel: 'Панель автоматизації',
+    automationDescription: 'Увімкніть автоматичні процеси для оптимізації ваших робочих процесів.',
+    projectAnalysis: 'Аналіз проектів',
+    projectAnalysisDesc: 'Автоматичний аналіз проектів різних форматів для швидкого виявлення проблем.',
+    complianceCheck: 'Перевірка відповідності',
+    complianceCheckDesc: 'Автоматична перевірка відповідності українським нормам (ДБН).',
+    costOptimization: 'Оптимізація витрат',
+    costOptimizationDesc: 'AI пропонує рішення для зниження витрат на матеріали та роботи.',
+    procurementAutomation: 'Автоматизація закупівель',
+    procurementAutomationDesc: 'Оптимізація закупівель з урахуванням локації, часу доставки та вартості.',
+    enabled: 'Увімкнено',
+    disabled: 'Вимкнено'
+  }
+};
+
+// English translations
+const en = {
+  nav: {
+    dashboard: 'Dashboard',
+    calculators: 'Calculators',
+    projects: 'Projects',
+    login: 'Login',
+    account: 'Account',
+    logout: 'Logout',
+    marketResearch: 'Market Research',
+    admin: 'Admin'
+  },
+  footer: {
+    rights: 'All rights reserved.'
+  },
+  calculators: {
+    title: 'HVAC Calculators',
+    airExchange: 'Air Exchange Calculation',
+    ductSizing: 'Duct Sizing',
+    smokeRemoval: 'Smoke Removal Calculation',
+    ductArea: 'Duct Area',
+    waterHeater: 'Water Heater'
+  },
+  dashboard: {
+    title: 'AI Dashboard',
+    description: 'Automated analysis and optimization of your projects with AI.',
+    loading: 'Loading...',
+    insights: 'AI Insights',
+    recentProjects: 'Recent Projects',
+    projectName: 'Project Name',
+    status: 'Status',
+    compliance: 'Compliance',
+    costSavings: 'Cost Savings',
+    automationPanel: 'Automation Panel',
+    automationDescription: 'Enable automated processes to streamline your workflows.',
+    projectAnalysis: 'Project Analysis',
+    projectAnalysisDesc: 'Automatic analysis of projects in various formats for quick issue detection.',
+    complianceCheck: 'Compliance Check',
+    complianceCheckDesc: 'Automated compliance verification with Ukrainian standards (ДБН).',
+    costOptimization: 'Cost Optimization',
+    costOptimizationDesc: 'AI suggests solutions to reduce costs on materials and labor.',
+    procurementAutomation: 'Procurement Automation',
+    procurementAutomationDesc: 'Optimized procurement considering location, delivery time, and cost.',
+    enabled: 'Enabled',
+    disabled: 'Disabled'
+  }
+};
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: { translation: en },
+      uk: { translation: uk }
+    },
+    lng: localStorage.getItem('language') || 'uk',
+    fallbackLng: 'uk',
+    interpolation: {
+      escapeValue: false
+    }
+  });
 
 const LocalizationContext = createContext();
 
-const translations = {
-  ua: uaTranslations,
-  en: enTranslations,
-};
+export const useLocalization = () => useContext(LocalizationContext);
 
 export const LocalizationProvider = ({ children }) => {
-  const [language, setLanguage] = useState(() => {
-    // Отримуємо збережену мову або встановлюємо українську за замовчуванням
-    return localStorage.getItem('language') || 'ua';
-  });
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
 
   useEffect(() => {
-    localStorage.setItem('language', language);
-    // Встановлюємо атрибут lang для HTML документа
-    document.documentElement.lang = language;
-  }, [language]);
+    const handleLanguageChange = (lng) => {
+      setCurrentLanguage(lng);
+      localStorage.setItem('language', lng);
+    };
 
-  const t = (key, interpolations = {}) => {
-    const keys = key.split('.');
-    let value = translations[language];
+    i18n.on('languageChanged', handleLanguageChange);
 
-    for (const k of keys) {
-      value = value?.[k];
-    }
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
+  }, []);
 
-    if (typeof value === 'string' && Object.keys(interpolations).length > 0) {
-      return Object.keys(interpolations).reduce((str, param) => {
-        return str.replace(new RegExp(`{{${param}}}`, 'g'), interpolations[param]);
-      }, value);
-    }
-
-    return value || key;
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
   };
 
-  const changeLanguage = (newLanguage) => {
-    if (translations[newLanguage]) {
-      setLanguage(newLanguage);
-    }
-  };
-
-  const value = {
-    language,
-    setLanguage: changeLanguage,
-    t,
-    isUkrainian: language === 'ua',
-    isEnglish: language === 'en',
-  };
-
-  return <LocalizationContext.Provider value={value}>{children}</LocalizationContext.Provider>;
-};
-
-export const useLocalization = () => {
-  const context = useContext(LocalizationContext);
-  if (!context) {
-    throw new Error('useLocalization must be used within a LocalizationProvider');
-  }
-  return context;
+  return (
+    <LocalizationContext.Provider value={{ t: i18n.t, language: currentLanguage, changeLanguage }}>
+      {children}
+    </LocalizationContext.Provider>
+  );
 };

@@ -1,22 +1,19 @@
-# Development Dockerfile for frontend
-FROM node:18-alpine
-
-# Set working directory
+# Build stage
+FROM node:16.14.2-alpine AS builder
 WORKDIR /app
-
-# Set environment variables
-ENV NODE_ENV=development
-
-# Install dependencies with caching
 COPY package*.json ./
-RUN --mount=type=cache,target=/root/.npm \
-    npm install
-
-# Copy source code
+RUN npm install typescript@4.9.5 --save-exact && \
+    npm install ajv@8.11.2 ajv-keywords@5.1.0 --save-exact && \
+    npm install react-scripts@5.0.1 --save-exact && \
+    npm install --legacy-peer-deps
 COPY . .
+RUN npm run build
 
-# Expose port
+# Production stage
+FROM node:16.14.2-alpine
+WORKDIR /app
+ENV NODE_ENV production
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/node_modules ./node_modules
 EXPOSE 3000
-
-# Start development server
 CMD ["npm", "start"]
