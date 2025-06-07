@@ -1,25 +1,31 @@
-### [2025-06-07] - FS-01: Foundation and Refactoring
+# Changelog
 
-- **Added:**
-  - Standardized `src/` directories for both backend and frontend to improve code organization.
-  - Clear separation of Django (`django_project/`) and FastAPI (`fastapi_app/`) components within the backend.
-  - Modular frontend structure with dedicated folders for components, services, hooks, store, and pages.
+## [v2.1.0] - 2025-06-07
+### Added
+- **AI-01: AI Dashboard**: Implemented a new unified dashboard for all AI interactions, including chat, content generation, and project-specific analysis.
+- **AI-02: Automated Project Analysis**:
+  - Implemented backend service (`project_analysis_service.py`) and FastAPI endpoints for core analysis logic.
+  - Added frontend components to `AIDashboard.tsx` to display simulated analysis results.
 
-- **Changed:**
-  - **Completed Task FS-01:** Restructured the entire project file system for clarity and maintainability.
-  - Moved all backend and frontend source code into their respective new directories.
-  - Updated all configuration files (`docker-compose.yml`, `package.json`, `.github/workflows/ci-cd.yml`, etc.) to reflect the new file paths.
+### Changed
+- **UI-01: UI/UX Redesign**:
+  - Implemented a complete redesign of the user interface, including a new navigation menu, color scheme, and typography.
+  - **Homepage**: Rebuilt with an enhanced hero section, capabilities overview, testimonials, and clear calls-to-action.
+  - **Project Management**: Implemented a new, dedicated page for managing projects.
+  - **Responsiveness**: Updated all key pages to be fully responsive across mobile, tablet, and desktop devices.
+- **Infrastructure**:
+  - Updated `Navigation.tsx` and `App.tsx` to include routes for all new pages and features.
+  - Updated `MASTER_PLAN.md` to reflect the completion of Phase 1 and progress on Phase 2.
 
-- **Removed:**
-  - Obsolete and redundant files from the root directory.
+## [v2.0.0] - 2025-06-07
+### Added
+- Standardized `src/` directories for both backend and frontend to improve code organization.
+- Clear separation of Django (`django_project/`) and FastAPI (`fastapi_app/`) components within the backend.
+- Modular frontend structure with dedicated folders for components, services, hooks, store, and pages.
 
-### [Unreleased]
+### Changed
+- **FS-01: File Structure Cleanup**: Completed a full restructuring of the project file system for clarity and maintainability.
+- Updated all configuration files (`docker-compose.yml`, `package.json`, `.github/workflows/ci-cd.yml`, etc.) to reflect the new file paths.
 
-#### Added
-- **AI-01**: Implemented AI Dashboard with unified interface for AI chat, content generation, and project-specific insights.
-- **AI-02**: Started planning for Automated Project Analysis feature to provide AI-driven insights and compliance checks.
-
-#### Changed
-- Updated `Navigation.tsx` to include link to AI Dashboard.
-- Updated `App.tsx` to include route for AI Dashboard.
-- Updated `MASTER_PLAN.md` to reflect progress on AI-01 and start of AI-02.
+### Removed
+- Obsolete and redundant files from the root directory.
