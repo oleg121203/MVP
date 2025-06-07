@@ -1,15 +1,15 @@
-import { useAuth } from './context/AuthContext';
-import { LoginForm } from './components/LoginForm';
-import { ProjectList } from './components/ProjectList';
-import { AIGeneration } from './components/AIGeneration';
-import { ErrorNotifications } from './components/ErrorNotifications';
-import { LoadingIndicator } from './components/LoadingIndicator';
-import MainLayout from './layouts/MainLayout';
+import { useAuth } from '../context/AuthContext';
+import { LoginForm } from '../components/LoginForm';
+import { ProjectList } from '../components/ProjectList';
+import { AIGeneration } from '../components/AIGeneration';
+import { ErrorNotifications } from '../components/ErrorNotifications';
+import { LoadingIndicator } from '../components/LoadingIndicator';
+import MainLayout from '../layouts/MainLayout';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import CalculatorsPage from './pages/CalculatorsPage';
-import DashboardPage from './pages/DashboardPage';
-import AIDashboard from './pages/AIDashboard';
+import HomePage from '../pages/HomePage';
+import CalculatorsPage from '../pages/CalculatorsPage';
+import DashboardPage from '../pages/DashboardPage';
+import AIDashboard from '../pages/AIDashboard';
 
 function App() {
   const { isAuthenticated } = useAuth();

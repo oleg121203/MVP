@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { apiClient, GetProjectsResponse, Project } from '@/api/client';
-import { useLoading } from '@/context/LoadingContext';
+import { useLoading } from '../context/LoadingContext';
+
+// Define the Project interface
+interface Project {
+  id: string; // Assuming id is a string, adjust if it's a number
+  name: string;
+  description: string;
+  created_at: string; // Assuming created_at is a string (ISO date), adjust if it's a Date object
+}
 
 export const ProjectList: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -10,11 +17,16 @@ export const ProjectList: React.FC = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const { projects } = await withLoading(apiClient.getProjects<GetProjectsResponse>());
-        setProjects(projects);
-      } catch (err: unknown) {
-        setError('Failed to load projects');
-        console.error(err);
+        await withLoading(async () => {
+          const response = await fetch('/api/projects');
+          if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+          }
+          const data = await response.json();
+          setProjects(data);
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load projects');
       }
     };
 

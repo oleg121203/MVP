@@ -94,13 +94,13 @@ const AIDashboard: React.FC = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            area: projectData.area || 1000, // Default values for demonstration
-            occupancy: projectData.occupancy || 50,
-            climate_zone: projectData.climateZone || "Temperate",
-            system_type: projectData.systemType || "Split System",
-            energy_consumption: projectData.energyConsumption || 1200,
-            ventilation_rate: projectData.ventilationRate || 0.3,
-            noise_level: projectData.noiseLevel || 50
+            area: 1000, // Default values for demonstration
+            occupancy: 50,
+            climate_zone: 'Temperate',
+            system_type: 'Split System',
+            energy_consumption: 1200,
+            ventilation_rate: 0.3,
+            noise_level: 50
           }),
         });
 

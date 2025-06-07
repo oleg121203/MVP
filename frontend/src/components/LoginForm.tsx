@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useLoading } from '@/context/LoadingContext';
+import { useLoading } from '../context/LoadingContext';
 
 interface LoginFormProps {}
 
@@ -13,13 +13,15 @@ export const LoginForm: React.FC<LoginFormProps> = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    if (!username || !password) {
+      setError('Both username and password are required');
+      return;
+    }
 
     try {
-      await withLoading(login(username, password));
+      await withLoading(() => login(username, password));
     } catch (err) {
-      setError('Login failed. Please check your credentials.');
-      console.error(err);
+      setError(err instanceof Error ? err.message : 'Login failed');
     }
   };
 

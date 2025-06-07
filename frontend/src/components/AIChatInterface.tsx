@@ -74,7 +74,7 @@ export default function AIChatInterface() {
         <Button 
           colorScheme="blue" 
           onClick={handleSend}
-          loading={isLoading}
+          isLoading={isLoading}
           loadingText="Sending"
         >
           Send

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { apiClient, AITaskResponse } from '@/api/client';
-import { useLoading } from '@/context/LoadingContext';
+import { useLoading } from '../context/LoadingContext';
 
 interface TaskStatus {
   id: string;
@@ -22,28 +22,30 @@ export const AIGeneration: React.FC = () => {
     setError('');
 
     try {
-      const { id } = await withLoading(apiClient.generateContent<{ id: string }>({ prompt }));
-      setTask({ id, status: 'pending' });
+      await withLoading(async () => {
+        const { id } = await apiClient.generateContent<{ id: string }>({ prompt });
+        setTask({ id, status: 'pending' });
 
-      const pollTask = async () => {
-        try {
-          const status = await withLoading(apiClient.getTaskStatus<AITaskResponse>(id));
-          setTask(status);
+        const pollTask = async () => {
+          try {
+            const status = await apiClient.getTaskStatus<AITaskResponse>(id);
+            setTask(status);
 
-          if (status.status === 'processing') {
-            setTimeout(pollTask, 1000);
+            if (status.status === 'processing') {
+              setTimeout(pollTask, 1000);
+            }
+          } catch (err) {
+            console.error('Polling error:', err);
+            setTask((prev) => ({
+              ...prev!,
+              status: 'failed',
+              error: 'Failed to check status',
+            }));
           }
-        } catch (err) {
-          console.error('Polling error:', err);
-          setTask((prev) => ({
-            ...prev!,
-            status: 'failed',
-            error: 'Failed to check status',
-          }));
-        }
-      };
+        };
 
-      pollTask();
+        pollTask();
+      });
     } catch (err) {
       setError('Failed to start generation');
       console.error(err);

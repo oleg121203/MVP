@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type ErrorContextType = {
-  error: string | null;
-  setError: (error: string | null) => void;
-  clearError: () => void;
+  errors: string[];
+  setError: (error: string) => void;
+  clearErrors: () => void;
 };
 
 const ErrorContext = createContext<ErrorContextType | undefined>(undefined);
@@ -13,12 +13,13 @@ interface ErrorProviderProps {
 }
 
 export const ErrorProvider: React.FC<ErrorProviderProps> = ({ children }) => {
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const clearError = () => setError(null);
+  const setError = (error: string) => setErrors(prev => [...prev, error]);
+  const clearErrors = () => setErrors([]);
 
   return (
-    <ErrorContext.Provider value={{ error, setError, clearError }}>
+    <ErrorContext.Provider value={{ errors, setError, clearErrors }}>
       {children}
     </ErrorContext.Provider>
   );
