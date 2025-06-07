@@ -1,0 +1,34 @@
+# Development Dockerfile for backend
+FROM python:3.9-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH="/app"
+
+# Create a non-root user
+RUN useradd -m appuser
+
+# Set working directory and permissions
+WORKDIR /app
+RUN chown appuser:appuser /app
+
+# Copy requirements and install dependencies
+COPY --chown=appuser:appuser requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY --chown=appuser:appuser . .
+
+# Switch to non-root user
+USER appuser
+
+# Expose port
+EXPOSE 8000
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD wget -qO- http://localhost:8000/health || exit 1
+
+# Command to run the application with auto-reload
+CMD ["python", "src/fastapi_app/main.py", "--reload"]

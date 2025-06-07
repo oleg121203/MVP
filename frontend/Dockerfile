@@ -1,19 +1,31 @@
 # Build stage
-FROM node:16.14.2-alpine AS builder
+FROM node:18-alpine AS builder
+
 WORKDIR /app
+
+# Install dependencies
 COPY package*.json ./
-RUN npm install --force
-RUN npm install typescript@5.0.0 --save-exact && \
-    npm install ajv@8.11.2 ajv-keywords@5.1.0 --save-exact && \
-    npm install react-scripts@5.0.1 --save-exact --legacy-peer-deps
+RUN npm install --legacy-peer-deps && \
+    npm install typescript@5.0.0 ajv@8.11.2 ajv-keywords@5.1.0 react-scripts@5.0.1 --save-exact --legacy-peer-deps
+
+# Copy and build application
 COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:16.14.2-alpine
+FROM node:18-alpine
+
+# Install serve for static file serving
+RUN npm install -g serve@14.2.1
+
+# Use existing node user for security
+USER node
+
 WORKDIR /app
-ENV NODE_ENV production
 COPY --from=builder /app/build ./build
-COPY --from=builder /app/node_modules ./node_modules
+
+# Expose port
 EXPOSE 3000
-CMD ["npm", "start"]
+
+# Command to serve the built app
+CMD ["serve", "-s", "build", "-l", "3000"]

@@ -2,6 +2,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
+  fallback?: ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -19,22 +20,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-
-    // In a real app, you would send this to an error tracking service
-    if (process.env.NODE_ENV === 'production') {
-      // Error tracking service integration would go here
-    }
+    console.error('Error caught by ErrorBoundary:', error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      return (
-        <div className="p-4 bg-red-50 text-red-600 border border-red-200 rounded">
-          <h2 className="font-bold">Something went wrong.</h2>
-          <p>Our team has been notified. Please try again later.</p>
-        </div>
-      );
+      return this.props.fallback || <h1>Something went wrong.</h1>;
     }
 
     return this.props.children;

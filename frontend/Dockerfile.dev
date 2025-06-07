@@ -1,4 +1,8 @@
 FROM node:18-alpine
+
+# Use existing node user for security
+USER node
+
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
