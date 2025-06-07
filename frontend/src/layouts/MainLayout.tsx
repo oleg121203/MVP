@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { Box, Flex, VStack, HStack, Text, IconButton, useDisclosure, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
+import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -25,11 +26,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title = 'VentAI' }) =
             />
             <Text fontSize="xl" fontWeight="bold">{title}</Text>
           </HStack>
-          <HStack spacing={4} display={{ base: 'none', md: 'flex' }}>
-            <Link to="/">Home</Link>
-            <Link to="/calculators">Calculators</Link>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/automation">Automation</Link>
+          <HStack spacing={4}>
+            <HStack spacing={4} display={{ base: 'none', md: 'flex' }}>
+              <Link to="/">Home</Link>
+              <Link to="/calculators">Calculators</Link>
+              <Link to="/dashboard">Dashboard</Link>
+              <Link to="/automation">Automation</Link>
+            </HStack>
+            <LanguageSwitcher />
           </HStack>
         </HStack>
       </Box>

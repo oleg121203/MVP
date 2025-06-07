@@ -1,11 +1,7 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react';
 
-interface CustomButtonProps extends ButtonProps {
-  children: ReactNode;
-}
-
-const Button: React.FC<CustomButtonProps> = ({ children, ...props }) => {
+const Button: React.FC<ButtonProps> = ({ children, ...props }) => {
   return (
     <ChakraButton {...props}>
       {children}
