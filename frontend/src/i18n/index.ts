@@ -1,7 +1,9 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import en from './locales/en.json';
-import uk from './locales/uk.json';
+
+// Temporarily commented out to resolve module not found errors
+// import en from './locales/en.json';
+// import uk from './locales/uk.json';
 
 // Type declarations for translation files
 declare module "./locales/en.json" {
