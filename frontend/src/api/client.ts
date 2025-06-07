@@ -48,7 +48,7 @@ export class VentApiClient {
     this.loading = loading;
   }
 
-  async request<T, D = any>(
+  async request<T, D = unknown>(
     method: string,
     endpoint: string,
     data?: D,
@@ -115,7 +115,7 @@ export class VentApiClient {
   }
 
   // AI methods
-  async generateContent<T = any>(data: { prompt: string }): Promise<T> {
+  async generateContent<T = unknown>(data: { prompt: string }): Promise<T> {
     return this.request<T>('POST', '/api/ai/generate', data);
   }
 

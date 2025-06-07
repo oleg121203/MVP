@@ -36,7 +36,7 @@ export const getAIDashboardData = async () => {
   return response.data;
 };
 
-export const loginUser = async (credentials: { username: string; password: string }) => {
+export const loginUser = async (credentials: { username: string; password: string }): Promise<{ access_token: string }> => {
   const response = await djangoApiClient.post('/auth/login/', credentials);
   return response.data;
 };

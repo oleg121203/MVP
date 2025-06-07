@@ -15,7 +15,7 @@ const AIDashboard: React.FC = () => {
   const [generationResult, setGenerationResult] = useState<string | null>(null);
   const [isGenerationLoading, setIsGenerationLoading] = useState(false);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
-  const [projectInsights, setProjectInsights] = useState<any>(null);
+  const [projectInsights, setProjectInsights] = useState<unknown>(null);
 
   // Simulated project data
   const projects = [
@@ -70,7 +70,7 @@ const AIDashboard: React.FC = () => {
   // Automated Project Analysis Section
   const ProjectAnalysis = () => {
     const [selectedProject, setSelectedProject] = useState<string | null>(null);
-    const [analysisResults, setAnalysisResults] = useState<any>(null);
+    const [analysisResults, setAnalysisResults] = useState<unknown>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const toast = useToast();

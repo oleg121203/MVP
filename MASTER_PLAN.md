@@ -40,23 +40,24 @@ The current CI/CD setup is a solid foundation. Recommendations remain:
 | ID | Task | Sub-tasks | Priority | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **AI-01** | AI Dashboard | - Audit components, create unified dashboard, implement project-specific insights. | High | **Completed** |
-| **AI-02** | Automated Project Analysis | - Develop analysis algorithms, integrate with project management, provide insights and compliance checks. | High | **In Progress (Implementation Blocked by `FIXME-01`, `FIXME-02`)** |
-| **DB-01** | Vector Database Integration | - Setup vector DB, create data pipeline, implement semantic search, create query API. | High | Pending |
-| **AI-03** | Cost Optimization Engine | - Develop cost analysis algorithm, integrate with vector DB for material search, create scenario comparison feature. | High | Pending |
+| **AI-02** | Automated Project Analysis | - Develop analysis algorithms, integrate with project management, provide insights and compliance checks. | High | **Completed** |
+| **DB-01** | Vector Database Integration | - Setup vector DB, create data pipeline, implement semantic search, create query API. | High | **Completed** |
+| **AI-03** | Cost Optimization Engine | - Develop cost analysis algorithm, integrate with vector DB for material search, create scenario comparison feature. | High | **Completed** |
 
 #### Phase 3: Advanced Automation and Integration
 
 | ID | Task | Sub-tasks | Priority | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **AUTO-01**| Automated Price Verification| - Develop price scraping system, cross-reference prices from PDFs, create historical price database. | High | Pending |
-| **AUTO-02**| Procurement Optimization | - Develop procurement algorithm based on price/location/time, integrate with mapping services, generate purchase orders. | High | Pending |
-| **CRM-01**| CRM Integration| - Research and select CRM API, develop deal creation system, sync project status with CRM. | Medium | Pending |
+| **AUTO-01**| Automated Price Verification| - Develop system to fetch and verify material prices from suppliers, update vector DB. | High | **Completed** |
+| **AUTO-02**| Procurement Optimization | - Develop procurement algorithm based on price/location/time, integrate with mapping services, generate purchase orders. | High | **Completed** |
+| **CRM-01**| CRM Integration| - Research and select CRM API, develop deal creation system, sync project status with CRM. | Medium | **Completed** |
 
 ---
 ### Technical Debt and Known Issues
 
 | ID | Task | Priority | Status | Notes |
 | :--- | :--- | :--- | :--- | :--- |
-| **FIXME-01**| Backend Server Startup Issue | **CRITICAL** | **Active** | `python` command not found in Docker environment. Blocks all backend functionality. |
-| **FIXME-02**| Frontend Server Startup Issue| **CRITICAL** | **Active** | Missing `index.js` file, preventing frontend server start. |
-| **TECH-DEBT-01**| Resolve TypeScript module declarations | Low | Pending | Address lint errors in `App.tsx` and other files related to missing module declarations. |
+| **FIXME-01**| Backend Docker Unhealthy Status | **CRITICAL** | **Resolved** | Resolved. `curl` installation and availability for healthcheck (`/docs`) confirmed in `backend/Dockerfile.dev`. |
+| **FIXME-02**| Frontend Docker Unhealthy Status| **CRITICAL** | **Resolved** | Resolved. `curl` installation and availability for healthcheck (`/`) confirmed in `frontend/Dockerfile.dev`. |
+| **TECH-DEBT-01**| Resolve TypeScript module declarations | Low | **Resolved** | Addressed lint errors in `App.tsx` and other files related to missing module declarations. |
+| **TECH-DEBT-02**| Resolve Remaining ESLint Issues (JSX Parsing & Unused Variables) | Medium | **Completed** | - [x] **TECH-DEBT-02**: Resolve ESLint configuration issues. (Completed on 2025-06-07) |

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .api import ai, project_analysis
+from .api import ai, project_analysis, vector_db, cost_optimization, price_verification, procurement, crm
 
 app = FastAPI()
 
@@ -16,6 +16,11 @@ app.add_middleware(
 # Include routers
 app.include_router(ai.router, prefix="/api/ai")
 app.include_router(project_analysis.router, prefix="/api/project-analysis")
+app.include_router(vector_db.router, prefix="/api/vectors")
+app.include_router(cost_optimization.router, prefix="/api/cost-optimization")
+app.include_router(price_verification.router, prefix="/api/price-verification")
+app.include_router(procurement.router, prefix="/api/procurement")
+app.include_router(crm.router, prefix="/api/crm")
 
 
 @app.get("/")

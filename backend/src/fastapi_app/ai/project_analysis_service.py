@@ -2,6 +2,9 @@ from typing import Dict, List, Optional
 import pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor
 from joblib import load, dump
+import json
+import os
+from pathlib import Path
 
 class ProjectAnalysisService:
     def __init__(self):
@@ -16,11 +19,25 @@ class ProjectAnalysisService:
             return GradientBoostingRegressor(n_estimators=100)
 
     def _load_compliance_rules(self) -> Dict:
-        # Placeholder for loading compliance rules from a database or file
+        """
+        Load compliance rules from a configuration file or environment variables.
+        
+        Returns:
+            Dict: Compliance rules dictionary
+        """
+        config_file = Path('src/fastapi_app/config/compliance_rules.json')
+        if config_file.exists():
+            try:
+                with open(config_file, 'r') as f:
+                    return json.load(f)
+            except Exception as e:
+                print(f"Error loading compliance rules from file: {e}")
+        
+        # Fallback to environment variables or default values
         return {
-            "max_energy_consumption": 1000,  # kWh per sqm
-            "min_ventilation_rate": 0.35,    # ACH (Air Changes per Hour)
-            "max_noise_level": 45,           # dB
+            "max_energy_consumption": float(os.getenv('MAX_ENERGY_CONSUMPTION', 1000)),  # kWh per sqm
+            "min_ventilation_rate": float(os.getenv('MIN_VENTILATION_RATE', 0.35)),    # ACH (Air Changes per Hour)
+            "max_noise_level": float(os.getenv('MAX_NOISE_LEVEL', 45)),                # dB
         }
 
     def analyze_project(self, project_data: Dict) -> Dict:
