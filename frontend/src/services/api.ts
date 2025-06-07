@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { AuthResponse } from '../types/api';
 
 // Base URLs for backend services
 const FASTAPI_BASE_URL = 'http://localhost:5000/api/ai';
@@ -36,7 +37,7 @@ export const getAIDashboardData = async () => {
   return response.data;
 };
 
-export const loginUser = async (credentials: { username: string; password: string }): Promise<{ access_token: string }> => {
+export const loginUser = async (credentials: { username: string; password: string }): Promise<AuthResponse> => {
   const response = await djangoApiClient.post('/auth/login/', credentials);
-  return response.data;
+  return response.data as AuthResponse;
 };

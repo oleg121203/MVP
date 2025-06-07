@@ -1,8 +1,21 @@
-// Removed Next.js specific import
+// API route for chat functionality
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+interface ChatRequest {
+  message: string;
+}
+
+interface ChatResponse {
+  reply: string;
+}
+
+interface ErrorResponse {
+  message: string;
+}
 
 export default async function handler(
-  req: unknown,
-  res: unknown
+  req: NextApiRequest,
+  res: NextApiResponse<ChatResponse | ErrorResponse>
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
@@ -10,7 +23,7 @@ export default async function handler(
 
   try {
     // TODO: Connect to actual AI service
-    const { message } = req.body;
+    const { message } = req.body as ChatRequest;
     
     // Mock response for now
     const reply = `I received your question about: "${message}". This will connect to the AI backend soon.`;

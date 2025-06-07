@@ -4,18 +4,19 @@ import { useTranslation } from 'react-i18next';
 import { FaComment, FaMagic, FaChartLine, FaUser, FaRobot, FaPaperPlane } from 'react-icons/fa';
 import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
+import { AnalysisResults, ProjectInsights, ChatMessage } from '../types/api';
 
 const AIDashboard: React.FC = () => {
   const { t } = useTranslation();
   const toast = useToast();
-  const [chatMessages, setChatMessages] = useState<Array<{ role: string, content: string }>>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [isChatLoading, setIsChatLoading] = useState(false);
   const [promptInput, setPromptInput] = useState('');
   const [generationResult, setGenerationResult] = useState<string | null>(null);
   const [isGenerationLoading, setIsGenerationLoading] = useState(false);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
-  const [projectInsights, setProjectInsights] = useState<unknown>(null);
+  const [projectInsights, setProjectInsights] = useState<ProjectInsights | null>(null);
 
   // Simulated project data
   const projects = [
@@ -26,7 +27,7 @@ const AIDashboard: React.FC = () => {
 
   const handleChatSend = async () => {
     if (!chatInput.trim()) return;
-    const userMessage = { role: 'user', content: chatInput };
+    const userMessage: ChatMessage = { role: 'user', content: chatInput };
     setChatMessages(prev => [...prev, userMessage]);
     setChatInput('');
     setIsChatLoading(true);
@@ -35,7 +36,7 @@ const AIDashboard: React.FC = () => {
     setTimeout(() => {
       setChatMessages(prev => [
         ...prev,
-        { role: 'ai', content: `Response to: ${userMessage.content}` },
+        { role: 'assistant', content: `Response to: ${userMessage.content}` },
       ]);
       setIsChatLoading(false);
     }, 1000);
@@ -70,7 +71,7 @@ const AIDashboard: React.FC = () => {
   // Automated Project Analysis Section
   const ProjectAnalysis = () => {
     const [selectedProject, setSelectedProject] = useState<string | null>(null);
-    const [analysisResults, setAnalysisResults] = useState<unknown>(null);
+    const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const toast = useToast();

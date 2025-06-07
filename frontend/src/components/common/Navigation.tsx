@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Flex, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Link as ChakraLink, Text, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Link as ChakraLink, Text, useBreakpointValue, Icon } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { FaHome, FaCalculator, FaFolder, FaRobot, FaCog } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { IconType } from 'react-icons';
 
 const Navigation: React.FC = () => {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ const Navigation: React.FC = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   // Navigation items
-  const navItems = [
+  const navItems: Array<{ to: string; icon: IconType; label: string }> = [
     { to: '/', icon: FaHome, label: t('nav.home') },
     { to: '/calculators', icon: FaCalculator, label: t('nav.calculators') },
     { to: '/dashboard', icon: FaHome, label: t('nav.dashboard') },
@@ -32,7 +33,7 @@ const Navigation: React.FC = () => {
       {navItems.map((item) => (
         <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
           <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
-            <item.icon style={{ marginRight: '0.75rem' }} />
+            <Icon as={item.icon} mr={3} />
             <Text>{item.label}</Text>
           </ChakraLink>
         </Link>
@@ -69,7 +70,7 @@ const Navigation: React.FC = () => {
           {navItems.map((item) => (
             <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
               <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
-                <item.icon style={{ marginRight: '0.5rem' }} />
+                <Icon as={item.icon} mr={2} />
                 <Text>{item.label}</Text>
               </ChakraLink>
             </Link>
