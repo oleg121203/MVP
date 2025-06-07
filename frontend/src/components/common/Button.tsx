@@ -3,7 +3,7 @@ import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react';
 
 const Button: React.FC<ButtonProps> = ({ children, ...props }) => {
   return (
-    <ChakraButton {...props}>
+    <ChakraButton {...props as any}>
       {children}
     </ChakraButton>
   );
