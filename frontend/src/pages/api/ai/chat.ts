@@ -1,8 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+// Removed Next.js specific import
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+  req: any,
+  res: any
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
