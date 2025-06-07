@@ -1,11 +1,38 @@
+# Development Dockerfile for frontend
 FROM node:18-alpine
 
-# Use existing node user for security
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json (or yarn.lock if you use Yarn)
+# This allows Docker to cache the npm install step if these files haven't changed
+COPY package*.json ./
+
+# Install dependencies as root first for permissions
+# Using --legacy-peer-deps as seen in your production Dockerfile
+RUN npm install --legacy-peer-deps
+# Install specific versions as noted in production Dockerfile for consistency
+RUN npm install typescript@5.0.4 ajv@8.11.2 ajv-keywords@5.1.0 react-scripts@5.0.1 --save-exact --legacy-peer-deps
+
+# Install curl for healthcheck
+RUN apk add --no-cache curl && \
+    echo "--- Dockerfile (frontend): which curl ---" && \
+    which curl && \
+    echo "--- Dockerfile (frontend): ls -l /usr/bin/curl ---" && \
+    ls -l /usr/bin/curl && \
+    echo "--- Dockerfile (frontend): curl version ---" && \
+    /usr/bin/curl --version
+
+# Application code will be mounted from the host via docker-compose.dev.yml
+# So, no COPY . . for src code here.
+
+# Switch to non-root user 'node' (standard in node images)
+# Ensure /app is owned by node or writable if npm needs to write post-install scripts as node user later
+# For now, this setup assumes npm start doesn't need to write to node_modules extensively.
 USER node
 
-WORKDIR /app
-COPY package*.json ./
-RUN npm install --legacy-peer-deps
-COPY . .
+# Expose the port React development server will run on
 EXPOSE 3000
-CMD ["npm", "start", "--", "--port", "3000"]
+
+# Default command (will be overridden by docker-compose.dev.yml if specified there)
+CMD ["npm", "start"]

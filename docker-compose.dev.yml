@@ -57,7 +57,8 @@ services:
       - ./backend:/app
     ports:
       - "8000:8000"
-    command: ["sh", "-c", "pip install -r requirements.txt && uvicorn src.fastapi_app.main:app --host 0.0.0.0 --port 8000 --reload"]
+    user: appuser # Ensure service runs as the non-root user defined in Dockerfile.dev
+    command: ["sh", "-c", "python -m pip install -r requirements.txt && python -m uvicorn src.fastapi_app.main:app --host 0.0.0.0 --port 8000 --reload"]
     depends_on:
       db:
         condition: service_healthy

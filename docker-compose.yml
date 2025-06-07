@@ -45,15 +45,18 @@ services:
     image: ventai-backend:latest
     container_name: ventai-backend
     restart: unless-stopped
+    working_dir: /app
+    user: appuser
     environment:
       DATABASE_URL: postgresql://ventai:ventai123@postgres:5432/ventai_db
       REDIS_URL: redis://redis:6379/0
       ENVIRONMENT: production
+      # PYTHONDONTWRITEBYTECODE, PYTHONUNBUFFERED, and PATH are set in Dockerfile
     volumes:
-      - ./backend:/app
+      - ./backend:/app # For development; consider removing for pure production image-based deployments
     ports:
       - "8000:8000"
-    command: ["/opt/venv/bin/python", "src/fastapi_app/main.py"]
+    command: ["python", "-m", "uvicorn", "src.fastapi_app.main:app", "--host", "0.0.0.0", "--port", "8000"]
     depends_on:
       postgres:
         condition: service_healthy
