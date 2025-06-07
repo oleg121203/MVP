@@ -1,6 +1,6 @@
 services:
   # PostgreSQL Database
-  postgres:
+  db:
     image: postgres:15-alpine
     container_name: ventai-postgres-dev
     restart: unless-stopped
@@ -40,25 +40,26 @@ services:
   # Backend for development (with auto-reload)
   backend:
     build:
-      context: .
-      dockerfile: vent-ai-backend/Dockerfile.dev
+      context: ./backend
+      dockerfile: Dockerfile.dev
     container_name: ventai-backend-dev
-    restart: unless-stopped
-    working_dir: /app/vent-ai-backend
+    image: ventai-backend-dev:latest
+    working_dir: /app
     environment:
-      - DATABASE_URL=postgresql://ventai_dev:ventai_dev_password@postgres:5432/ventai_dev
+      - DATABASE_URL=postgresql://ventai_dev:ventai_dev_password@db:5432/ventai_dev
       - SECRET_KEY=dev-secret-key-change-in-production
       - ENCRYPTION_KEY=P-K5ljoDHJvr7AU-P-gsY3wtTuXAP-3PyuR7nfQsPE8=
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - REDIS_URL=redis://redis:6379/0
       - ENVIRONMENT=development
     volumes:
-      - .:/app
-      - /app/vent-ai-backend/__pycache__
+      - ./backend:/app
+      - /app/__pycache__
     ports:
-      - "8001:8000"
+      - "8000:8000"
+    command: ["./venv/bin/python", "src/fastapi_app/main.py", "--reload"]
     depends_on:
-      postgres:
+      db:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -73,27 +74,27 @@ services:
   # Frontend development server
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend.dev
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     container_name: ventai-frontend-dev
-    restart: unless-stopped
+    image: ventai-frontend-dev:latest
     working_dir: /app
     environment:
-      - REACT_APP_API_URL=http://host.docker.internal:8001
+      - REACT_APP_API_URL=http://host.docker.internal:8000
       - CHOKIDAR_USEPOLLING=true
       - NODE_ENV=development
     volumes:
-      - .:/app
+      - ./frontend:/app
       - /app/node_modules
-      - /app/vent-ai-backend
     ports:
-      - "3000:3000"
+      - "3001:3001"
+    command: ["npm", "run", "dev"]
     depends_on:
       - backend
     networks:
       - ventai-dev-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://localhost:3001"]
       interval: 30s
       timeout: 10s
       retries: 3

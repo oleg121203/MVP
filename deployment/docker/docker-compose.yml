@@ -1,7 +1,7 @@
 
 services:
   # PostgreSQL Database
-  postgres:
+  db:
     image: postgres:15-alpine
     container_name: ventai-postgres
     restart: unless-stopped
@@ -44,14 +44,15 @@ services:
   # Vent.AI Backend API
   backend:
     build:
-      context: ./vent-ai-backend
+      context: ./backend
       dockerfile: Dockerfile
+    image: ventai-backend:latest
     container_name: ventai-backend
     restart: unless-stopped
     env_file:
-      - ../.env.production
+      - ../../.env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-ventai_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ventai_db}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-ventai_user}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-ventai_db}
       - SECRET_KEY=${SECRET_KEY}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
@@ -60,11 +61,12 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - ENVIRONMENT=production
     volumes:
-      - ./vent-ai-backend/logs:/app/logs
+      - ./backend/logs:/app/logs
     ports:
       - "8000:8000"
+    command: ["./venv/bin/python", "src/fastapi_app/main.py"]
     depends_on:
-      postgres:
+      db:
         condition: service_healthy
       redis:
         condition: service_healthy

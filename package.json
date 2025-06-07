@@ -10,8 +10,8 @@
   "scripts": {
     "install:all": "npm install && cd frontend && npm install && cd ../backend && venv/bin/pip install -r requirements.txt",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "dev:frontend": "cd frontend && PORT=3002 npm start",
-    "dev:backend": "cd backend && ./venv/bin/python src/main.py",
+    "dev:frontend": "cd frontend && PORT=3001 npm start",
+    "dev:backend": "cd backend && ./venv/bin/python src/fastapi_app/main.py",
     "build": "cd frontend && npm run build",
     "test": "npm run test:frontend && npm run test:backend",
     "test:frontend": "cd frontend && npm test",
@@ -19,8 +19,12 @@
     "docker:dev": "docker-compose -f deployment/docker/docker-compose.dev.yml up",
     "docker:prod": "docker-compose -f deployment/docker/docker-compose.prod.yml up -d",
     "setup": "../.workspace/workflow-manager.sh setup complete",
-    "lint:backend": "cd backend/src && flake8 . && black --check . && isort --check .",
-    "format:backend": "cd backend/src && black . && isort ."
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && venv/bin/python -m flake8 src && venv/bin/python -m black --check src && venv/bin/python -m isort --check src",
+    "format": "npm run format:frontend && npm run format:backend",
+    "format:frontend": "cd frontend && npm run format",
+    "format:backend": "cd backend/src && venv/bin/python -m black . && venv/bin/python -m isort ."
   },
   "keywords": [
     "hvac",
