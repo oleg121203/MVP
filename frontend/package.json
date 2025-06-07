@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@heroicons/react": "^2.2.0",
-    "@react-three/drei": "^10.1.2",
-    "@react-three/fiber": "^9.1.2",
     "ajv": "8.11.2",
     "ajv-keywords": "5.1.0",
     "axios": "^1.6.7",
@@ -56,6 +55,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
+    "@react-three/drei": "^10.1.2",
+    "@react-three/fiber": "^9.1.2",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
     "@testing-library/jest-dom": "^6.6.3",

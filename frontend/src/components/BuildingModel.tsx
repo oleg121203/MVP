@@ -8,7 +8,7 @@ export default function BuildingModel(props: any) {
   const group = useRef<Group>(null!);
   
   // Load building model
-  const { nodes, materials } = useGLTF('/models/building.glb');
+  const { nodes, materials } = useGLTF('/models/building.glb') as any;
   
   // Rotate model slowly
   useFrame(() => {
