@@ -6,6 +6,9 @@ import { ErrorNotifications } from './components/ErrorNotifications';
 import { LoadingIndicator } from './components/LoadingIndicator';
 import MainLayout from './layouts/MainLayout';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import CalculatorsPage from './pages/CalculatorsPage';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -13,6 +16,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={
+          <MainLayout>
+            <HomePage />
+          </MainLayout>
+        } />
+        <Route path="/calculators" element={
+          <MainLayout>
+            <CalculatorsPage />
+          </MainLayout>
+        } />
+        <Route path="/dashboard" element={
+          <MainLayout>
+            <DashboardPage />
+          </MainLayout>
+        } />
         <Route path="*" element={
           <MainLayout>
             <LoadingIndicator />
