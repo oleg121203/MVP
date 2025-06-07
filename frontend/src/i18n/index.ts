@@ -19,8 +19,26 @@ i18n
   .use(initReactI18next)
   .init({
     resources: {
-      en: { translation: en },
-      uk: { translation: uk },
+      en: {
+        translation: {
+          welcome: "Welcome to VentAI",
+          home: "Home",
+          calculators: "Calculators",
+          dashboard: "Dashboard",
+          automation: "Automation",
+          language: "Language"
+        }
+      },
+      uk: {
+        translation: {
+          welcome: "Ласкаво просимо до VentAI",
+          home: "Головна",
+          calculators: "Калькулятори",
+          dashboard: "Панель управління",
+          automation: "Автоматизація",
+          language: "Мова"
+        }
+      }
     },
     lng: 'en', // Default language
     fallbackLng: 'en',
