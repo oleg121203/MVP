@@ -16,6 +16,7 @@ app.add_middleware(
 # Include routers
 app.include_router(ai.router, prefix="/api/ai")
 
+
 @app.get("/")
 async def root():
     return {"message": "VentAI Backend Service"}

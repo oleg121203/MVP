@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from rest_framework import serializers
 
-from .models import UserProfile
 
 
 class RegisterSerializer(serializers.ModelSerializer):

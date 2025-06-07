@@ -1,14 +1,12 @@
 import secrets
 
 from django.conf import settings
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.shortcuts import render
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .permissions import IsAdminOrReadOnly
 from .serializers import RegisterSerializer
 
 # Create your views here.
