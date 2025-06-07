@@ -2,6 +2,7 @@
 FROM node:16.14.2-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
+RUN npm install --force
 RUN npm install typescript@5.0.0 --save-exact && \
     npm install ajv@8.11.2 ajv-keywords@5.1.0 --save-exact && \
     npm install react-scripts@5.0.1 --save-exact --legacy-peer-deps
