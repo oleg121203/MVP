@@ -16,21 +16,31 @@ class VectorDBService:
         self.dimension = 384  # Dimension for all-MiniLM-L6-v2 model
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
         self.index = self._initialize_index()
+        self.pinecone_available = self.index is not None
 
     def _initialize_index(self):
         """
         Initialize Pinecone index if it doesn't exist.
+        Returns None if Pinecone is not properly configured.
         """
-        pinecone.init(api_key=self.api_key, environment=self.environment)
-        
-        if self.index_name not in pinecone.list_indexes():
-            pinecone.create_index(
-                name=self.index_name,
-                dimension=self.dimension,
-                metric='cosine'
-            )
-        
-        return pinecone.Index(self.index_name)
+        if not self.api_key:
+            print("Warning: PINECONE_API_KEY not found. Vector DB operations will be disabled.")
+            return None
+            
+        try:
+            pinecone.init(api_key=self.api_key, environment=self.environment)
+            
+            if self.index_name not in pinecone.list_indexes():
+                pinecone.create_index(
+                    name=self.index_name,
+                    dimension=self.dimension,
+                    metric='cosine'
+                )
+            
+            return pinecone.Index(self.index_name)
+        except Exception as e:
+            print(f"Warning: Failed to initialize Pinecone: {e}. Vector DB operations will be disabled.")
+            return None
 
     def generate_embedding(self, text: str) -> List[float]:
         """
@@ -53,6 +63,9 @@ class VectorDBService:
             vector: Vector embedding.
             metadata: Metadata associated with the vector.
         """
+        if not self.pinecone_available:
+            print("Warning: Pinecone not available. Vector upsert operation skipped.")
+            return
         self.index.upsert([(vector_id, vector, metadata)])
 
     def batch_upsert_vectors(self, vectors_data: List[Dict]) -> None:
@@ -62,6 +75,9 @@ class VectorDBService:
         Args:
             vectors_data: List of dictionaries with id, vector, and metadata.
         """
+        if not self.pinecone_available:
+            print("Warning: Pinecone not available. Batch vector upsert operation skipped.")
+            return
         vectors = [(data['id'], data['vector'], data['metadata']) for data in vectors_data]
         self.index.upsert(vectors)
 
@@ -77,6 +93,9 @@ class VectorDBService:
         Returns:
             List[Dict]: List of matching results with metadata and scores.
         """
+        if not self.pinecone_available:
+            print("Warning: Pinecone not available. Returning empty search results.")
+            return []
         query_vector = self.generate_embedding(query)
         results = self.index.query(query_vector, top_k=top_k, include_metadata=True, filter=filter)
         return [{'id': match['id'], 'score': match['score'], 'metadata': match['metadata']} for match in results['matches']]
@@ -90,6 +109,9 @@ class VectorDBService:
             vector: New vector embedding (optional).
             metadata: New metadata (optional).
         """
+        if not self.pinecone_available:
+            print("Warning: Pinecone not available. Vector update operation skipped.")
+            return
         update_data = {}
         if vector:
             update_data['values'] = vector
@@ -105,4 +127,7 @@ class VectorDBService:
         Args:
             vector_id: ID of the vector to delete.
         """
+        if not self.pinecone_available:
+            print("Warning: Pinecone not available. Vector delete operation skipped.")
+            return
         self.index.delete(ids=[vector_id])

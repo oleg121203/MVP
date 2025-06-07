@@ -6,7 +6,8 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100
+    PIP_DEFAULT_TIMEOUT=100 \
+    PYTHONPATH=/app
 
 # Create a non-root user and group, ensure home directory is created with -m
 RUN groupadd -g 1001 appgroup && useradd --no-log-init -r -m -g appgroup -u 1001 appuser
@@ -20,6 +21,9 @@ RUN chown -R appuser:appgroup /opt/venv
 
 # Set working directory (code will be mounted here)
 WORKDIR /app
+
+# Create directories for MCP server with proper ownership (as root before switching user)
+RUN mkdir -p /app/logs/mcp && chown -R appuser:appgroup /app
 
 # Install curl for healthcheck (as root)
 RUN apt-get update && \
@@ -45,6 +49,8 @@ RUN pip install -r /app/requirements.txt
 # Explicitly install pandas and scikit-learn as a safeguard
 RUN pip install pandas==2.2.2 scikit-learn==1.3.2
 
+# Install additional MCP dependencies for development
+RUN pip install asyncio-mqtt==0.16.1 websockets==12.0 aiofiles==24.1.0 httpx==0.25.2
 
 # Application code will be mounted via docker-compose.dev.yml
 # COPY --chown=appuser:appgroup . . # Not strictly needed if all code is volume mounted

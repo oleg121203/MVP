@@ -43,6 +43,13 @@ RUN pip install pandas==2.2.2 scikit-learn==1.3.2
 # This should come after dependency installation to optimize caching
 COPY . /app/
 
+# Copy MCP server from parent directory
+COPY ../mcp_server.py /app/mcp_server.py
+COPY ../mcp_ai_providers.py /app/mcp_ai_providers.py
+
+# Create MCP logs directory
+RUN mkdir -p /app/logs/mcp
+
 # Change ownership of the /app directory to the non-root user
 # This ensures the appuser can write to logs or other necessary files if needed
 RUN chown -R appuser:appgroup /app

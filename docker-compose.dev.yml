@@ -102,11 +102,72 @@ services:
       timeout: 10s
       retries: 3
 
+  # MCP Server for Claude 4 integration
+  mcp-server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: ventai-mcp-server-dev
+    image: ventai-mcp-server-dev:latest
+    restart: unless-stopped
+    working_dir: /app
+    environment:
+      # Database connection
+      DATABASE_URL: postgresql://ventai_dev:ventai_dev_password@db:5432/ventai_dev
+      REDIS_URL: redis://redis:6379/0
+      
+      # MCP specific
+      VENTAI_PROJECT_ROOT: /app
+      MCP_LOG_LEVEL: INFO
+      PYTHONPATH: /app/src
+      
+      # AI Providers
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-flash}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4-turbo-preview}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-3-sonnet-20240229}
+      
+      # VentAI specific
+      PINECONE_API_KEY: ${PINECONE_API_KEY}
+      PINECONE_ENVIRONMENT: ${PINECONE_ENVIRONMENT:-us-west1-gcp}
+      HUBSPOT_API_KEY: ${HUBSPOT_API_KEY}
+      LABOR_COST_PER_HOUR: ${LABOR_COST_PER_HOUR:-50.0}
+      ENERGY_COST_PER_KWH: ${ENERGY_COST_PER_KWH:-0.12}
+    volumes:
+      - ./backend:/app
+      - ./mcp_server.py:/app/mcp_server.py
+      - ./mcp_ai_providers.py:/app/mcp_ai_providers.py
+      - mcp_logs:/app/logs/mcp
+    ports:
+      - "8001:8001"  # MCP server port
+    user: appuser
+    command: ["python", "mcp_server.py"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    networks:
+      - ventai-dev-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s = socket.socket(); s.connect(('localhost', 8001)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 volumes:
   postgres_dev_data:
     name: ventai_postgres_dev_data
   frontend_node_modules:
     name: ventai_frontend_node_modules
+  mcp_logs:
+    name: ventai_mcp_logs
 
 networks:
   ventai-dev-network:
