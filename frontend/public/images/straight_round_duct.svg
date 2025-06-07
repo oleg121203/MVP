@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Round duct viewed from side -->
+  <rect x="10" y="30" width="180" height="40" fill="none" stroke="#333" stroke-width="2" rx="20" ry="20"/>
+
+  <!-- Dimension lines -->
+  <line x1="10" y1="15" x2="190" y2="15" stroke="#555" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="10" y1="15" x2="10" y2="30" stroke="#555" stroke-width="1"/>
+  <line x1="190" y1="15" x2="190" y2="30" stroke="#555" stroke-width="1"/>
+  <text x="100" y="12" font-family="Arial" font-size="10" text-anchor="middle">Length</text>
+
+  <!-- Diameter indicator -->
+  <line x1="200" y1="30" x2="200" y2="70" stroke="#555" stroke-width="1" stroke-dasharray="4"/>
+  <text x="210" y="50" font-family="Arial" font-size="10" text-anchor="middle" transform="rotate(90, 210, 50)">Diameter</text>
+
+  <!-- Flow direction -->
+  <path d="M100,85 L120,85 L115,80 M115,90 L120,85" fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="100" y="95" font-family="Arial" font-size="10" text-anchor="middle">Flow</text>
+</svg>

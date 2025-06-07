@@ -1,0 +1,97 @@
+/* Button.css - Reusable button component styles */
+
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Button variants */
+.ui-button-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.ui-button-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.ui-button-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.ui-button-secondary:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.ui-button-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.ui-button-danger:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.ui-button-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.ui-button-success:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+/* Button states */
+.ui-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Loading state */
+.ui-button-loading {
+  position: relative;
+}
+
+.ui-button-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Full width variant */
+.ui-button-full-width {
+  width: 100%;
+}
+
+/* Button sizes */
+.ui-button-small {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+}
+
+.ui-button-large {
+  padding: 0.8rem 1.8rem;
+  font-size: 1.125rem;
+}

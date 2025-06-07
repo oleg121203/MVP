@@ -1,0 +1,23 @@
+/* ThemedImage component styles */
+.themed-image {
+  transition: filter 0.3s ease;
+}
+
+/* Automatic image darkening for dark theme */
+.dark .themed-image {
+  filter: brightness(0.8) contrast(1.1);
+}
+
+/* Ensure images don't become too dark on hover in dark theme */
+.dark .themed-image:hover {
+  filter: brightness(0.85) contrast(1.05);
+}
+
+/* Preserve original brightness for images that should stay bright */
+.themed-image.preserve-brightness {
+  filter: none !important;
+}
+
+.dark .themed-image.preserve-brightness {
+  filter: none !important;
+}

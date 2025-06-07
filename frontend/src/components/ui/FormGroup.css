@@ -1,0 +1,46 @@
+.form-group {
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.required-indicator {
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+.help-text {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.error-message {
+  font-size: 0.8rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+}
+
+.has-error .form-control {
+  border-color: #ef4444;
+}
+
+/* Dark mode styles */
+.dark .form-label {
+  color: #e5e7eb;
+}
+
+.dark .help-text {
+  color: #9ca3af;
+}
+
+.dark .error-message {
+  color: #f87171;
+}

@@ -1,0 +1,19 @@
+{
+  "appTitle": "VentAI система вентиляції",
+  "calculateBtn": "Розрахувати продуктивність",
+  "darkMode": "Темний режим",
+  "airflow": "Повітряний потік",
+  "heatTransfer": "Теплопередача",
+  "pressureDrop": "Падіння тиску",
+  "hvacPerformanceCalculator": "Калькулятор продуктивності HVAC",
+  "airflowParameters": "Параметри повітряного потоку",
+  "airVelocity": "Швидкість повітря (м/с)",
+  "ductDiameter": "Діаметр каналу (м)",
+  "thermalParameters": "Теплові параметри",
+  "temperatureDiff": "Різниця температур (°C)",
+  "airDensity": "Густина повітря (кг/м³)",
+  "calculateSystemPerformance": "Розрахувати продуктивність",
+  "airflowRate": "Витрата повітря",
+  "error": "Помилка",
+  "results": "Результати"
+}

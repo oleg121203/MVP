@@ -1,0 +1,108 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ventai-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ventai_dev
+      POSTGRES_USER: ventai_dev
+      POSTGRES_PASSWORD: ventai_dev_password
+      LANG: en_US.utf8
+      LC_ALL: en_US.utf8
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - ventai-dev-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ventai_dev -d ventai_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis for development
+  redis:
+    image: redis:7-alpine
+    container_name: ventai-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    networks:
+      - ventai-dev-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Backend for development (with auto-reload)
+  backend:
+    build:
+      context: .
+      dockerfile: vent-ai-backend/Dockerfile.dev
+    container_name: ventai-backend-dev
+    restart: unless-stopped
+    working_dir: /app/vent-ai-backend
+    environment:
+      - DATABASE_URL=postgresql://ventai_dev:ventai_dev_password@postgres:5432/ventai_dev
+      - SECRET_KEY=dev-secret-key-change-in-production
+      - ENCRYPTION_KEY=P-K5ljoDHJvr7AU-P-gsY3wtTuXAP-3PyuR7nfQsPE8=
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=development
+    volumes:
+      - .:/app
+      - /app/vent-ai-backend/__pycache__
+    ports:
+      - "8001:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ventai-dev-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:8000/docs || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend development server
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend.dev
+    container_name: ventai-frontend-dev
+    restart: unless-stopped
+    working_dir: /app
+    environment:
+      - REACT_APP_API_URL=http://host.docker.internal:8001
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/vent-ai-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - ventai-dev-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_dev_data:
+    name: ventai_postgres_dev_data
+
+networks:
+  ventai-dev-network:
+    name: ventai-dev-network
+    driver: bridge

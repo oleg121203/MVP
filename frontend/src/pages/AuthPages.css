@@ -1,0 +1,54 @@
+/* Auth pages styling - minimal CSS for compatibility */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 1.25rem;
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.auth-button {
+  width: 100%;
+  cursor: pointer;
+}
+
+.auth-button:hover {
+  background-color: #3a7bc8;
+}
+
+.auth-button:disabled {
+  background-color: #a0c3e8;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #e74c3c;
+  margin-bottom: 16px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.auth-link {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.auth-link a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}

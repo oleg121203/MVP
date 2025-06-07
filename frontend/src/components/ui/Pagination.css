@@ -1,0 +1,114 @@
+/* Pagination Component Styles */
+
+.pagination-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
+.pagination-info {
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.pagination-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.pagination-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-button {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.pagination-button.page {
+  min-width: 2.5rem;
+}
+
+.pagination-button.first,
+.pagination-button.prev,
+.pagination-button.next,
+.pagination-button.last {
+  font-size: 1.25rem;
+}
+
+/* Active state */
+.pagination-item.active .pagination-button {
+  background-color: var(--primary-color, #4a6cf7);
+  color: white;
+  font-weight: 600;
+}
+
+/* Ellipsis */
+.pagination-ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  color: #666;
+  font-size: 1.25rem;
+}
+
+/* Disabled state */
+.pagination-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hover effects */
+.pagination-button:not([disabled]):hover {
+  background-color: var(--secondary-bg, #f0f0f0);
+}
+
+.pagination-item.active .pagination-button:hover {
+  background-color: var(--primary-hover, #3a5ce7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .pagination-list {
+    gap: 0.125rem;
+  }
+
+  .pagination-button {
+    min-width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+  }
+
+  .pagination-button.first,
+  .pagination-button.prev,
+  .pagination-button.next,
+  .pagination-button.last {
+    font-size: 1rem;
+  }
+
+  .pagination-ellipsis {
+    min-width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+}

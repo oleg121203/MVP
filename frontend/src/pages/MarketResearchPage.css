@@ -1,0 +1,527 @@
+.research-form {
+  margin: 2rem 0;
+  width: 100%;
+}
+
+/* Стилі для SearchBar в контексті сторінки досліджень ринку */
+.market-research-search {
+  width: 100%;
+}
+
+.market-research-search .search-input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.market-research-search .search-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 150px;
+}
+
+.market-research-search .search-button:disabled {
+  background-color: #a0cfff;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #d93025;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+
+.report-container {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Report Card Styles */
+.report-card {
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark .report-card {
+  background-color: #1f2937;
+  color: #f9fafb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.report-title {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #333;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+}
+
+.dark .report-title {
+  color: #f9fafb;
+  border-bottom-color: #374151;
+}
+
+/* Interactive Report Sections */
+.report-section {
+  margin-bottom: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dark .report-section {
+  border-color: #374151;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dark .section-header {
+  background-color: #374151;
+}
+
+.section-header:hover {
+  background-color: #f3f4f6;
+}
+
+.dark .section-header:hover {
+  background-color: #4b5563;
+}
+
+.section-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dark .section-header h4 {
+  color: #f9fafb;
+}
+
+.section-toggle {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.section-toggle.expanded {
+  transform: rotate(0deg);
+}
+
+.section-content {
+  padding: 1.25rem;
+  background-color: #fff;
+  border-top: 1px solid #e5e7eb;
+  animation: slideDown 0.3s ease-out;
+}
+
+.dark .section-content {
+  background-color: #1f2937;
+  border-top-color: #374151;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.overview-section,
+.price-analysis-section {
+  line-height: 1.6;
+}
+
+.recommendations-list {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.recommendation-item {
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.recommendation-item:last-child {
+  margin-bottom: 0;
+}
+
+.full-report-toggle {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.toggle-button {
+  font-size: 0.9rem;
+}
+
+.full-report-content {
+  margin-top: 1.25rem;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.full-report-content h4 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #4b5563;
+}
+
+.dark .full-report-content h4 {
+  color: #d1d5db;
+}
+
+.report-text {
+  white-space: pre-wrap; /* Allows long lines to wrap */
+  word-wrap: break-word;
+  background-color: #fff;
+  padding: 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.dark .report-text {
+  background-color: #111827;
+  color: #f9fafb;
+  border-color: #374151;
+}
+
+/* Price Data Card Styles */
+.price-data-card {
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark .price-data-card {
+  background-color: #1f2937;
+  color: #f9fafb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.price-table-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.price-table-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.dark .price-table-header h3 {
+  color: #f9fafb;
+}
+
+.price-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.filter-container {
+  flex: 1;
+  min-width: 200px;
+}
+
+.price-filter-input {
+  width: 100%;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.sort-label {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.dark .sort-label {
+  color: #d1d5db;
+}
+
+.sort-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sort-button {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.75rem;
+}
+
+/* Store price cell styling */
+.store-price-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.store-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  color: #4b5563;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.dark .store-link {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+.store-link:hover {
+  background-color: #3b82f6;
+  color: white;
+  transform: scale(1.1);
+}
+
+.dark .store-link:hover {
+  background-color: #4f46e5;
+}
+
+.link-icon {
+  font-size: 0.9rem;
+}
+
+.market-prices-table {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.prices-pagination {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* History Section Styles */
+.history-section {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark .history-section {
+  background-color: #1f2937;
+  color: #f9fafb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.history-section h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  color: #333;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+}
+
+.dark .history-section h3 {
+  color: #f9fafb;
+  border-bottom-color: #374151;
+}
+
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.dark .loading-spinner {
+  border-color: #374151;
+  border-top-color: #4f46e5;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.history-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.history-pagination {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dark .history-item {
+  background-color: #111827;
+  border-color: #374151;
+}
+
+.history-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-color: #3b82f6;
+}
+
+.dark .history-item:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border-color: #4f46e5;
+}
+
+.history-item.active {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.dark .history-item.active {
+  border-color: #4f46e5;
+  background-color: #1e293b;
+}
+
+.history-item-content {
+  flex: 1;
+}
+
+.history-item-name {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.dark .history-item-name {
+  color: #f9fafb;
+}
+
+.history-item-date {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.dark .history-item-date {
+  color: #9ca3af;
+}
+
+.history-item-arrow {
+  margin-left: 0.75rem;
+  color: #9ca3af;
+  transition: transform 0.2s ease;
+}
+
+.history-item:hover .history-item-arrow {
+  transform: translateX(3px);
+  color: #3b82f6;
+}
+
+.dark .history-item:hover .history-item-arrow {
+  color: #4f46e5;
+}
+
+.empty-history {
+  text-align: center;
+  padding: 2rem 0;
+  color: #6b7280;
+}
+
+.dark .empty-history {
+  color: #9ca3af;
+}
+
+.empty-history-hint {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .price-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-container {
+    width: 100%;
+  }
+
+  .sort-controls {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .history-list {
+    grid-template-columns: 1fr;
+  }
+}

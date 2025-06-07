@@ -1,0 +1,19 @@
+{
+  "appTitle": "VentAI HVAC System",
+  "calculateBtn": "Calculate Performance",
+  "darkMode": "Dark Mode",
+  "airflow": "Airflow",
+  "heatTransfer": "Heat Transfer",
+  "pressureDrop": "Pressure Drop",
+  "hvacPerformanceCalculator": "HVAC Performance Calculator",
+  "airflowParameters": "Airflow Parameters",
+  "airVelocity": "Air Velocity (m/s)",
+  "ductDiameter": "Duct Diameter (m)",
+  "thermalParameters": "Thermal Parameters",
+  "temperatureDiff": "Temperature Diff (°C)",
+  "airDensity": "Air Density (kg/m³)",
+  "calculateSystemPerformance": "Calculate System Performance",
+  "airflowRate": "Airflow Rate",
+  "error": "Error",
+  "results": "Results"
+}

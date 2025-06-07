@@ -1,0 +1,160 @@
+.duct-sizing-container {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e9ecef;
+}
+
+.duct-sizing-container h2 {
+  text-align: center;
+  color: #212529;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.input-section {
+  margin-bottom: 2rem;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-unit input {
+  flex-grow: 1;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  font-size: 1rem;
+  border-right: none;
+}
+
+.input-with-unit .unit {
+  background-color: #e9ecef;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  color: #495057;
+  font-weight: 500;
+  width: 50px;
+  text-align: center;
+}
+
+.input-group small {
+  display: block;
+  margin-top: 0.5rem;
+  color: #6c757d;
+}
+
+.calculate-btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.calculate-btn:hover {
+  background-color: #0069d9;
+}
+
+.results-section {
+  margin-top: 2rem;
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+}
+
+.result-group {
+  margin-bottom: 1.5rem;
+}
+
+.result-group h3 {
+  font-size: 1.2rem;
+  color: #343a40;
+  margin-bottom: 0.5rem;
+}
+
+.result-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #28a745;
+  text-align: center;
+}
+
+.rectangular-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.5rem;
+}
+
+.rect-option {
+  background-color: #e9ecef;
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.rect-option .ratio {
+  display: block;
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 0.3rem;
+  font-weight: normal;
+}
+
+.result-note {
+  text-align: center;
+  color: #6c757d;
+  margin-top: 1rem;
+}
+
+/* --- Standards compliance note --- */
+.standards-note {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-left: 4px solid #28a745;
+  border-radius: 0 4px 4px 0;
+}
+
+.standards-note small {
+  color: #495057;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  display: block;
+}
+
+/* --- Ukrainian standards highlight --- */
+.ukrainian-standards {
+  background: linear-gradient(135deg, #0057b7 0%, #ffd700 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}

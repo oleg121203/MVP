@@ -1,0 +1,113 @@
+.water-heater-calculator {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.water-heater-calculator h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+/* Form styles will be added in subsequent steps */
+
+.water-heater-calculator .calculator-tabs {
+  margin-bottom: 24px;
+}
+
+.water-heater-calculator .form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.water-heater-calculator .results-section {
+  margin-top: 24px;
+  padding: 20px;
+  background-color: var(--background-color-offset);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.water-heater-calculator .results-section h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: var(--text-color-primary);
+}
+
+.water-heater-calculator .results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.water-heater-calculator .result-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.water-heater-calculator .result-label {
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+  margin-bottom: 4px;
+}
+
+.water-heater-calculator .result-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+/* Styling for the custom select dropdown */
+.water-heater-calculator .custom-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg-color);
+  color: var(--text-color-primary);
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%236b7280'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.water-heater-calculator .custom-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color-light);
+}
+
+/* Animation classes for future use */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .water-heater-calculator {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+}

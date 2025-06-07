@@ -1,0 +1,73 @@
+/* Animation styles for calculator components */
+.section-enter {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: translateY(-10px);
+}
+
+.section-enter-active {
+  opacity: 1;
+  max-height: 200px;
+  transform: translateY(0);
+  transition:
+    opacity 300ms ease-in,
+    max-height 300ms ease-in,
+    transform 300ms ease-in;
+}
+
+.section-exit {
+  opacity: 1;
+  max-height: 200px;
+  transform: translateY(0);
+}
+
+.section-exit-active {
+  opacity: 0;
+  max-height: 0;
+  transform: translateY(-10px);
+  transition:
+    opacity 300ms ease-out,
+    max-height 300ms ease-out,
+    transform 300ms ease-out;
+}
+
+/* Unit display styling */
+.input-with-unit {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-unit input {
+  padding-right: 40px; /* Space for the unit */
+  width: 100%;
+}
+
+.input-unit {
+  position: absolute;
+  right: 10px;
+  color: var(--text-secondary, #6c757d);
+  pointer-events: none;
+}
+
+/* Focus and validation styles */
+.calculator-input:focus {
+  border-color: var(--primary, #007bff);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.calculator-input.invalid {
+  border-color: var(--danger, #dc3545);
+  background-color: rgba(220, 53, 69, 0.05);
+}
+
+.calculator-input.invalid:focus {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Transition for all calculator elements */
+.calculator-container * {
+  transition: all 0.3s ease;
+}

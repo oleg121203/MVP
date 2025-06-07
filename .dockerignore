@@ -1,0 +1,13 @@
+# Ігнорування env файлів
+.env*
+!.env.example
+
+# Ігнорування git та IDE
+.git/
+.idea/
+.vscode/
+
+# Логи та кеш
+*.log
+*.tmp
+__pycache__/
