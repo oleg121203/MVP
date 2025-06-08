@@ -33,10 +33,51 @@ async def root():
 
 @app.get("/health")
 async def health():
-    return {
+    import os
+    import sqlite3
+    import time
+    
+    health_status = {
         "status": "healthy",
+        "timestamp": time.time(),
+        "environment": os.getenv("ENVIRONMENT", "unknown"),
+        "database": {"status": "unknown", "type": "unknown"},
         "mcp_server": True
     }
+    
+    # Check database connection
+    try:
+        database_url = os.getenv("DATABASE_URL", "")
+        
+        if "postgresql" in database_url:
+            health_status["database"]["type"] = "postgresql"
+            # For PostgreSQL, we'd need to import psycopg2 and test connection
+            # For now, just mark as configured
+            health_status["database"]["status"] = "configured"
+        elif "sqlite" in database_url or not database_url:
+            health_status["database"]["type"] = "sqlite"
+            # Test SQLite connection
+            try:
+                # Extract database path from URL or use default
+                if "sqlite:///" in database_url:
+                    db_path = database_url.replace("sqlite:///", "")
+                else:
+                    db_path = "./ventai_local.db"
+                
+                # Test connection
+                conn = sqlite3.connect(db_path)
+                cursor = conn.cursor()
+                cursor.execute("SELECT 1")
+                conn.close()
+                health_status["database"]["status"] = "connected"
+            except Exception as e:
+                health_status["database"]["status"] = f"error: {str(e)}"
+        else:
+            health_status["database"]["status"] = "unknown_url"
+    except Exception as e:
+        health_status["database"]["status"] = f"check_failed: {str(e)}"
+    
+    return health_status
 
 
 @app.get("/status")

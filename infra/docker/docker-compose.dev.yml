@@ -1,16 +1,16 @@
 # Development Docker Compose Configuration
-version: '3.8'
-
 services:
   # PostgreSQL Database
   db:
     image: postgres:15-alpine
     container_name: ventai-postgres-dev
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: ventai_dev
-      POSTGRES_USER: ventai_dev
-      POSTGRES_PASSWORD: ventai_dev_password
+      POSTGRES_DB: ${POSTGRES_DB:-ventai_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-ventai_dev}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ventai_dev_password}
       LANG: en_US.UTF-8
       LC_ALL: en_US.UTF-8
     volumes:
@@ -30,6 +30,8 @@ services:
     image: redis:7-alpine
     container_name: ventai-redis-dev
     restart: unless-stopped
+    env_file:
+      - .env
     ports:
       - "6380:6379"
     networks:
@@ -49,6 +51,8 @@ services:
     image: ventai-backend-dev:latest
     restart: unless-stopped
     working_dir: /app
+    env_file:
+      - .env
     environment:
       DATABASE_URL: postgresql://ventai_dev:ventai_dev_password@db:5432/ventai_dev
       SECRET_KEY: dev-secret-key-change-in-production
@@ -71,7 +75,7 @@ services:
     networks:
       - ventai-dev-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -104,7 +108,7 @@ services:
       - ventai-dev-network
     command: ["npm", "start"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -161,7 +165,7 @@ services:
     networks:
       - ventai-dev-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
       interval: 30s
       timeout: 10s
       retries: 3

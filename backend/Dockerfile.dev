@@ -25,17 +25,6 @@ WORKDIR /app
 # Create directories for MCP server with proper ownership (as root before switching user)
 RUN mkdir -p /app/logs/mcp && chown -R appuser:appgroup /app
 
-# Install curl for healthcheck (as root)
-RUN apt-get update && \
-    apt-get install -y curl && \
-    rm -rf /var/lib/apt/lists/* && \
-    echo "--- Dockerfile: which curl ---" && \
-    which curl && \
-    echo "--- Dockerfile: ls -l /usr/bin/curl ---" && \
-    ls -l /usr/bin/curl && \
-    echo "--- Dockerfile: curl version ---" && \
-    /usr/bin/curl --version
-
 # Copy requirements first to leverage Docker cache (will be at /app/requirements.txt)
 COPY --chown=appuser:appgroup requirements.txt /app/requirements.txt
 
