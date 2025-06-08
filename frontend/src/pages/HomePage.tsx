@@ -3,7 +3,6 @@ import { Box, Text, VStack, Button, Heading, Image, SimpleGrid, Flex } from '@ch
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaCalculator, FaChartLine, FaLightbulb, FaRocket } from 'react-icons/fa';
-import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
 import ChakraIcon from '../components/common/ChakraIcon';
 
@@ -11,7 +10,7 @@ const HomePage: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <MainLayout title={t('welcome')}>
+    <Box>
       {/* Hero Section */}
       <Box bg="background.light" pt={{ base: 12, md: 20 }} pb={{ base: 12, md: 20 }} textAlign="center" px={{ base: 4, md: 0 }}>
         <Heading as="h1" size={{ base: '2xl', md: '3xl' }} mb={4} color="brand.primary" fontWeight="extrabold">{t('ventai.hero.title')}</Heading>
@@ -92,7 +91,7 @@ const HomePage: React.FC = () => {
       <Box py={{ base: 6, md: 10 }} textAlign="center" bg="white" borderTop="1px solid" borderColor="gray.200">
         <Text fontSize="sm" color="text.secondary">{t('ventai.footer.copyright')}</Text>
       </Box>
-    </MainLayout>
+    </Box>
   );
 };
 

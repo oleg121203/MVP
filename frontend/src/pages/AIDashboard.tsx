@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Box, Flex, Heading, Text, Button, Input, VStack, Select, useToast, Spinner, UnorderedList, ListItem, Stack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { FaComment, FaMagic, FaChartLine, FaUser, FaRobot, FaPaperPlane } from 'react-icons/fa';
-import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
 import ChakraIcon from '../components/common/ChakraIcon';
 import { AnalysisResults, ProjectInsights, ChatMessage } from '../types/api';
@@ -182,7 +181,7 @@ const AIDashboard: React.FC = () => {
   };
 
   return (
-    <MainLayout title={t('aiDashboard.title')}>
+    <Box>
       <Box p={{ base: 4, md: 8 }}>
         <Heading as="h1" size={{ base: 'xl', md: '2xl' }} mb={6} color="brand.primary" textAlign="center">{t('aiDashboard.title')}</Heading>
         <Text fontSize={{ base: 'md', md: 'lg' }} mb={8} textAlign="center" color="text.secondary">{t('aiDashboard.subtitle')}</Text>
@@ -304,7 +303,7 @@ const AIDashboard: React.FC = () => {
           </VStack>
         </Flex>
       </Box>
-    </MainLayout>
+    </Box>
   );
 };
 

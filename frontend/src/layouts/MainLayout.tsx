@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react';
 import { Box, Flex, VStack, HStack, Text, IconButton, useDisclosure, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
 import Navigation from '../components/common/Navigation';
 
 interface MainLayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
   title?: string;
 }
 
@@ -29,10 +29,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title = 'VentAI' }) =
           </HStack>
           <HStack spacing={4}>
             <HStack spacing={4} display={{ base: 'none', md: 'flex' }}>
-              <Link to="/">Home</Link>
-              <Link to="/calculators">Calculators</Link>
-              <Link to="/dashboard">Dashboard</Link>
-              <Link to="/automation">Automation</Link>
+              <Navigation isMobile={false} />
             </HStack>
             <LanguageSwitcher />
           </HStack>
@@ -46,22 +43,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title = 'VentAI' }) =
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">VentAI Menu</DrawerHeader>
           <DrawerBody>
-            <VStack spacing={4} align="start">
-              <Link to="/" onClick={onClose}>Home</Link>
-              <Link to="/calculators" onClick={onClose}>Calculators</Link>
-              <Link to="/dashboard" onClick={onClose}>Dashboard</Link>
-              <Link to="/automation" onClick={onClose}>Automation</Link>
-            </VStack>
+            <Navigation isMobile={true} />
           </DrawerBody>
         </DrawerContent>
       </Drawer>
 
-      {/* Navigation */}
-      <Navigation />
-
       {/* Main Content */}
       <Box as="main" flex="1" p={4} overflowY="auto">
-        {children}
+        {children || <Outlet />}
       </Box>
 
       {/* Footer */}

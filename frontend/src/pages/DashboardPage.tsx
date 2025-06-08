@@ -3,7 +3,6 @@ import { Box, Text, VStack, Heading, SimpleGrid, Flex, IconButton, Divider, Butt
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaProjectDiagram, FaCalculator, FaRobot, FaCog } from 'react-icons/fa';
-import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
 import ChakraIcon from '../components/common/ChakraIcon';
 import ThreeScene from '../components/ThreeScene';
@@ -13,7 +12,7 @@ const DashboardPage: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <MainLayout title={t('dashboard')}>
+    <Box>
       <Box p={{ base: 4, md: 8 }}>
         {/* Welcome Message */}
         <Heading as="h1" size="xl" mb={2}>{t('dashboard.welcome')}</Heading>
@@ -109,7 +108,7 @@ const DashboardPage: React.FC = () => {
           <IconButton aria-label={t('dashboard.settings')} icon={<ChakraIcon icon={FaCog} />} variant="outline" size={{ base: 'sm', md: 'md' }} />
         </Flex>
       </Box>
-    </MainLayout>
+    </Box>
   );
 };
 

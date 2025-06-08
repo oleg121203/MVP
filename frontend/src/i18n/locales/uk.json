@@ -4,5 +4,36 @@
   "calculators": "Калькулятори",
   "dashboard": "Панель управління",
   "automation": "Автоматизація",
-  "language": "Мова"
+  "language": "Мова",
+  "navigation": {
+    "home": "Головна",
+    "calculators": "Калькулятори",
+    "dashboard": "Панель управління",
+    "aiDashboard": "AI Панель",
+    "projects": "Проекти",
+    "projectManagement": "Управління проектами",
+    "aiInsights": "AI Аналітика",
+    "settings": "Налаштування",
+    "automation": "Автоматизація"
+  },
+  "nav": {
+    "openMenu": "Відкрити меню",
+    "menu": "Меню"
+  },
+  "ventai": {
+    "hero": {
+      "title": "Розумні рішення вентиляції",
+      "subtitle": "Професійні розрахунки HVAC та аналітика на базі ШІ для оптимальної вентиляції будівель",
+      "cta": "Почати роботу",
+      "secondaryCta": "Переглянути проекти",
+      "imageAlt": "Сучасна система вентиляції"
+    },
+    "footer": {
+      "copyright": "© 2024 VentAI. Всі права захищено."
+    }
+  },
+  "aiDashboard": {
+    "title": "AI Панель",
+    "subtitle": "Передові інструменти ШІ для аналізу вентиляції"
+  }
 }

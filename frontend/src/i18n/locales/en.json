@@ -4,5 +4,36 @@
   "calculators": "Calculators",
   "dashboard": "Dashboard",
   "automation": "Automation",
-  "language": "Language"
+  "language": "Language",
+  "navigation": {
+    "home": "Home",
+    "calculators": "Calculators",
+    "dashboard": "Dashboard",
+    "aiDashboard": "AI Dashboard",
+    "projects": "Projects",
+    "projectManagement": "Project Management",
+    "aiInsights": "AI Insights",
+    "settings": "Settings",
+    "automation": "Automation"
+  },
+  "nav": {
+    "openMenu": "Open menu",
+    "menu": "Menu"
+  },
+  "ventai": {
+    "hero": {
+      "title": "Smart Ventilation Solutions",
+      "subtitle": "Professional HVAC calculations and AI-powered insights for optimal building ventilation",
+      "cta": "Get Started",
+      "secondaryCta": "View Projects",
+      "imageAlt": "Modern ventilation system"
+    },
+    "footer": {
+      "copyright": "© 2024 VentAI. All rights reserved."
+    }
+  },
+  "aiDashboard": {
+    "title": "AI Dashboard",
+    "subtitle": "Advanced AI tools for ventilation analysis"
+  }
 }

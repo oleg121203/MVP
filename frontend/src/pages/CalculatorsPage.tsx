@@ -3,7 +3,6 @@ import { Box, Text, VStack, Heading, SimpleGrid, Flex, Input, Button, Divider, I
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaCalculator, FaSearch, FaLifeRing } from 'react-icons/fa';
-import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
 import ChakraIcon from '../components/common/ChakraIcon';
 
@@ -13,7 +12,7 @@ const CalculatorsPage: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
 
   return (
-    <MainLayout title={t('calculators')}>
+    <Box>
       <Box p={{ base: 4, md: 8 }}>
         {/* Search and Filter */}
         <Flex direction={{ base: 'column', md: 'row' }} gap={4} mb={8} align="center" maxW="container.lg" mx="auto">
@@ -177,7 +176,7 @@ const CalculatorsPage: React.FC = () => {
           </SimpleGrid>
         </Box>
       </Box>
-    </MainLayout>
+    </Box>
   );
 };
 

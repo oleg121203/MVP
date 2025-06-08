@@ -1,7 +1,7 @@
 // Centralized API Configuration
 
 // Base URLs for different backend services
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const FASTAPI_BASE_PATH = process.env.REACT_APP_FASTAPI_PATH || '/api';
 const DJANGO_BASE_PATH = process.env.REACT_APP_DJANGO_PATH || '/api';
 

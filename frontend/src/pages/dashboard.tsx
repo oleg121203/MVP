@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Flex, Heading, Text, VStack, SimpleGrid, IconButton, Divider, Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { FaCog, FaCalculator, FaFolder, FaLightbulb } from 'react-icons/fa';
-import MainLayout from '../layouts/MainLayout';
 import Card from '../components/common/Card';
 import ChakraIcon from '../components/common/ChakraIcon';
 import ThreeScene from '../components/ThreeScene';
@@ -12,7 +11,7 @@ export default function Dashboard() {
   const { t } = useTranslation();
 
   return (
-    <MainLayout title={t('dashboard.title')}>
+    <Box>
       <Box p={{ base: 4, md: 8 }}>
         {/* Welcome Message */}
         <Box mb={8}>
@@ -139,6 +138,6 @@ export default function Dashboard() {
           </Flex>
         </Box>
       </Box>
-    </MainLayout>
+    </Box>
   );
 }

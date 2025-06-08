@@ -50,7 +50,7 @@ class OllamaProvider(AIProvider):
             
             # Перевірка доступності моделі
             models = self.client.list()
-            available_models = [m['name'] for m in models['models']]
+            available_models = [m.model for m in models.models]
             
             if self.model not in available_models:
                 logger.warning(f"Model {self.model} not found in Ollama. Available: {available_models}")
