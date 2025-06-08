@@ -22,8 +22,9 @@ from . import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", views.test_endpoint, name="api-test"),
-    path("api/auth/", include("authentication.urls")),
+    path("api/auth/", include("apps.authentication.urls")),
+    path("api/projects/", include("apps.projects.urls")),
+    path("api/insights/", include("apps.insights.urls")),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]

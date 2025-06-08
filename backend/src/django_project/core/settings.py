@@ -38,9 +38,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "corsheaders",
+    # Third-party apps
     "rest_framework",
-    "apps.authentication.apps.AuthenticationConfig",
+    "rest_framework.authtoken",
+    "corsheaders",
+    # Local apps
+    "apps.authentication",
+    "apps.projects",
+    "apps.insights.apps.InsightsConfig",
     "rest_framework_simplejwt",
 ]
 
@@ -81,12 +86,8 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ventai_db",
-        "USER": "ventai",
-        "PASSWORD": "ventai123",
-        "HOST": "postgres",
-        "PORT": "5432",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 

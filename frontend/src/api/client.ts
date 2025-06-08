@@ -94,14 +94,14 @@ export class VentApiClient {
   }
 
   async login(username: string, password: string) {
-    const response = await fetch(`${API_BASE_URL}/api/auth/token`, {
+    const response = await fetch(`${API_BASE_URL}/api/token/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
     });
 
     const data = await response.json();
-    this.setToken(data.access_token);
+    this.setToken(data.access);
     return data;
   }
 

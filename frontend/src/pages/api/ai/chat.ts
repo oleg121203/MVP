@@ -22,11 +22,24 @@ export default async function handler(
   }
 
   try {
-    // TODO: Connect to actual AI service
+    // Connect to actual AI service via backend MCP server
     const { message } = req.body as ChatRequest;
     
-    // Mock response for now
-    const reply = `I received your question about: "${message}". This will connect to the AI backend soon.`;
+    // Make request to MCP server endpoint with correct prefix
+    const response = await fetch('http://localhost:8001/api/ai/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }),
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Backend responded with status ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const reply = data.reply || 'No response from AI service';
     
     res.status(200).json({ reply });
   } catch (error) {

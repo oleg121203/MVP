@@ -1,0 +1,192 @@
+{
+  "navigation": {
+    "home": "Home",
+    "calculators": "Calculators",
+    "dashboard": "Dashboard",
+    "aiDashboard": "AI Dashboard",
+    "projects": "Projects",
+    "projectManagement": "Project Management",
+    "aiInsights": "AI Insights",
+    "settings": "Settings",
+    "automation": "Automation"
+  },
+  "calculators": {
+    "title": "Calculators",
+    "searchPlaceholder": "Search calculators...",
+    "help": "Help",
+    "categories": {
+      "all": "All",
+      "airflow": "Airflow",
+      "duct": "Duct",
+      "energy": "Energy"
+    },
+    "airflow": {
+      "title": "Airflow Calculators",
+      "description": "Tools for calculating airflow parameters in HVAC systems.",
+      "cfm": {
+        "title": "CFM Calculator",
+        "description": "Calculate Cubic Feet per Minute based on room dimensions and air changes."
+      },
+      "velocity": {
+        "title": "Air Velocity Calculator",
+        "description": "Determine air velocity in ducts based on airflow and duct dimensions."
+      },
+      "pressure": {
+        "title": "Pressure Drop Calculator",
+        "description": "Estimate pressure loss in duct systems."
+      }
+    },
+    "duct": {
+      "title": "Duct Calculators",
+      "description": "Tools for sizing and optimizing ductwork in HVAC designs.",
+      "size": {
+        "title": "Duct Sizing Calculator",
+        "description": "Calculate optimal duct sizes based on airflow and velocity constraints."
+      },
+      "friction": {
+        "title": "Friction Loss Calculator",
+        "description": "Estimate friction losses in duct runs."
+      }
+    },
+    "energy": {
+      "title": "Energy Calculators",
+      "description": "Tools for analyzing energy usage and efficiency in HVAC systems.",
+      "load": {
+        "title": "Cooling/Heating Load Calculator",
+        "description": "Estimate cooling and heating loads for spaces based on various factors."
+      },
+      "efficiency": {
+        "title": "Energy Efficiency Calculator",
+        "description": "Analyze energy efficiency ratings and potential savings."
+      }
+    },
+    "noResults": "No calculators found matching '{{searchTerm}}'."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to VentAI Dashboard",
+    "subtitle": "Get an overview of your HVAC projects and insights.",
+    "stats": {
+      "projects": "Active Projects",
+      "calculations": "Calculations",
+      "aiInsights": "AI Insights"
+    },
+    "projects": {
+      "title": "Recent Projects",
+      "viewAll": "View All Projects"
+    },
+    "calculations": {
+      "title": "Recent Calculations",
+      "viewAll": "View All Calculations"
+    },
+    "ai": {
+      "title": "AI Insights",
+      "tip": "Ask our AI for insights or optimizations related to your projects."
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "newProject": "New Project",
+      "newCalculation": "New Calculation",
+      "aiAnalysis": "AI Analysis",
+      "settings": "Settings"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign In",
+      "requiredError": "Both username and password are required",
+      "loginFailed": "Login failed"
+    },
+    "register": {
+      "title": "Register",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "passwordConfirm": "Confirm Password",
+      "submit": "Register",
+      "passwordMismatch": "Passwords do not match",
+      "registrationFailed": "Registration failed"
+    }
+  },
+  "settings": {
+    "crm": {
+      "title": "CRM Settings",
+      "apiKey": {
+        "label": "HubSpot API Key",
+        "placeholder": "Enter your HubSpot API key",
+        "save": "Save API Key",
+        "saved": "API Key Saved",
+        "savedMessage": "HubSpot API key saved successfully and encrypted securely",
+        "validationError": "Validation Error",
+        "validationErrorMessage": "Please enter a valid API key",
+        "saveFailed": "Save Failed",
+        "saveFailedMessage": "Failed to save API key",
+        "networkError": "Network Error",
+        "networkErrorMessage": "An error occurred while saving the API key",
+        "info": "HubSpot API Key Info",
+        "infoMessage": "Your HubSpot API key is securely stored and encrypted. It will be masked in the UI for your security."
+      },
+      "sync": {
+        "title": "HubSpot Synchronization",
+        "button": "Sync with HubSpot",
+        "noKey": "HubSpot Sync Unavailable",
+        "noKeyMessage": "Please save your HubSpot API key before attempting synchronization.",
+        "success": "Synchronization Successful",
+        "successMessage": "Successfully synchronized data with HubSpot.",
+        "error": "Synchronization Failed",
+        "errorMessage": "Failed to synchronize with HubSpot. Please check your API key and try again.",
+        "networkError": "Network Error",
+        "networkErrorMessage": "An error occurred while communicating with HubSpot."
+      },
+      "status": {
+        "title": "HubSpot Connection Status",
+        "checking": "Checking...",
+        "connected": "Connected to HubSpot",
+        "disconnected": "Disconnected from HubSpot",
+        "error": "Connection Error",
+        "errorMessage": "Unable to verify HubSpot connection status."
+      }
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Manage all your HVAC projects here.",
+    "createNew": "Create New Project",
+    "searchPlaceholder": "Search projects...",
+    "noProjects": "No projects found.",
+    "error": "Error: {{message}}",
+    "projectList": {
+      "name": "Name",
+      "status": "Status",
+      "created": "Created",
+      "updated": "Last Updated",
+      "actions": "Actions",
+      "view": "View Details",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "detail": {
+      "title": "Project Details",
+      "description": "Description",
+      "status": "Status",
+      "created": "Created on",
+      "updated": "Last Updated",
+      "specifications": "Specifications",
+      "calculations": "Calculations",
+      "documents": "Documents",
+      "comments": "Comments",
+      "addComment": "Add Comment",
+      "edit": "Edit Project",
+      "export": "Export Project",
+      "share": "Share Project",
+      "noDescription": "No description provided.",
+      "noSpecifications": "No specifications added yet.",
+      "noCalculations": "No calculations performed yet.",
+      "noDocuments": "No documents uploaded yet.",
+      "noComments": "No comments yet."
+    }
+  }
+}

@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { AuthResponse } from '../types/api';
-
-// Base URLs for backend services
-const FASTAPI_BASE_URL = 'http://localhost:5000/api/ai';
-const DJANGO_BASE_URL = 'http://localhost:8000/api';
+import { FASTAPI_BASE_URL, DJANGO_BASE_URL, LOGIN_ENDPOINT, AI_DASHBOARD_ENDPOINT } from './apiConfig';
 
 // FastAPI client for AI services
 export const fastApiClient = axios.create({
@@ -33,11 +30,11 @@ export const removeAuthToken = () => {
 
 // Example API call functions
 export const getAIDashboardData = async () => {
-  const response = await fastApiClient.get('/dashboard');
+  const response = await fastApiClient.get(AI_DASHBOARD_ENDPOINT);
   return response.data;
 };
 
 export const loginUser = async (credentials: { username: string; password: string }): Promise<AuthResponse> => {
-  const response = await djangoApiClient.post('/auth/login/', credentials);
+  const response = await djangoApiClient.post(LOGIN_ENDPOINT, credentials);
   return response.data as AuthResponse;
 };

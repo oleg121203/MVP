@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLoading } from '../context/LoadingContext';
+import { useTranslation } from 'react-i18next';
 
 // Define the Project interface
 interface Project {
@@ -13,6 +14,7 @@ export const ProjectList: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [error, setError] = useState('');
   const { withLoading } = useLoading();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -33,13 +35,13 @@ export const ProjectList: React.FC = () => {
     fetchProjects();
   }, [withLoading]);
 
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (error) return <div className="text-red-500">{t('projects.error', { message: error })}</div>;
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Your Projects</h2>
+      <h2 className="text-xl font-semibold">{t('projects.title')}</h2>
       {projects.length === 0 ? (
-        <div className="text-gray-500">No projects found</div>
+        <div className="text-gray-500">{t('projects.noProjects')}</div>
       ) : (
         <ul className="space-y-2">
           {projects.map((project) => (

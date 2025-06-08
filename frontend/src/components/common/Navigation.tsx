@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
-import { Box, Flex, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Link as ChakraLink, Text, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, VStack, Link as ChakraLink, Text, useBreakpointValue, Tooltip } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { FaHome, FaCalculator, FaFolder, FaRobot, FaCog } from 'react-icons/fa';
+import { FaHome, FaCalculator, FaFolder, FaRobot, FaCog, FaChartBar, FaBrain, FaTasks, FaLightbulb } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
 import ChakraIcon from './ChakraIcon';
+import { useAuth } from '../../context/AuthContext'; 
+
+// Define the expected shape of the Auth context
+interface AuthContextType {
+  user: { role?: string } | null;
+  // Add other properties if needed
+}
 
 const Navigation: React.FC = () => {
   const { t } = useTranslation();
+  const auth = useAuth() as unknown as AuthContextType;
+  const user = auth.user;
+  const isAdmin = user && user.role === 'admin';
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
   const onOpen = () => setIsOpen(true);
@@ -16,27 +26,33 @@ const Navigation: React.FC = () => {
   // Use responsive breakpoint to determine if mobile view
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  // Navigation items
-  const navItems: Array<{ to: string; icon: IconType; label: string }> = [
-    { to: '/', icon: FaHome, label: t('nav.home') },
-    { to: '/calculators', icon: FaCalculator, label: t('nav.calculators') },
-    { to: '/dashboard', icon: FaHome, label: t('nav.dashboard') },
-    { to: '/projects', icon: FaFolder, label: t('nav.projects') },
-    { to: '/project-management', icon: FaFolder, label: t('nav.projectManagement') },
-    { to: '/ai-dashboard', icon: FaRobot, label: t('nav.aiDashboard') },
-    { to: '/ai-insights', icon: FaRobot, label: t('nav.aiInsights') },
-    { to: '/settings', icon: FaCog, label: t('nav.settings') },
+  // Navigation items, conditionally rendered based on user role
+  const navItems: Array<{ to: string; icon: IconType; label: string; adminOnly?: boolean }> = [
+    { to: '/', icon: FaHome, label: t('navigation.home') },
+    { to: '/calculators', icon: FaCalculator, label: t('navigation.calculators') },
+    { to: '/dashboard', icon: FaChartBar, label: t('navigation.dashboard') },
+    { to: '/ai-dashboard', icon: FaBrain, label: t('navigation.aiDashboard') },
+    { to: '/projects', icon: FaFolder, label: t('navigation.projects') },
+    { to: '/project-management', icon: FaTasks, label: t('navigation.projectManagement'), adminOnly: true },
+    { to: '/ai-insights', icon: FaLightbulb, label: t('navigation.aiInsights'), adminOnly: true },
+    { to: '/settings', icon: FaCog, label: t('navigation.settings') },
+    { to: '/automation', icon: FaRobot, label: t('navigation.automation'), adminOnly: true },
   ];
+
+  // Filter nav items based on user role
+  const filteredNavItems = isAdmin ? navItems : navItems.filter(item => !item.adminOnly);
 
   // Navigation content to reuse in both desktop and mobile views
   const navContent = (
     <VStack spacing={4} align="stretch">
-      {navItems.map((item) => (
+      {filteredNavItems.map((item) => (
         <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
-          <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
-            <ChakraIcon icon={item.icon} mr={3} />
-            <Text>{item.label}</Text>
-          </ChakraLink>
+          <Tooltip label={item.label}>
+            <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center" overflow="hidden">
+              <ChakraIcon icon={item.icon} mr={3} flexShrink={0} />
+              <Text overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{item.label}</Text>
+            </ChakraLink>
+          </Tooltip>
         </Link>
       ))}
     </VStack>
@@ -68,12 +84,14 @@ const Navigation: React.FC = () => {
       ) : (
         /* Desktop View - Horizontal Navigation */
         <Flex as="nav" gap={6} align="center">
-          {navItems.map((item) => (
+          {filteredNavItems.map((item) => (
             <Link to={item.to} key={item.to} style={{ textDecoration: 'none' }}>
-              <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center">
-                <ChakraIcon icon={item.icon} mr={2} />
-                <Text>{item.label}</Text>
-              </ChakraLink>
+              <Tooltip label={item.label}>
+                <ChakraLink as="span" _hover={{ color: 'brand.primary' }} display="flex" alignItems="center" overflow="hidden">
+                  <ChakraIcon icon={item.icon} mr={2} flexShrink={0} />
+                  <Text overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{item.label}</Text>
+                </ChakraLink>
+              </Tooltip>
             </Link>
           ))}
         </Flex>

@@ -10,6 +10,9 @@ import HomePage from '../pages/HomePage';
 import CalculatorsPage from '../pages/CalculatorsPage';
 import DashboardPage from '../pages/DashboardPage';
 import AIDashboard from '../pages/AIDashboard';
+import ProjectsPage from '../pages/ProjectsPage';
+import SettingsPage from '../pages/SettingsPage';
+import ProjectManagementPage from '../pages/ProjectManagementPage';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -35,6 +38,31 @@ function App() {
         <Route path="/ai-dashboard" element={
           <MainLayout>
             <AIDashboard />
+          </MainLayout>
+        } />
+        <Route path="/projects" element={
+          <MainLayout>
+            <ProjectsPage />
+          </MainLayout>
+        } />
+        <Route path="/project-management" element={
+          <MainLayout>
+            <ProjectManagementPage />
+          </MainLayout>
+        } />
+        <Route path="/ai-insights" element={
+          <MainLayout>
+            <div>AI Insights Page (Placeholder)</div>
+          </MainLayout>
+        } />
+        <Route path="/settings" element={
+          <MainLayout>
+            <SettingsPage />
+          </MainLayout>
+        } />
+        <Route path="/automation" element={
+          <MainLayout>
+            <div>Automation Page (Placeholder)</div>
           </MainLayout>
         } />
         <Route path="*" element={

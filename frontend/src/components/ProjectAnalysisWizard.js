@@ -30,10 +30,14 @@ const ProjectAnalysisWizard = ({ sessionId, questions, onRefine, onComplete, cur
   };
 
   const handleSubmitAnswers = async () => {
-    // Basic validation: Ensure all questions have an answer (not empty)
-    const missingAnswers = questions.filter((q) => !userAnswers[q] || userAnswers[q].trim() === '');
-    if (missingAnswers.length > 0) {
-      warning(t('Please provide an answer for all questions.')); // Use translated warning
+    // Enhanced validation: Ensure all questions have a meaningful answer
+    const invalidAnswers = questions.filter((q) => {
+      const answer = userAnswers[q] ? userAnswers[q].trim() : '';
+      // Check for emptiness or insufficient length (e.g., less than 3 characters)
+      return answer.length < 3;
+    });
+    if (invalidAnswers.length > 0) {
+      warning(t('Please provide detailed answers for all questions (at least 3 characters).'));
       return;
     }
 

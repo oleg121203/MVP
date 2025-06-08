@@ -1,13 +1,15 @@
 import secrets
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from rest_framework import generics, permissions, status
+from rest_framework import generics, views, permissions, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, UserSerializer
 
 # Create your views here.
 
@@ -78,3 +80,46 @@ class PasswordResetView(APIView):
                 {"error": "Користувача з таким email не знайдено"},
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+
+class DashboardCustomizationView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        if hasattr(user, 'profile'):
+            return Response({
+                "dashboard_preferences": user.profile.dashboard_preferences
+            }, status=status.HTTP_200_OK)
+        return Response({
+            "error": "User profile not found"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request):
+        user = request.user
+        preferences = request.data.get("dashboard_preferences", {})
+        if hasattr(user, 'profile'):
+            user.profile.dashboard_preferences = preferences
+            user.profile.save()
+            return Response({
+                "message": "Dashboard preferences updated",
+                "dashboard_preferences": preferences
+            }, status=status.HTTP_200_OK)
+        return Response({
+            "error": "User profile not found"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+
+class UserProfileView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+    def patch(self, request):
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

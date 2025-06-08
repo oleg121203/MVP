@@ -1,9 +1,8 @@
 import axios from 'axios';
-
-const API_BASE = 'http://localhost:8000/api';
+import { FASTAPI_BASE_URL, TOKEN_REFRESH_ENDPOINT } from './apiConfig';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: FASTAPI_BASE_URL,
 });
 
 api.interceptors.request.use(config => {
@@ -20,7 +19,7 @@ api.interceptors.response.use(
     if (error.response.status === 401) {
       try {
         const refresh = localStorage.getItem('refresh_token');
-        const { data } = await axios.post(`${API_BASE}/token/refresh/`, { refresh });
+        const { data } = await axios.post(`${FASTAPI_BASE_URL}${TOKEN_REFRESH_ENDPOINT}`, { refresh });
         localStorage.setItem('access_token', data.access);
         error.config.headers.Authorization = `Bearer ${data.access}`;
         return axios(error.config);

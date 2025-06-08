@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useToast } from '../context/ToastContext';
 import './CRMSettings.css';
 
 const CRMSettings = () => {
+  const { t } = useTranslation();
   const [apiKey, setApiKey] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [hasStoredKey, setHasStoredKey] = useState(false);
@@ -11,8 +13,8 @@ const CRMSettings = () => {
   const handleSaveApiKey = async () => {
     if (!apiKey.trim()) {
       error({
-        title: 'Validation Error',
-        message: 'Please enter a valid API key',
+        title: t('settings.crm.apiKey.validationError'),
+        message: t('settings.crm.apiKey.validationErrorMessage'),
       });
       return;
     }
@@ -34,22 +36,22 @@ const CRMSettings = () => {
 
       if (response.ok) {
         success({
-          title: 'API Key Saved',
-          message: 'HubSpot API key saved successfully and encrypted securely',
+          title: t('settings.crm.apiKey.saved'),
+          message: t('settings.crm.apiKey.savedMessage'),
         });
         setApiKey('********'); // Show masked value instead of clearing
         setHasStoredKey(true);
       } else {
         const errorData = await response.json();
         error({
-          title: 'Save Failed',
-          message: errorData.detail || 'Failed to save API key',
+          title: t('settings.crm.apiKey.saveFailed'),
+          message: errorData.detail || t('settings.crm.apiKey.saveFailedMessage'),
         });
       }
     } catch (err) {
       error({
-        title: 'Network Error',
-        message: 'Could not save API key. Please check your connection.',
+        title: t('settings.crm.apiKey.networkError'),
+        message: t('settings.crm.apiKey.networkErrorMessage'),
       });
       console.error('Failed to save API key:', err);
     } finally {
@@ -72,20 +74,20 @@ const CRMSettings = () => {
 
       if (response.ok) {
         success({
-          title: 'Connection Successful',
-          message: 'HubSpot connection test successful',
+          title: t('settings.crm.testConnection.success'),
+          message: t('settings.crm.testConnection.successMessage'),
         });
       } else {
         const errorData = await response.json();
         error({
-          title: 'Connection Failed',
-          message: errorData.detail || 'HubSpot connection test failed',
+          title: t('settings.crm.testConnection.error'),
+          message: errorData.detail || t('settings.crm.testConnection.errorMessage'),
         });
       }
     } catch (err) {
       error({
-        title: 'Connection Error',
-        message: 'Could not test connection. Please check your network.',
+        title: t('settings.crm.testConnection.networkError'),
+        message: t('settings.crm.testConnection.networkErrorMessage'),
       });
       console.error('Failed to test connection:', err);
     } finally {
@@ -96,18 +98,18 @@ const CRMSettings = () => {
   return (
     <div className="crm-settings">
       <div className="settings-header">
-        <h2>CRM Integration Settings</h2>
+        <h2>{t('settings.crm.title')}</h2>
         <p className="settings-description">
-          Configure your HubSpot integration to automatically create deals from your projects.
+          {t('settings.crm.description')}
         </p>
       </div>
 
       <div className="settings-section">
-        <h3>HubSpot Configuration</h3>
+        <h3>{t('settings.crm.apiKey.label')}</h3>
 
         <div className="form-group">
           <label htmlFor="hubspot-api-key">
-            HubSpot API Key
+            {t('settings.crm.apiKey.label')}
             <span className="required">*</span>
           </label>
           <input
@@ -121,24 +123,24 @@ const CRMSettings = () => {
                 setHasStoredKey(false);
               }
             }}
-            placeholder={hasStoredKey ? 'API key is stored securely' : 'Enter your HubSpot API key'}
+            placeholder={hasStoredKey ? t('settings.crm.apiKey.storedPlaceholder') : t('settings.crm.apiKey.placeholder')}
             className={`api-key-input ${hasStoredKey ? 'has-stored-key' : ''}`}
           />
           <small className="help-text">
-            Your API key will be encrypted and stored securely.
+            {t('settings.crm.apiKey.helpText')}
             <a
               href="https://knowledge.hubspot.com/integrations/how-do-i-get-my-hubspot-api-key"
               target="_blank"
               rel="noopener noreferrer"
             >
-              How to get your HubSpot API key
+              {t('settings.crm.apiKey.helpLink')}
             </a>
           </small>
         </div>
 
         <div className="button-group">
           <button onClick={handleSaveApiKey} disabled={isLoading} className="btn btn-primary">
-            {isLoading ? 'Saving...' : 'Save API Key'}
+            {isLoading ? t('settings.crm.apiKey.saving') : t('settings.crm.apiKey.save')}
           </button>
 
           <button
@@ -146,7 +148,7 @@ const CRMSettings = () => {
             disabled={isLoading || !apiKey}
             className="btn btn-secondary"
           >
-            {isLoading ? 'Testing...' : 'Test Connection'}
+            {isLoading ? t('settings.crm.testConnection.testing') : t('settings.crm.testConnection.button')}
           </button>
         </div>
 
@@ -154,38 +156,38 @@ const CRMSettings = () => {
       </div>
 
       <div className="settings-section">
-        <h3>How It Works</h3>
+        <h3>{t('settings.crm.howItWorks.title')}</h3>
         <div className="info-cards">
           <div className="info-card">
-            <h4>🔐 Secure Storage</h4>
+            <h4>{t('settings.crm.howItWorks.secureStorage.title')}</h4>
             <p>
-              Your API key is encrypted using AES-256 encryption before being stored in our
-              database.
+              {t('settings.crm.howItWorks.secureStorage.description')}
             </p>
           </div>
 
           <div className="info-card">
-            <h4>🎯 Automatic Deals</h4>
-            <p>Create HubSpot deals directly from your Vent.AI projects with calculated amounts.</p>
+            <h4>{t('settings.crm.howItWorks.automaticDeals.title')}</h4>
+            <p>
+              {t('settings.crm.howItWorks.automaticDeals.description')}
+            </p>
           </div>
 
           <div className="info-card">
-            <h4>📊 Data Sync</h4>
+            <h4>{t('settings.crm.howItWorks.dataSync.title')}</h4>
             <p>
-              Project specifications and commercial proposals are automatically included in deal
-              data.
+              {t('settings.crm.howItWorks.dataSync.description')}
             </p>
           </div>
         </div>
       </div>
 
       <div className="settings-section">
-        <h3>Next Steps</h3>
+        <h3>{t('settings.crm.nextSteps.title')}</h3>
         <ol className="steps-list">
-          <li>Save your HubSpot API key above</li>
-          <li>Create or open a project in Vent.AI</li>
-          <li>Generate commercial proposals and specifications</li>
-          <li>Use the "Create CRM Deal" button in your project to sync data to HubSpot</li>
+          <li>{t('settings.crm.nextSteps.step1')}</li>
+          <li>{t('settings.crm.nextSteps.step2')}</li>
+          <li>{t('settings.crm.nextSteps.step3')}</li>
+          <li>{t('settings.crm.nextSteps.step4')}</li>
         </ol>
       </div>
     </div>
