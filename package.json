@@ -1,19 +1,28 @@
 {
-  "name": "ventai-mvp",
-  "version": "1.0.0",
-  "description": "VentAI MVP - AI-powered event management platform",
+  "name": "ventai-enterprise",
+  "version": "2.0.0",
+  "description": "VentAI Enterprise - AI-powered HVAC platform with advanced analytics",
   "scripts": {
     "dev:backend": "cd backend && uvicorn main:app --reload --host 0.0.0.0 --port 8000",
     "dev:frontend": "cd frontend && npm start",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "test:setup": "python test-setup.py",
+    "dev:enterprise": "./start-enterprise-services.sh && npm run dev",
+    "enterprise:services": "./start-enterprise-services.sh",
+    "enterprise:migrate": "cd backend && python enterprise_migration.py",
+    "enterprise:setup": "npm run enterprise:services && npm run enterprise:migrate",
+    "dashboard:dev": "cd frontend && REACT_APP_MODE=dashboard npm start",
+    "test:enterprise": "cd backend && pytest tests/enterprise/",
+    "test:performance": "cd backend && pytest tests/performance/",
     "build:frontend": "cd frontend && npm run build",
-    "start:prod": "concurrently \"cd backend && uvicorn main:app --host 0.0.0.0 --port 8000\" \"cd frontend && npm start\""
+    "build:enterprise": "cd frontend && REACT_APP_MODE=enterprise npm run build",
+    "start:prod": "concurrently \"cd backend && uvicorn main:app --host 0.0.0.0 --port 8000\" \"cd frontend && npm start\"",
+    "analytics:dev": "cd backend && python -m analytics.main",
+    "ai:test": "cd backend && python -m ai.test_providers"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"
   },
-  "keywords": ["ai", "events", "mvp"],
-  "author": "VentAI Team",
+  "keywords": ["ai", "hvac", "enterprise", "analytics", "automation"],
+  "author": "VentAI Enterprise Team",
   "license": "MIT"
 }
