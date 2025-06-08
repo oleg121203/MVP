@@ -1,0 +1,187 @@
+name: Backup and Recovery
+
+on:
+  schedule:
+    # Daily backup at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      backup_type:
+        description: 'Type of backup'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - database
+          - files
+
+jobs:
+  backup-database:
+    runs-on: ubuntu-latest
+    if: contains(fromJson('["full", "database"]'), github.event.inputs.backup_type || 'full')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Create database backup
+        env:
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: |
+          mkdir -p backups
+          BACKUP_FILE="backups/ventai-db-$(date +%Y%m%d-%H%M%S).sql"
+          
+          PGPASSWORD=$POSTGRES_PASSWORD pg_dump \
+            -h $POSTGRES_HOST \
+            -U $POSTGRES_USER \
+            -d $POSTGRES_DB \
+            --clean \
+            --create \
+            --if-exists \
+            --verbose \
+            > $BACKUP_FILE
+          
+          # Compress backup
+          gzip $BACKUP_FILE
+          
+          echo "Database backup created: ${BACKUP_FILE}.gz"
+          ls -lah ${BACKUP_FILE}.gz
+
+      - name: Upload to cloud storage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: |
+          # Install AWS CLI
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          
+          # Upload backup
+          BACKUP_FILE=$(ls backups/ventai-db-*.sql.gz | head -1)
+          aws s3 cp $BACKUP_FILE s3://${{ secrets.S3_BACKUP_BUCKET }}/database/
+          
+          echo "Backup uploaded to S3"
+
+      - name: Clean old backups
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: |
+          # Keep only last 30 days of backups
+          aws s3 ls s3://${{ secrets.S3_BACKUP_BUCKET }}/database/ | \
+          awk '{print $4}' | \
+          head -n -30 | \
+          xargs -I {} aws s3 rm s3://${{ secrets.S3_BACKUP_BUCKET }}/database/{}
+
+  backup-application-data:
+    runs-on: ubuntu-latest
+    if: contains(fromJson('["full", "files"]'), github.event.inputs.backup_type || 'full')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create application backup
+        run: |
+          mkdir -p backups
+          
+          # Create archive of important files
+          tar -czf backups/ventai-app-$(date +%Y%m%d-%H%M%S).tar.gz \
+            --exclude=node_modules \
+            --exclude=venv \
+            --exclude=__pycache__ \
+            --exclude=.git \
+            --exclude=backups \
+            .
+          
+          echo "Application backup created"
+          ls -lah backups/
+
+      - name: Upload application backup
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: |
+          # Install AWS CLI
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          
+          # Upload backup
+          BACKUP_FILE=$(ls backups/ventai-app-*.tar.gz | head -1)
+          aws s3 cp $BACKUP_FILE s3://${{ secrets.S3_BACKUP_BUCKET }}/application/
+
+  test-backup-integrity:
+    runs-on: ubuntu-latest
+    needs: [backup-database]
+    steps:
+      - name: Download and test database backup
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: |
+          # Install AWS CLI
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          
+          # Download latest backup
+          mkdir -p test-restore
+          LATEST_BACKUP=$(aws s3 ls s3://${{ secrets.S3_BACKUP_BUCKET }}/database/ | sort | tail -n 1 | awk '{print $4}')
+          aws s3 cp s3://${{ secrets.S3_BACKUP_BUCKET }}/database/$LATEST_BACKUP test-restore/
+          
+          # Test backup integrity
+          cd test-restore
+          gunzip $LATEST_BACKUP
+          SQL_FILE=${LATEST_BACKUP%.gz}
+          
+          # Basic validation
+          if [ -s "$SQL_FILE" ]; then
+            echo "✅ Backup file is not empty"
+          else
+            echo "❌ Backup file is empty"
+            exit 1
+          fi
+          
+          # Check for key tables
+          if grep -q "CREATE TABLE" "$SQL_FILE"; then
+            echo "✅ Backup contains table definitions"
+          else
+            echo "❌ Backup missing table definitions"
+            exit 1
+          fi
+          
+          echo "✅ Backup integrity test passed"
+
+  notify-backup-status:
+    runs-on: ubuntu-latest
+    needs: [backup-database, backup-application-data, test-backup-integrity]
+    if: always()
+    steps:
+      - name: Send notification
+        uses: 8398a7/action-slack@v3
+        if: env.SLACK_WEBHOOK_URL != ''
+        with:
+          status: ${{ job.status }}
+          text: |
+            VentAI Backup Status: ${{ job.status }}
+            
+            Database Backup: ${{ needs.backup-database.result }}
+            Application Backup: ${{ needs.backup-application-data.result }}
+            Integrity Test: ${{ needs.test-backup-integrity.result }}
+            
+            Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

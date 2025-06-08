@@ -77,14 +77,17 @@ main() {
     # Check project structure
     log "Checking project structure..."
     check_file "package.json" || exit 1
-    check_file "docker-compose.dev.yml" || exit 1
-    check_file "docker-compose.yml" || exit 1
+    check_file "infra/docker/docker-compose.dev.yml" || exit 1
+    check_file "infra/docker/docker-compose.yml" || exit 1
     check_dir "frontend" || exit 1
     check_dir "backend" || exit 1
+    check_dir "services/mcp" || exit 1
     check_file "frontend/package.json" || exit 1
     check_file "backend/requirements.txt" || exit 1
+    check_file "services/mcp/requirements.txt" || exit 1
     check_file "frontend/Dockerfile.dev" || exit 1
     check_file "backend/Dockerfile.dev" || exit 1
+    check_file "services/mcp/Dockerfile" || exit 1
     
     # Validate package.json scripts
     log "Validating package.json scripts..."
@@ -104,14 +107,14 @@ main() {
     
     # Check Docker Compose syntax
     log "Validating Docker Compose files..."
-    if docker-compose -f docker-compose.dev.yml config >/dev/null 2>&1; then
+    if docker-compose -f infra/docker/docker-compose.dev.yml config >/dev/null 2>&1; then
         success "docker-compose.dev.yml syntax is valid"
     else
         error "docker-compose.dev.yml syntax is invalid"
         exit 1
     fi
     
-    if docker-compose -f docker-compose.yml config >/dev/null 2>&1; then
+    if docker-compose -f infra/docker/docker-compose.yml config >/dev/null 2>&1; then
         success "docker-compose.yml syntax is valid"
     else
         error "docker-compose.yml syntax is invalid"

@@ -4,51 +4,133 @@
 
 VentAI - це професійна платформа для розрахунків та проектування систем вентиляції з інтеграцією AI технологій.
 
-## Архітектура
+## Project Structure
 
 ```
 ventai-app/
-├── frontend/           # React фронтенд додаток
-├── backend/           # Python FastAPI бекенд
-├── docs/              # Документація проекту
-├── tests/             # Тести всіх компонентів
-├── deployment/        # Docker та деплой конфігурації
-└── config/            # Конфігураційні файли
+├── frontend/              # React frontend application
+├── backend/               # Python FastAPI backend
+├── services/              # Microservices
+│   └── mcp/              # Model Context Protocol server
+├── scripts/               # Development and management scripts
+├── tools/                 # Development tools
+├── infra/                 # Infrastructure configuration
+│   ├── docker/           # Docker configurations
+│   └── k8s/              # Kubernetes manifests
+├── docs/                  # Project documentation
+│   ├── architecture/     # Architecture documentation
+│   ├── api/              # API documentation
+│   └── deployment/       # Deployment guides
+├── tests/                 # All project tests
+│   ├── integration/      # Integration tests
+│   ├── unit/             # Unit tests
+│   └── e2e/              # End-to-end tests
+├── configs/               # Configuration files
+├── environments/          # Environment configurations
+└── .github/              # GitHub workflows and templates
 ```
 
-## Швидкий старт
+## Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- Python 3.11+
+- Docker & Docker Compose
+
+### Installation and Setup
 
 ```bash
-# Встановлення залежностей
-npm run install:all
+# Complete project setup (recommended for first time)
+npm run setup:complete
 
-# Запуск в режимі розробки
+# Or step by step:
+npm run install:all
+npm run setup:environment
+npm run setup:dev
+```
+
+### Development
+
+```bash
+# Start development environment
 npm run dev
 
-# Запуск з Docker
+# Start with Docker
 npm run docker:dev
+
+# Start specific services
+npm run dev:frontend
+npm run dev:backend
+npm run dev:mcp
 ```
 
-## База данных
+## Database Configuration
 
-VentAI поддерживает две конфигурации баз данных:
-- **SQLite** - для быстрой разработки и тестирования
-- **PostgreSQL** - для продакшн развертывания и продвинутой разработки
+VentAI supports multiple database configurations:
+- **SQLite** - for quick development and testing
+- **PostgreSQL** - for production deployment and advanced development
 
-### Переход на PostgreSQL и Redis
+### Using PostgreSQL and Redis
 
-Для запуска с PostgreSQL и Redis:
+To run with PostgreSQL and Redis:
 
 ```bash
-# Запуск PostgreSQL и Redis в Docker
-./start-db-services.sh
+# Start PostgreSQL and Redis with Docker
+npm run docker:db
 
-# Запуск сервера с PostgreSQL и Redis
-cd backend
-./start_postgres_redis_server.sh
+# Start backend with PostgreSQL and Redis
+npm run dev:backend:postgres
+
+# Or use the setup script
+./scripts/setup-project.sh --with-postgres
 ```
 
-Подробная информация о миграции на PostgreSQL и Redis находится в [docs/POSTGRES_REDIS_INTEGRATION.md](docs/POSTGRES_REDIS_INTEGRATION.md)
+### Environment Management
+
+Environment configurations are located in `environments/`:
+- `.env.development` - Development settings
+- `.env.production.template` - Production template
+- `.env.local.template` - Local override template
+
+## Scripts and Tools
+
+### Project Management
+```bash
+npm run setup:complete      # Complete project setup
+npm run validate:workflow   # Validate development workflow
+npm run clean:all          # Clean all build artifacts
+```
+
+### Development Tools
+```bash
+npm run lint               # Run all linters
+npm run format             # Format all code
+npm run test:all          # Run all tests
+npm run build:all         # Build all components
+```
+
+### Docker Operations
+```bash
+npm run docker:dev         # Start development environment
+npm run docker:prod        # Start production environment
+npm run docker:db          # Start database services only
+npm run docker:clean       # Clean Docker resources
+```
+
+## Documentation
+
+- [Architecture](docs/architecture/) - System architecture and design
+- [API Documentation](docs/api/) - API endpoints and schemas
+- [Deployment Guide](docs/deployment/) - Deployment instructions
+- [PostgreSQL Integration](docs/POSTGRES_REDIS_INTEGRATION.md) - Database migration guide
+
+## Development Workflow
+
+1. **Setup**: Run `npm run setup:complete` for initial setup
+2. **Development**: Use `npm run dev` for development server
+3. **Testing**: Run `npm run test:all` before commits
+4. **Validation**: Use `npm run validate:workflow` to check setup
+5. **Production**: Deploy with `npm run docker:prod`
 
 ## Можливості
 

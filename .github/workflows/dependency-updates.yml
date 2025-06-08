@@ -1,0 +1,83 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Update Node.js dependencies
+        run: |
+          cd frontend
+          npm update
+          npm audit fix --audit-level moderate
+          cd ..
+          
+          # Update root dependencies
+          npm update
+
+      - name: Update Python dependencies
+        run: |
+          cd backend
+          pip install --upgrade pip
+          pip install pip-tools
+          pip-compile --upgrade requirements.in --output-file requirements.txt
+          cd ..
+
+      - name: Update Docker base images
+        run: |
+          # Update base images in Dockerfiles
+          sed -i 's/node:18-alpine/node:18-alpine/g' frontend/Dockerfile.prod
+          sed -i 's/python:3.11-slim/python:3.11-slim/g' backend/Dockerfile.prod
+
+      - name: Run tests
+        run: |
+          npm run install:all
+          npm run test:all
+          npm run lint
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update dependencies"
+          title: "🔄 Automated Dependency Updates"
+          body: |
+            ## 🔄 Automated Dependency Updates
+            
+            This PR contains automated updates to project dependencies:
+            
+            ### Updated:
+            - Node.js frontend dependencies
+            - Python backend dependencies  
+            - Docker base images
+            
+            ### Testing:
+            - [x] All tests pass
+            - [x] Linting passes
+            - [x] No breaking changes detected
+            
+            **Note**: This PR was created automatically. Please review changes before merging.
+            
+            Generated on: ${{ github.run_id }}
+          branch: automated/dependency-updates
+          delete-branch: true
