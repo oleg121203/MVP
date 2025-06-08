@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 VentAI Development Environment Test
-Tests if the minimal development setup is working correctly.
+Tests if the development setup is working correctly in Universal dev-container.
 """
 
 import os
@@ -15,56 +15,52 @@ def test_python_env():
     print("🐍 Python Environment Test")
     print(f"Python version: {sys.version}")
     print(f"Python executable: {sys.executable}")
-    return True
+    
+    # Test FastAPI import (globally installed)
+    try:
+        import fastapi
+        print("✅ FastAPI available")
+        return True
+    except ImportError:
+        print("❌ FastAPI not available - run setup")
+        return False
 
-def test_backend_venv():
-    """Test backend virtual environment"""
-    print("\n🔧 Backend Virtual Environment Test")
-    venv_path = Path("backend/venv")
-    if venv_path.exists():
-        print("✅ Virtual environment exists")
-        
-        # Check if we can activate and run basic imports
-        activate_script = venv_path / "bin" / "activate"
-        if activate_script.exists():
-            print("✅ Activation script exists")
+def test_node_env():
+    """Test Node.js environment"""
+    print("\n📱 Node.js Environment Test")
+    try:
+        result = subprocess.run(["node", "--version"], capture_output=True, text=True)
+        if result.returncode == 0:
+            print(f"✅ Node.js version: {result.stdout.strip()}")
         else:
-            print("❌ Activation script missing")
+            print("❌ Node.js not available")
             return False
             
-        # Try to test basic imports
-        python_path = venv_path / "bin" / "python"
-        if python_path.exists():
-            print("✅ Python interpreter in venv exists")
-            try:
-                result = subprocess.run([str(python_path), "-c", "import fastapi; print('FastAPI available')"], 
-                                     capture_output=True, text=True, timeout=10)
-                if result.returncode == 0:
-                    print("✅ FastAPI available in venv")
-                else:
-                    print(f"❌ FastAPI import failed: {result.stderr}")
-                    return False
-            except Exception as e:
-                print(f"❌ Error testing FastAPI: {e}")
-                return False
+        result = subprocess.run(["npm", "--version"], capture_output=True, text=True)
+        if result.returncode == 0:
+            print(f"✅ NPM version: {result.stdout.strip()}")
+            return True
         else:
-            print("❌ Python interpreter not found in venv")
+            print("❌ NPM not available")
             return False
-    else:
-        print("❌ Virtual environment not found")
+    except FileNotFoundError:
+        print("❌ Node.js/NPM not found")
         return False
-    
-    return True
 
 def test_frontend_deps():
     """Test frontend dependencies"""
-    print("\n📱 Frontend Dependencies Test")
+    print("\n📦 Frontend Dependencies Test")
+    
+    if not Path("frontend").exists():
+        print("❌ Frontend directory not found")
+        return False
+        
     node_modules = Path("frontend/node_modules")
     if node_modules.exists():
         print("✅ node_modules exists")
         
-        # Check for key packages
-        key_packages = ["react", "next", "@types/react"]
+        # Check for key packages (React app, not Next.js)
+        key_packages = ["react", "react-dom", "react-scripts"]
         for package in key_packages:
             package_path = node_modules / package
             if package_path.exists():
@@ -72,21 +68,20 @@ def test_frontend_deps():
             else:
                 print(f"❌ {package} missing")
                 return False
+        return True
     else:
         print("❌ node_modules not found")
         return False
-    
-    return True
 
 def test_env_files():
     """Test environment files"""
     print("\n📄 Environment Files Test")
     
-    backend_env = Path("backend/.env.minimal")
+    backend_env = Path("backend/.env")
     if backend_env.exists():
-        print("✅ Backend .env.minimal exists")
+        print("✅ Backend .env exists")
     else:
-        print("❌ Backend .env.minimal missing")
+        print("❌ Backend .env missing")
         return False
     
     frontend_env = Path("frontend/.env.local")
@@ -98,40 +93,48 @@ def test_env_files():
     
     return True
 
-def test_docker_config():
-    """Test Docker configuration"""
-    print("\n🐳 Docker Configuration Test")
+def test_backend_structure():
+    """Test backend structure"""
+    print("\n🔧 Backend Structure Test")
     
-    docker_compose = Path("infra/docker/docker-compose.dev.yml")
-    if docker_compose.exists():
-        print("✅ Docker Compose file exists")
-    else:
-        print("❌ Docker Compose file missing")
+    if not Path("backend").exists():
+        print("❌ Backend directory not found")
         return False
+        
+    required_files = [
+        "backend/requirements.txt"
+    ]
     
-    docker_env = Path("infra/docker/.env")
-    if docker_env.exists():
-        print("✅ Docker .env file exists")
+    for file_path in required_files:
+        if Path(file_path).exists():
+            print(f"✅ {file_path} exists")
+        else:
+            print(f"❌ {file_path} missing")
+            return False
+    
+    # Check if main.py exists
+    main_py = Path("backend/main.py")
+    if main_py.exists():
+        print("✅ backend/main.py exists")
     else:
-        print("❌ Docker .env file missing")
-        return False
+        print("⚠️  backend/main.py missing (will be created)")
     
     return True
 
 def main():
     """Run all tests"""
-    print("🔍 VentAI Development Environment Test")
-    print("=====================================")
+    print("🔍 VentAI Universal Dev-Container Environment Test")
+    print("=================================================")
     
     # Change to project root
     os.chdir(Path(__file__).parent)
     
     tests = [
         test_python_env,
-        test_backend_venv,
+        test_node_env,
+        test_backend_structure,
         test_frontend_deps,
-        test_env_files,
-        test_docker_config
+        test_env_files
     ]
     
     results = []
@@ -153,15 +156,14 @@ def main():
     if passed == total:
         print("🎉 All tests passed! Development environment is ready.")
         print("\nNext steps:")
-        print("1. Run: ./start-minimal-dev.sh")
-        print("2. Open: http://localhost:3000")
-        print("3. Check API: http://localhost:8000/docs")
+        print("1. Run: npm run dev")
+        print("2. Open: http://localhost:3000 (Frontend)")
+        print("3. Check API: http://localhost:8000/docs (Backend)")
     else:
-        print("❌ Some tests failed. Please check the setup.")
-        print("\nTroubleshooting:")
-        print("1. Run: ./setup-minimal-dev.sh")
-        print("2. Check logs for any error messages")
-        print("3. Try Docker alternative: ./scripts/start-dev-environment.sh")
+        print("❌ Some tests failed. Please run setup.")
+        print("\nSetup commands:")
+        print("1. Run: bash .devcontainer/setup.sh")
+        print("2. Or rebuild dev-container")
     
     return passed == total
 

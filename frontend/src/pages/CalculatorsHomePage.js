@@ -11,6 +11,9 @@ import WaterHeaterCalculator from './WaterHeaterCalculator';
 import { Button } from './components/ui';
 import './calculators.animations.css';
 
+// Import AI components
+import { AIChatAssistant } from './components/ai/AIEnhancedCalculator';
+
 const CalculatorsHomePage = ({ projects, addSpecToProject }) => {
   const { t } = useLocalization();
   const { theme } = useTheme();
@@ -343,6 +346,21 @@ const CalculatorsHomePage = ({ projects, addSpecToProject }) => {
         </div>
       ) : (
         renderActiveCalculator()
+      )}
+
+      {/* Global AI Chat Assistant for Calculator Selection */}
+      {!activeCalculator && (
+        <AIChatAssistant 
+          calculatorType="calculator_selection"
+          context={{
+            availableCalculators: calculators.map(calc => ({
+              id: calc.id,
+              name: calc.name,
+              description: calc.description
+            })),
+            currentTheme: theme
+          }}
+        />
       )}
     </div>
   );

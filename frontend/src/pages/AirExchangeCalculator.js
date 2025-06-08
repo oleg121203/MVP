@@ -3,6 +3,9 @@ import { Button, Form, FormGroup, Input } from './components/ui';
 import { useLocalization } from './context/LocalizationContext';
 import { useTheme } from './context/ThemeContext';
 
+// Import AI components
+import { AIEnhancedCalculator, AIChatAssistant } from './components/ai/AIEnhancedCalculator';
+
 const AirExchangeCalculator = ({ projects, addSpecToProject }) => {
   const { t } = useLocalization();
   const { theme } = useTheme();
@@ -26,7 +29,33 @@ const AirExchangeCalculator = ({ projects, addSpecToProject }) => {
     projects?.length > 0 ? projects[0].id : ''
   );
 
+  // AI Enhancement states
+  const [currentInputData, setCurrentInputData] = useState({});
+  const [aiSuggestions, setAiSuggestions] = useState(null);
+
+  // Function to handle AI suggestions updates
+  const handleAISuggestionsUpdate = (suggestions) => {
+    setAiSuggestions(suggestions);
+  };
+
+  // Update input data for AI analysis
+  const updateInputData = () => {
+    const inputData = {
+      mode,
+      length,
+      width,
+      height,
+      airChangeRate,
+      peopleCount,
+      airPerPerson
+    };
+    setCurrentInputData(inputData);
+  };
+
   const handleCalculate = () => {
+    // Update input data for AI analysis
+    updateInputData();
+    
     // Reset errors and animation state
     setErrors({});
     setShowAnimation(false);
@@ -190,7 +219,13 @@ const AirExchangeCalculator = ({ projects, addSpecToProject }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto my-8 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+    <AIEnhancedCalculator
+      calculatorType="air_exchange"
+      inputData={currentInputData}
+      results={results}
+      onSuggestionsUpdate={handleAISuggestionsUpdate}
+    >
+      <div className="max-w-3xl mx-auto my-8 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
       <h2 className="text-2xl font-bold text-center text-neutral dark:text-white mb-6">
         {t('airExchange.title')}
       </h2>
@@ -412,7 +447,19 @@ const AirExchangeCalculator = ({ projects, addSpecToProject }) => {
           </Button>
         </div>
       )}
+
+      {/* AI Chat Assistant */}
+      <AIChatAssistant 
+        calculatorType="air_exchange"
+        context={{
+          mode,
+          inputData: currentInputData,
+          results,
+          suggestions: aiSuggestions
+        }}
+      />
     </div>
+    </AIEnhancedCalculator>
   );
 };
 

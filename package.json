@@ -1,102 +1,19 @@
 {
-  "name": "ventai-app",
-  "version": "2.0.0",
-  "description": "VentAI - Professional HVAC Calculation and Design Platform",
-  "private": true,
-  "workspaces": [
-    "frontend",
-    "backend",
-    "services/*"
-  ],
+  "name": "ventai-mvp",
+  "version": "1.0.0",
+  "description": "VentAI MVP - AI-powered event management platform",
   "scripts": {
-    "preinstall": "node scripts/check-node-version.js",
-    
-    "setup:complete": "./scripts/setup-project.sh",
-    "setup:environment": "node scripts/setup-environment.js",
-    "setup:dev": "npm run install:all && npm run setup:environment",
-    "validate:complete": "./scripts/validate-complete.sh",
-    "validate:workflow": "./scripts/validate-workflow.sh",
-    
-    "install:all": "npm run install:deps && npm run install:frontend && npm run install:backend && npm run install:services",
-    "install:deps": "npm install",
-    "install:frontend": "cd frontend && npm install --legacy-peer-deps",
-    "install:backend": "cd backend && python -m venv venv && source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt",
-    "install:services": "cd services/mcp && pip install -r requirements.txt",
-    
-    "dev": "npm run docker:dev",
-    "dev:local": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:mcp\"",
+    "dev:backend": "cd backend && uvicorn main:app --reload --host 0.0.0.0 --port 8000",
     "dev:frontend": "cd frontend && npm start",
-    "dev:backend": "cd backend && source venv/bin/activate && python src/fastapi_app/main.py",
-    "dev:backend:postgres": "cd backend && source venv/bin/activate && DATABASE_URL=$POSTGRES_DATABASE_URL python src/fastapi_app/main.py",
-    "dev:mcp": "cd services/mcp && python mcp_server.py",
-    
-    "docker:dev": "docker-compose -f infra/docker/docker-compose.dev.yml up --build",
-    "docker:prod": "docker-compose -f infra/docker/docker-compose.prod.yml up -d --build",
-    "docker:db": "docker-compose -f infra/docker/docker-compose-db.yml up -d",
-    "docker:test": "docker-compose -f infra/docker/docker-compose.test.yml up --build --abort-on-container-exit",
-    "docker:monitoring": "docker-compose -f infra/docker/docker-compose.prod.yml -f infra/docker/docker-compose.monitoring.yml up -d",
-    "docker:down": "docker-compose -f infra/docker/docker-compose.dev.yml down",
-    "docker:down:prod": "docker-compose -f infra/docker/docker-compose.prod.yml down",
-    "docker:clean": "docker system prune -af && docker volume prune -f",
-    
-    "build": "npm run build:all",
-    "build:all": "npm run build:frontend && npm run build:backend",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "test:setup": "python test-setup.py",
     "build:frontend": "cd frontend && npm run build",
-    "build:backend": "cd backend && docker build -t ventai-backend .",
-    
-    "test:all": "npm run test:frontend && npm run test:backend && npm run test:mcp && npm run test:integration",
-    "test:frontend": "cd frontend && npm test -- --coverage --watchAll=false",
-    "test:backend": "cd backend && source venv/bin/activate && python -m pytest tests/ -v --tb=short",
-    "test:mcp": "cd services/mcp && python -m pytest tests/ -v",
-    "test:integration": "cd tests/integration && python -m pytest -v",
-    "test:e2e": "cd tests/e2e && npx playwright test",
-    "test:performance": "./tests/performance/run-performance-tests.sh",
-    "test:docker": "docker-compose -f infra/docker/docker-compose.test.yml up --build --abort-on-container-exit",
-    
-    "lint": "npm run lint:frontend && npm run lint:backend && npm run lint:services",
-    "lint:frontend": "cd frontend && npm run lint",
-    "lint:backend": "cd backend && source venv/bin/activate && python -m flake8 src && python -m black --check src && python -m isort --check src",
-    "lint:services": "cd services/mcp && python -m flake8 . && python -m black --check . && python -m isort --check .",
-    
-    "format": "npm run format:frontend && npm run format:backend && npm run format:services",
-    "format:check": "npm run format:frontend:check && npm run format:backend:check && npm run format:services:check",
-    "format:frontend": "cd frontend && npm run format",
-    "format:frontend:check": "cd frontend && npm run format:check",
-    "format:backend": "cd backend && source venv/bin/activate && python -m black src && python -m isort src",
-    "format:backend:check": "cd backend && source venv/bin/activate && python -m black --check src && python -m isort --check src",
-    "format:services": "cd services/mcp && python -m black . && python -m isort .",
-    "format:services:check": "cd services/mcp && python -m black --check . && python -m isort --check .",
-    
-    "clean:all": "npm run clean:frontend && npm run clean:backend && npm run clean:node_modules",
-    "clean:frontend": "cd frontend && rm -rf build dist .next",
-    "clean:backend": "cd backend && rm -rf __pycache__ .pytest_cache dist build",
-    "clean:node_modules": "rm -rf node_modules frontend/node_modules",
-    
-    "db:migrate": "./scripts/database/migrate.sh migrate",
-    "db:backup": "./scripts/database/migrate.sh backup",
-    "db:reset": "./scripts/database/migrate.sh reset",
-    "db:status": "./scripts/database/migrate.sh status",
-    
-    "report:performance": "./tests/performance/run-performance-tests.sh",
-    "report:coverage": "cd frontend && npm run coverage && cd ../backend && coverage report",
-    
-    "k8s:deploy": "kubectl apply -f infra/k8s/",
-    "k8s:undeploy": "kubectl delete -f infra/k8s/",
-    "k8s:status": "kubectl get all -n ventai",
-    
-    "monitoring:up": "docker-compose -f infra/docker/docker-compose.monitoring.yml up -d",
-    "monitoring:down": "docker-compose -f infra/docker/docker-compose.monitoring.yml down"
+    "start:prod": "concurrently \"cd backend && uvicorn main:app --host 0.0.0.0 --port 8000\" \"cd frontend && npm start\""
   },
-  "keywords": [
-    "hvac",
-    "ventilation",
-    "ai",
-    "calculations",
-    "engineering"
-  ],
-  "author": "VentAI Team",
-  "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.0"
-  }
+  },
+  "keywords": ["ai", "events", "mvp"],
+  "author": "VentAI Team",
+  "license": "MIT"
 }

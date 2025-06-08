@@ -14,6 +14,12 @@ import OffsetModule from './components/calculators/area/OffsetModule';
 import HoodModule from './components/calculators/area/HoodModule';
 import SummarySection from './components/calculators/area/SummarySection';
 
+// Import AI components
+import { AIEnhancedCalculator, AIChatAssistant } from './components/ai/AIEnhancedCalculator';
+
+// Import AI components
+import { AIEnhancedCalculator, AIChatAssistant } from './components/ai/AIEnhancedCalculator';
+
 const DuctAreaCalculator = ({ projects = [], addSpecToProject }) => {
   // Get global localization and theme from contexts
   const { t } = useLocalization();
@@ -31,6 +37,11 @@ const DuctAreaCalculator = ({ projects = [], addSpecToProject }) => {
   // State for save confirmation
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [saveStatus, setSaveStatus] = useState({ success: false, message: '' });
+
+  // AI Enhancement states
+  const [currentInputData, setCurrentInputData] = useState({});
+  const [currentResults, setCurrentResults] = useState({});
+  const [aiSuggestions, setAiSuggestions] = useState(null);
 
   // Use the global t function for translations
   // Function to handle saving to project
@@ -81,6 +92,19 @@ const DuctAreaCalculator = ({ projects = [], addSpecToProject }) => {
       ...prevResults,
       [moduleKey]: results,
     }));
+    
+    // Update current results for AI analysis
+    setCurrentResults(results);
+  };
+
+  // Function to handle input data changes for AI analysis
+  const handleInputDataChange = (inputData) => {
+    setCurrentInputData(inputData);
+  };
+
+  // Function to handle AI suggestions updates
+  const handleAISuggestionsUpdate = (suggestions) => {
+    setAiSuggestions(suggestions);
   };
 
   // Tabs configuration
@@ -102,12 +126,20 @@ const DuctAreaCalculator = ({ projects = [], addSpecToProject }) => {
 
     const TabComponent = activeTabConfig.component;
     return (
-      <div className="tab-content">
-        <TabComponent
-          t={t}
-          onCalculate={(results) => updateCalculationResults(activeTab, results)}
-        />
-      </div>
+      <AIEnhancedCalculator
+        calculatorType={`duct_area_${activeTab}`}
+        inputData={currentInputData}
+        results={currentResults}
+        onSuggestionsUpdate={handleAISuggestionsUpdate}
+      >
+        <div className="tab-content">
+          <TabComponent
+            t={t}
+            onCalculate={(results) => updateCalculationResults(activeTab, results)}
+            onInputChange={handleInputDataChange}
+          />
+        </div>
+      </AIEnhancedCalculator>
     );
   };
 
@@ -195,6 +227,17 @@ const DuctAreaCalculator = ({ projects = [], addSpecToProject }) => {
           </div>
         </div>
       )}
+
+      {/* AI Chat Assistant */}
+      <AIChatAssistant 
+        calculatorType={`duct_area_${activeTab}`}
+        context={{
+          currentTab: activeTab,
+          calculationResults: calculationResults,
+          inputData: currentInputData,
+          suggestions: aiSuggestions
+        }}
+      />
     </div>
   );
 };

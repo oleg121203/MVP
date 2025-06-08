@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useLocalization } from './context/LocalizationContext';
 import { Button, Input, Form, FormGroup } from './components/ui';
 import { useTheme } from './context/ThemeContext';
+import SimpleAIWrapper from './components/ai/SimpleAIWrapper';
 
 // Довідник коефіцієнтів місцевих опорів (ζ, дзета) згідно з поширеними практиками та нормами
 const LOCAL_RESISTANCE_COEFFICIENTS = {
@@ -28,6 +29,21 @@ const PressureDropCalculator = ({ projects, addSpecToProject }) => {
   const [selectedProjectId, setSelectedProjectId] = useState(
     projects?.length > 0 ? projects[0].id : ''
   );
+
+  // AI Enhancement data
+  const inputData = { 
+    elementType, 
+    airflow, 
+    diameter, 
+    length, 
+    sections 
+  };
+  const results = useMemo(() => {
+    const totalPressureDrop = sections
+      .reduce((sum, section) => sum + section.pressureDrop, 0)
+      .toFixed(2);
+    return { totalPressureDrop, sectionsCount: sections.length };
+  }, [sections]);
 
   const handleAddSection = () => {
     // Reset errors
@@ -127,7 +143,12 @@ const PressureDropCalculator = ({ projects, addSpecToProject }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto my-8 p-8 bg-base-100 dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+    <SimpleAIWrapper
+      calculatorType="pressure_drop"
+      inputData={inputData}
+      results={results}
+    >
+      <div className="max-w-3xl mx-auto my-8 p-8 bg-base-100 dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
       <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-6">
         {t('pressureDrop.title')}
       </h2>
@@ -283,6 +304,7 @@ const PressureDropCalculator = ({ projects, addSpecToProject }) => {
         </div>
       )}
     </div>
+    </SimpleAIWrapper>
   );
 };
 

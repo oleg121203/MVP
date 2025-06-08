@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocalization } from './context/LocalizationContext';
 import { useTheme } from './context/ThemeContext';
 import { Button, Input, Form, FormGroup } from './components/ui';
+import SimpleAIWrapper from '../components/ai/SimpleAIWrapper';
 
 const SmokeRemovalCalculator = ({ projects, addSpecToProject }) => {
   const { t } = useLocalization();
@@ -107,7 +108,18 @@ const SmokeRemovalCalculator = ({ projects, addSpecToProject }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto my-8 p-8 bg-base-100 dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+    <SimpleAIWrapper 
+      calculatorType="smoke-removal"
+      currentInputData={{
+        mode,
+        corridorWidth,
+        corridorHeight,
+        airVelocity,
+        firePerimeter,
+        smokeFreeHeight
+      }}
+    >
+      <div className="max-w-3xl mx-auto my-8 p-8 bg-base-100 dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
       <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-6">
         {t('smokeRemoval.title')}
       </h2>
@@ -332,6 +344,7 @@ const SmokeRemovalCalculator = ({ projects, addSpecToProject }) => {
         </>
       )}
     </div>
+    </SimpleAIWrapper>
   );
 };
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocalization } from './context/LocalizationContext';
 import { Button, Input, Form, FormGroup } from './components/ui';
 import { useTheme } from './context/ThemeContext';
+import SimpleAIWrapper from './components/ai/SimpleAIWrapper';
 
 const AcousticCalculator = ({ projects, addSpecToProject }) => {
   const { t } = useLocalization();
@@ -17,6 +18,14 @@ const AcousticCalculator = ({ projects, addSpecToProject }) => {
   const [selectedProjectId, setSelectedProjectId] = useState(
     projects?.length > 0 ? projects[0].id : ''
   );
+
+  // AI Enhancement data
+  const inputData = { 
+    fanPowerLevel, 
+    requiredRoomLevel, 
+    ductLength, 
+    elbowCount 
+  };
 
   // Constants for calculation (simplified)
   const ATTENUATION_PER_METER = 0.5; // dBA/m
@@ -89,7 +98,12 @@ const AcousticCalculator = ({ projects, addSpecToProject }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto my-8 p-8 bg-base-100 dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+    <SimpleAIWrapper
+      calculatorType="acoustic"
+      inputData={inputData}
+      results={result}
+    >
+      <div className="max-w-3xl mx-auto my-8 p-8 bg-base-100 dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
       <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-6">
         {t('acoustic.title')}
       </h2>
@@ -234,6 +248,7 @@ const AcousticCalculator = ({ projects, addSpecToProject }) => {
         </>
       )}
     </div>
+    </SimpleAIWrapper>
   );
 };
 

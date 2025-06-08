@@ -4,6 +4,7 @@ import { Input, FormGroup, Tabs } from './components/ui';
 import PowerSelectionForm from './components/calculators/PowerSelectionForm';
 import TemperatureSelectionForm from './components/calculators/TemperatureSelectionForm';
 import { useToast } from './context/ToastContext';
+import SimpleAIWrapper from './components/ai/SimpleAIWrapper';
 
 const WaterHeaterCalculator = () => {
   // State to manage which tab is currently active. 'power' is the default.
@@ -119,7 +120,12 @@ const WaterHeaterCalculator = () => {
   ];
 
   return (
-    <div className="calculator-container water-heater-calculator">
+    <SimpleAIWrapper
+      calculatorType="water_heater"
+      inputData={inputs}
+      results={results}
+    >
+      <div className="calculator-container water-heater-calculator">
       <div className="calculator-header">
         {/* The title will be dynamic based on localization later */}
         <h2>Water Heater Calculator</h2>
@@ -176,6 +182,7 @@ const WaterHeaterCalculator = () => {
         )}
       </div>
     </div>
+    </SimpleAIWrapper>
   );
 };
 

@@ -1,172 +1,111 @@
-# VentAI - Professional HVAC Platform
+# VentAI MVP
 
-## Огляд
+VentAI - это инновационная платформа для управления проектами с помощью ИИ, которая помогает командам автоматизировать рутинные задачи и принимать более обоснованные решения.
 
-VentAI - це професійна платформа для розрахунків та проектування систем вентиляції з інтеграцією AI технологій.
+## ✅ Статус проекта
 
-## Project Structure
+🎉 **Полностью настроен и готов к разработке!**
 
-```
-ventai-app/
-├── frontend/              # React frontend application
-├── backend/               # Python FastAPI backend
-├── services/              # Microservices
-│   └── mcp/              # Model Context Protocol server
-├── scripts/               # Development and management scripts
-├── tools/                 # Development tools
-├── infra/                 # Infrastructure configuration
-│   ├── docker/           # Docker configurations
-│   └── k8s/              # Kubernetes manifests
-├── docs/                  # Project documentation
-│   ├── architecture/     # Architecture documentation
-│   ├── api/              # API documentation
-│   └── deployment/       # Deployment guides
-├── tests/                 # All project tests
-│   ├── integration/      # Integration tests
-│   ├── unit/             # Unit tests
-│   └── e2e/              # End-to-end tests
-├── configs/               # Configuration files
-├── environments/          # Environment configurations
-└── .github/              # GitHub workflows and templates
-```
+- ✅ Universal Dev-Container настроен
+- ✅ Backend (FastAPI) работает на порту 8000
+- ✅ Frontend (React) работает на порту 3000
+- ✅ Все зависимости установлены
+- ✅ Среда разработки протестирована
 
-## Quick Start
+## 🚀 Быстрый старт
 
-### Prerequisites
-- Node.js 18+ 
-- Python 3.11+
-- Docker & Docker Compose
+### Предварительные требования
+- Visual Studio Code с расширением Dev Containers
+- Docker
 
-### Installation and Setup
-
-```bash
-# Complete project setup (recommended for first time)
-npm run setup:complete
-
-# Or step by step:
-npm run install:all
-npm run setup:environment
-npm run setup:dev
-```
-
-### Development
-
-```bash
-# Start development environment
-npm run dev
-
-# Start with Docker
-npm run docker:dev
-
-# Start specific services
-npm run dev:frontend
-npm run dev:backend
-npm run dev:mcp
-```
-
-## Database Configuration
-
-VentAI supports multiple database configurations:
-- **SQLite** - for quick development and testing
-- **PostgreSQL** - for production deployment and advanced development
-
-### Using PostgreSQL and Redis
-
-To run with PostgreSQL and Redis:
-
-```bash
-# Start PostgreSQL and Redis with Docker
-npm run docker:db
-
-# Start backend with PostgreSQL and Redis
-npm run dev:backend:postgres
-
-# Or use the setup script
-./scripts/setup-project.sh --with-postgres
-```
-
-### Environment Management
-
-Environment configurations are located in `environments/`:
-- `.env.development` - Development settings
-- `.env.production.template` - Production template
-- `.env.local.template` - Local override template
-
-## Scripts and Tools
-
-### Project Management
-```bash
-npm run setup:complete      # Complete project setup
-npm run validate:workflow   # Validate development workflow
-npm run clean:all          # Clean all build artifacts
-```
-
-### Development Tools
-```bash
-npm run lint               # Run all linters
-npm run format             # Format all code
-npm run test:all          # Run all tests
-npm run build:all         # Build all components
-```
-
-### Docker Operations
-```bash
-npm run docker:dev         # Start development environment
-npm run docker:prod        # Start production environment
-npm run docker:db          # Start database services only
-npm run docker:clean       # Clean Docker resources
-```
-
-## Documentation
-
-- [Architecture](docs/architecture/) - System architecture and design
-- [API Documentation](docs/api/) - API endpoints and schemas
-- [Deployment Guide](docs/deployment/) - Deployment instructions
-- [PostgreSQL Integration](docs/POSTGRES_REDIS_INTEGRATION.md) - Database migration guide
-
-## Development Workflow
-
-1. **Setup**: Run `npm run setup:complete` for initial setup
-2. **Development**: Use `npm run dev` for development server
-3. **Testing**: Run `npm run test:all` before commits
-4. **Validation**: Use `npm run validate:workflow` to check setup
-5. **Production**: Deploy with `npm run docker:prod`
-
-## Можливості
-
-- **HVAC розрахунки** - Повний набір інженерних розрахунків
-- **AI інтеграція** - Інтелектуальні підказки та автоматизація
-- **Responsive дизайн** - Робота на всіх пристроях
-- **Звітність** - Генерація професійних звітів
-- **Безпека** - Сучасні методи аутентифікації
-
-## Розробка
-
-Детальна інформація по розробці знаходиться в [docs/development](docs/development/).
-
-## Документація
-
-- [API Documentation](docs/api/)
-- [User Guide](docs/user-guide/)
-- [Architecture](docs/architecture/)
-
-## Troubleshooting
-
-### Docker Build Issues
-1. If seeing 'path not found' errors:
+### Запуск
+1. Откройте проект в VS Code
+2. При появлении уведомления нажмите "Reopen in Container"
+3. Дождитесь настройки окружения (автоматически)
+4. Запустите разработку:
    ```bash
-   docker system prune -a -f --volumes
-   rm -rf deployment/docker/.cache
-   ```
-2. Rebuild with:
-   ```bash
-   docker-compose -f docker-compose.yml -f deployment/docker/docker-compose.dev.yml up --build
+   npm run dev
    ```
 
-### Missing Frontend Files
-- Ensure `src/index.js` exists with basic React render setup
-- Verify all dependencies are installed (`npm install`)
+## 🔧 Доступные команды
+
+- `npm run dev` - запуск backend и frontend в режиме разработки
+- `npm run test:setup` - проверка настройки окружения
+- `npm run dev:backend` - запуск только backend
+- `npm run dev:frontend` - запуск только frontend
+
+## 🌐 URL-адреса
+
+- **Frontend**: http://localhost:3000 (React приложение)
+- **Backend API**: http://localhost:8000 (FastAPI)
+- **API Documentation**: http://localhost:8000/docs (Swagger UI)
+
+## 📁 Структура проекта
+
+```
+MVP/
+├── .devcontainer/          # Настройки Dev-Container
+│   ├── devcontainer.json  # Конфигурация контейнера
+│   └── setup.sh          # Скрипт настройки окружения
+├── backend/               # FastAPI backend
+│   ├── main.py           # Основное приложение
+│   ├── requirements.txt  # Python зависимости
+│   └── .env             # Переменные окружения
+├── frontend/             # React frontend
+│   ├── src/             # Исходный код
+│   ├── public/          # Статические файлы
+│   └── .env.local       # Переменные окружения
+├── package.json         # Node.js конфигурация
+├── test-setup.py        # Тест настройки окружения
+└── README.md           # Документация
+```
+
+## 🧪 Тестирование
+
+Проверить настройку окружения:
+```bash
+npm run test:setup
+```
+
+Результат должен показать: **"🎉 All tests passed! Development environment is ready."**
+
+## 🔧 Технические детали
+
+### Backend (FastAPI)
+- Python 3.12.1
+- FastAPI с автоматической перезагрузкой
+- Uvicorn сервер
+- Swagger документация включена
+
+### Frontend (React)
+- Node.js 20.19.0
+- Create React App
+- Hot reload включен
+- Порт 3000
+
+### Dev-Container
+- Universal контейнер Microsoft
+- Автоматическая установка зависимостей
+- Python и Node.js предустановлены
+
+## 🚀 Деплой на production
+
+Для production деплоя на Linux серверах:
+1. Установите Docker и Docker Compose
+2. Скопируйте проект на сервер
+3. Настройте production переменные окружения
+4. Используйте systemd или supervisor для управления процессами
+
+## 🛠️ Разработка
+
+Проект готов к разработке! Начните с:
+1. Запуска `npm run dev`
+2. Открытия http://localhost:3000 для frontend
+3. Просмотра API документации на http://localhost:8000/docs
+4. Редактирования кода - изменения применяются автоматически
 
 ---
 
-**Версія**: 2.0.0 - Reorganized Architecture
+**Последнее обновление**: Проект полностью настроен и протестирован ✅
+
+

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocalization } from './context/LocalizationContext';
 import { useTheme } from './context/ThemeContext';
 import { Button, Input, Form, FormGroup } from './components/ui';
+import SimpleAIWrapper from './components/ai/SimpleAIWrapper';
 
 const DuctSizingCalculator = ({ projects, addSpecToProject }) => {
   const { t } = useLocalization();
@@ -14,6 +15,9 @@ const DuctSizingCalculator = ({ projects, addSpecToProject }) => {
     projects?.length > 0 ? projects[0].id : ''
   );
   const [showAnimation, setShowAnimation] = useState(false);
+
+  // AI Enhancement data
+  const inputData = { airflow, velocity };
 
   const handleCalculate = () => {
     // Reset errors and animation state
@@ -140,7 +144,12 @@ const DuctSizingCalculator = ({ projects, addSpecToProject }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto my-8 p-8 bg-base-100 dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+    <SimpleAIWrapper
+      calculatorType="duct_sizing"
+      inputData={inputData}
+      results={results}
+    >
+      <div className="max-w-3xl mx-auto my-8 p-8 bg-base-100 dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
       <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-6">
         {t('ductSizing.title')}
       </h2>
@@ -276,6 +285,7 @@ const DuctSizingCalculator = ({ projects, addSpecToProject }) => {
         </div>
       )}
     </div>
+    </SimpleAIWrapper>
   );
 };
 

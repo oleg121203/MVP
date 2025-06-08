@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ventai
-  labels:
-    name: ventai
-    environment: production
