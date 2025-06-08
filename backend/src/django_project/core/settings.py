@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "apps.authentication",
     "apps.projects",
     "apps.insights.apps.InsightsConfig",
+    "apps.automation.apps.AutomationConfig",
     "rest_framework_simplejwt",
 ]
 

@@ -1,0 +1,27 @@
+{
+  "aiInsights": {
+    "title": "AI Insights",
+    "noInsights": "No AI insights available at the moment.",
+    "fetchErrorTitle": "Error",
+    "fetchError": "Failed to fetch AI insights. Please try again later.",
+    "eventType": "Event Type",
+    "createdAt": "Created At"
+  },
+  "automation": {
+    "title": "Automation Rules",
+    "createNewRule": "Create New Rule",
+    "name": "Name",
+    "trigger": "Trigger",
+    "action": "Action",
+    "status": "Status",
+    "created": "Created",
+    "actions": "Actions",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Edit",
+    "delete": "Delete",
+    "noRules": "No automation rules found",
+    "fetchErrorTitle": "Error",
+    "fetchError": "Failed to fetch automation rules. Please try again later."
+  }
+}

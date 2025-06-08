@@ -13,6 +13,8 @@ import AIDashboard from '../pages/AIDashboard';
 import ProjectsPage from '../pages/ProjectsPage';
 import SettingsPage from '../pages/SettingsPage';
 import ProjectManagementPage from '../pages/ProjectManagementPage';
+import AIInsightsPage from './AIInsightsPage';
+import AutomationPage from './AutomationPage';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -52,7 +54,7 @@ function App() {
         } />
         <Route path="/ai-insights" element={
           <MainLayout>
-            <div>AI Insights Page (Placeholder)</div>
+            <AIInsightsPage />
           </MainLayout>
         } />
         <Route path="/settings" element={
@@ -62,7 +64,7 @@ function App() {
         } />
         <Route path="/automation" element={
           <MainLayout>
-            <div>Automation Page (Placeholder)</div>
+            <AutomationPage />
           </MainLayout>
         } />
         <Route path="*" element={
