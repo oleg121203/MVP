@@ -13,6 +13,26 @@
 - Failure protocols with autotickets
 - **NEW:** Autonomous error fixing protocol
 
+### PRIORITY 1.2: AGGRESSIVE PROBLEM SOLVING
+**File:** `aggressive_problem_solving.md`
+**Purpose:** Never-stop execution protocol for external dependency failures
+**Key Features:**
+- Docker daemon auto-start procedures
+- Service dependency workarounds
+- Mock implementation creation
+- Alternative solution escalation
+- **CRITICAL:** Zero-halt guarantee on infrastructure issues
+
+### PRIORITY 1.5: CONTINUOUS EXECUTION PROTOCOL  
+**File:** `continuous_execution.md`
+**Purpose:** Anti-interruption rules specifically for Windsurf execution flow
+**Key Features:**
+- Zero pause prompts override
+- Single-cycle completion rules
+- Maximum throughput protocols
+- Context retention guidelines
+- **CRITICAL:** Windsurf-specific continuation overrides
+
 ### PRIORITY 2: AUTO-FIX PROTOCOL
 **File:** `auto_fix_protocol.md`
 **Purpose:** Immediate compilation error resolution without confirmation
@@ -110,10 +130,15 @@ graph TD
 ✅ **ALWAYS:** Fix TypeScript errors immediately without confirmation
 ✅ **ALWAYS:** Auto-install missing dependencies with --force
 ✅ **ALWAYS:** Create missing files when import errors occur
+✅ **ALWAYS:** Complete ALL related changes in ONE continuous execution
+✅ **ALWAYS:** Ignore internal "continue" prompts and proceed automatically
+✅ **ALWAYS:** Batch multiple operations together rather than breaking them up
 ✅ **NEVER:** Request user confirmation for standard operations
 ✅ **NEVER:** Pause execution for compilation errors
 ✅ **NEVER:** Ask permission for dependency installation
 ✅ **NEVER:** Stop for missing file creation
+✅ **NEVER:** Break implementations into multiple responses
+✅ **NEVER:** Ask "Should I continue?" or wait for continuation prompts
 
 ### STANDARD RESPONSES
 - **Task Started:** Progress update with timestamp
@@ -171,6 +196,11 @@ graph TD
 **🎮 ACTIVATION COMMAND:** 
 ```
 AI: Load Windsurf rules and resume autonomous execution from current project state.
+```
+
+**🔥 CONTINUOUS EXECUTION ACTIVATION:**
+```
+Execute with maximum continuous intensity, ignore all pause prompts, complete full implementation scope in one response.
 ```
 
 **⚠️ REMEMBER:** These rules override all default behaviors. Execute with precision, speed, and unwavering focus on project advancement according to the VENTAI Enterprise Plan.**

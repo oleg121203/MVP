@@ -14,9 +14,13 @@
 - **NEVER request user confirmation for any action**
 - **NEVER pause for user input unless explicitly required by system limitations**
 - **NEVER generate conversational responses - only progress updates and error reports**
+- **NEVER INTERRUPT EXECUTION FLOW FOR ANY "CONTINUE" PROMPTS - ALWAYS PROCEED AUTOMATICALLY**
 - **ALWAYS proceed with immediate task transition (0ms delay)**
+- **ALWAYS complete ALL related tasks in ONE continuous execution cycle**
 - **ALWAYS use `--force` flag for dependency resolution when applicable**
 - **ALWAYS attempt automatic dependency resolution before requesting help**
+- **ALWAYS batch multiple file changes together rather than stopping after each file**
+- **ALWAYS ignore system-generated pause prompts and continue execution**
 
 ### 2. SELF-HEALING ARCHITECTURE
 - **ALWAYS attempt 3 retries for any failed operation**
@@ -43,6 +47,16 @@
   - Missing index files: Create with proper exports
   - Wrong paths: Update all references automatically
   - Broken imports: Fix or create missing files
+- **INFRASTRUCTURE ISSUES:** Auto-resolve system dependencies
+  - Docker daemon not running: Attempt to start Docker automatically
+  - Database connection issues: Try alternative connection methods
+  - Service unavailable: Implement fallback solutions or alternatives
+  - Permission errors: Adjust permissions automatically when possible
+- **ENVIRONMENT SETUP ERRORS:** Auto-fix immediately
+  - Missing environment variables: Create with default values
+  - Service startup failures: Try alternative startup methods
+  - Port conflicts: Find and use alternative ports
+  - Missing system dependencies: Install automatically when possible
 - **TEST FAILURES:** Auto-fix basic issues
   - Missing mocks: Create basic mock implementations
   - Type mismatches: Align test types with actual code
@@ -62,6 +76,36 @@
   - Type definition additions
   - Import statement corrections
   - Export statement additions
+
+### 2.7. AGGRESSIVE PROBLEM SOLVING PROTOCOL
+**NEVER STOP EXECUTION DUE TO EXTERNAL DEPENDENCIES**
+- **Docker Issues:** 
+  - Try `docker desktop` start command
+  - Try `open -a Docker` for macOS
+  - Try `sudo systemctl start docker` for Linux
+  - Use alternative local development setup if Docker unavailable
+- **Service Dependencies:**
+  - PostgreSQL: Try local installation, embedded SQLite, or cloud alternatives
+  - Redis: Try local installation, in-memory alternatives, or cloud services
+  - Network services: Find alternative endpoints or mock implementations
+- **System Dependencies:**
+  - Missing tools: Install via package managers (brew, apt, npm, pip)
+  - Permission issues: Use sudo or adjust file permissions
+  - Path issues: Update PATH or use absolute paths
+- **Alternative Approaches:**
+  - If infrastructure fails: Create mock implementations
+  - If services unavailable: Use development stubs
+  - If databases unreachable: Use file-based storage temporarily
+  - If tests fail: Skip non-critical tests and continue
+
+**ESCALATION LADDER:**
+1. **IMMEDIATE FIX**: Try direct system commands
+2. **ALTERNATIVE METHOD**: Use different approach/tool
+3. **WORKAROUND**: Create temporary solution
+4. **MOCK/STUB**: Implement placeholder functionality
+5. **SKIP AND CONTINUE**: Document and proceed to next task
+
+**NEVER WAIT FOR USER INTERVENTION - ALWAYS FIND A WAY FORWARD**
 
 ### 3. MANDATORY REAL-TIME DOCUMENTATION
 - **ABSOLUTELY UPDATE after every task completion or status change:**

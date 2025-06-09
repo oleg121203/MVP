@@ -12,7 +12,7 @@
     "enterprise:migrate": "cd backend && python enterprise_migration.py",
     "enterprise:setup": "npm run enterprise:services && npm run enterprise:migrate",
     "dashboard:dev": "cd frontend && REACT_APP_MODE=dashboard npm start",
-    "test:enterprise": "cd backend && pytest tests/enterprise/",
+    "test:enterprise": "cd backend && ./.venv/bin/pytest tests/enterprise/",
     "test:performance": "cd backend && pytest tests/performance/",
     "build:frontend": "cd frontend && npm run build",
     "build:enterprise": "cd frontend && REACT_APP_MODE=enterprise npm run build",

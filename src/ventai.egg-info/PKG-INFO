@@ -129,62 +129,6 @@ cd backend && uvicorn main:app --reload
 
 ---
 
-## 🛠️ Enterprise Технології
-
-### Backend Stack
-- **FastAPI** - Швидкий Python фреймворк
-- **PostgreSQL** - Enterprise база даних
-- **Redis** - Кешування та черги
-- **Celery** - Background tasks
-- **SQLAlchemy** - ORM з аналітикою
-
-### Frontend Stack  
-- **React 18 + TypeScript** - Основний UI
-- **Redux Toolkit** - State management
-- **Material-UI + Custom** - Enterprise UI
-- **D3.js + Chart.js** - Аналітичні графіки
-- **Socket.IO** - Real-time оновлення
-
-### AI & Analytics
-- **OpenAI GPT-4** - AI аналіз
-- **LangChain** - AI workflow
-- **Pandas + NumPy** - Обробка даних
-- **Scikit-learn** - Machine Learning
-
----
-
-## 📊 Enterprise API Endpoints
-
-### Project Analytics
-```http
-GET    /api/enterprise/projects/analytics    # Аналітика проектів
-POST   /api/enterprise/projects/analyze      # AI аналіз проекту
-GET    /api/enterprise/dashboard/kpis        # Real-time KPIs
-```
-
-### Price Intelligence
-```http
-GET    /api/enterprise/pricing/analysis      # Аналіз цін
-POST   /api/enterprise/pricing/compare       # Порівняння постачальників
-GET    /api/enterprise/pricing/trends        # Ринкові тенденції
-```
-
-### CRM & Leads
-```http
-GET    /api/enterprise/crm/leads             # Управління лідами
-POST   /api/enterprise/crm/score            # AI оцінка ліда
-GET    /api/enterprise/crm/pipeline         # Воронка продажів
-```
-
-### Email AI
-```http
-POST   /api/enterprise/email/process        # Обробка емейла
-GET    /api/enterprise/email/insights       # AI інсайти
-POST   /api/enterprise/email/respond        # Автовідповідь
-```
-
----
-
 ## 📈 Enterprise KPIs
 
 ### Бізнес Метрики
@@ -270,6 +214,22 @@ npm run test:performance
 - 📞 **24/7 Hotline**: +380-44-XXX-XXXX
 - 💼 **Dedicated Manager**: Персональний менеджер
 - 📖 **Enterprise Docs**: [Enterprise Documentation](./docs/)
+
+---
+
+## Current Status
+- Phase 2.0: 85% completed
+- Phase 3.0: Initiated
+
+## Critical Issues
+1. Build errors (AT-001)
+2. Test environment issues (AT-002)
+3. WebSocket service initialization (AT-003)
+
+## How to Run
+1. Install dependencies: `npm install`
+2. Start development server: `npm run dev`
+3. Open http://localhost:3000
 
 ---
 

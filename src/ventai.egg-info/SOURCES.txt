@@ -13,8 +13,15 @@ src/ventai/backend/temp_test.py
 src/ventai/backend/test_api.py
 src/ventai/backend/routers/__init__.py
 src/ventai/backend/routers/analytics.py
+src/ventai/backend/routers/price_intelligence.py
 src/ventai/backend/services/__init__.py
 src/ventai/backend/services/analytics.py
+src/ventai/backend/services/market_analysis.py
 tests/test_analytics_api.py
 tests/test_analytics_new.py
 tests/test_api_working.py
+tests/test_price_intelligence.py
+tests/test_websocket.py
+tests/test_websocket_analytics.py
+tests/test_websocket_integration.py
+tests/test_websocket_proper.py
