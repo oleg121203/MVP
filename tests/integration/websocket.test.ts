@@ -1,5 +1,13 @@
 import io from 'socket.io-client';
-import { createServer } from '../../server';
+
+console.log('NODE_PATH:', process.env.NODE_PATH);
+
+try {
+  console.log('Express resolved from:', require.resolve('express'));
+} catch (e) {
+  console.error('Could not resolve express:', (e as Error).message);
+}
+import Server from '../../server';
 import { RedisConnectionManager } from '../../services/redis/connectionManager';
 import { ProjectAnalyticsEngine } from '../../services/analytics/engine';
 
@@ -8,8 +16,9 @@ describe('WebSocket Integration', () => {
   let analyticsEngine: ProjectAnalyticsEngine;
   
   beforeAll(async () => {
-    server = createServer();
-    await server.start();
+    const PORT = 8001; // Use a different port for integration tests
+    server = new Server();
+    await server.start(PORT);
     const redisManager = new RedisConnectionManager();
     analyticsEngine = new ProjectAnalyticsEngine(redisManager);
   });

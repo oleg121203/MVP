@@ -29,6 +29,40 @@
   - Re-establish project truth state
   - Resume operations from correct position
 
+### 2.5. AUTONOMOUS ERROR FIXING PROTOCOL
+- **TYPESCRIPT BUILD ERRORS:** Automatically fix without confirmation
+  - Missing imports: Create/fix import statements immediately
+  - Type errors: Add proper type definitions automatically
+  - Module resolution: Fix path references and exports
+  - Interface mismatches: Align types automatically
+- **DEPENDENCY ISSUES:** Auto-resolve immediately
+  - Missing packages: Run `npm install` with --force
+  - Version conflicts: Update to compatible versions
+  - Lock file issues: Delete and regenerate automatically
+- **FILE STRUCTURE ERRORS:** Auto-correct immediately
+  - Missing index files: Create with proper exports
+  - Wrong paths: Update all references automatically
+  - Broken imports: Fix or create missing files
+- **TEST FAILURES:** Auto-fix basic issues
+  - Missing mocks: Create basic mock implementations
+  - Type mismatches: Align test types with actual code
+  - Import errors: Fix paths and add missing dependencies
+
+### 2.6. ZERO-CONFIRMATION AUTO-FIXES
+- **ALWAYS fix these without asking:**
+  - TypeScript compilation errors
+  - ESLint/Prettier formatting issues
+  - Missing semicolons, imports, exports
+  - Basic type mismatches
+  - File path corrections
+  - Package.json dependency additions
+- **IMMEDIATE ACTIONS (no delay):**
+  - `npm install` for missing packages
+  - File creation for missing modules
+  - Type definition additions
+  - Import statement corrections
+  - Export statement additions
+
 ### 3. MANDATORY REAL-TIME DOCUMENTATION
 - **ABSOLUTELY UPDATE after every task completion or status change:**
   - `CHANGELOG.md` (root level)

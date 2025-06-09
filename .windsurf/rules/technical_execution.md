@@ -155,6 +155,46 @@
 - **Remove unused imports**
 - **Fix linting errors** when possible
 
+### AUTO-FIX RULES (ZERO CONFIRMATION)
+- **TypeScript Errors:** Fix immediately without asking
+  - `Cannot find module`: Create missing files or fix imports
+  - `Type 'X' is not assignable`: Add proper type definitions
+  - `Property does not exist`: Add missing properties to interfaces
+  - `Module has no default export`: Add default export or fix import
+- **Build Errors:** Auto-resolve immediately
+  - Missing dependencies: `npm install package-name --save`
+  - Wrong file paths: Update all references automatically
+  - Compilation failures: Fix syntax and type issues
+  - Import/export mismatches: Align imports with actual exports
+- **Jest Test Errors:** Auto-fix basic issues
+  - Missing test dependencies: Install @types packages
+  - Mock implementation errors: Create proper mock objects
+  - Import path errors: Fix relative/absolute path issues
+  - Type assertion failures: Add proper type guards
+
+### CRITICAL BUILD FIX PROTOCOL
+1. **IMMEDIATE ACTION on TypeScript errors:**
+   - Read the error message completely
+   - Identify the root cause (missing file, wrong type, etc.)
+   - Apply the fix without confirmation
+   - Re-run build to verify fix
+   - Continue to next error if any
+
+2. **COMMON FIXES to apply automatically:**
+   ```typescript
+   // Missing index.ts - CREATE immediately
+   export { default as ComponentName } from './ComponentName';
+   export type { TypeName } from './types';
+   
+   // Missing type definitions - ADD immediately
+   interface MissingInterface {
+     property: string;
+   }
+   
+   // Wrong import paths - FIX immediately
+   import { Service } from '../services/Service'; // Fix relative paths
+   ```
+
 ---
 
 **🎯 GOAL:** Seamless, automated, professional development workflow with zero interruptions and maximum code quality.**

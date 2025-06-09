@@ -9,7 +9,7 @@ import { RedisConnectionManager } from '../services/redis/connectionManager';
 import type { RedisClientType } from 'redis';
 import { createClient } from 'redis';
 import { ProjectMetrics } from '../interfaces/analytics';
-import { WebSocketService } from '../../services/websocket';
+import { WebSocketService } from '../services/websocket';
 
 // Mock msgpack directly in test file
 jest.mock('msgpack-lite', () => ({
@@ -21,6 +21,7 @@ describe('ProjectAnalyticsEngine', () => {
   let analyticsEngine: ProjectAnalyticsEngine;
   let redisManager: jest.Mocked<RedisConnectionManager>;
   let redisClient: jest.Mocked<RedisClientType>;
+  let webSocketService: jest.Mocked<WebSocketService>;
 
   beforeAll(async () => {
     redisClient = {
@@ -35,6 +36,12 @@ describe('ProjectAnalyticsEngine', () => {
       getConnection: jest.fn().mockResolvedValue(redisClient),
       releaseConnection: jest.fn()
     } as unknown as jest.Mocked<RedisConnectionManager>;
+
+    // Mock WebSocket service
+    webSocketService = {
+      broadcastAlerts: jest.fn(),
+      // Add other methods as needed
+    } as any;
 
     analyticsEngine = new ProjectAnalyticsEngine(redisManager);
   });

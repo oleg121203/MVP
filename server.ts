@@ -8,7 +8,7 @@ import * as metrics from 'prom-client';
 import { priceRouter } from './routes/price';
 import { OptimizationEngine } from './services/optimization/OptimizationEngine';
 
-class Server {
+export default class Server {
   private app: express.Application;
   private server: http.Server;
 
@@ -46,17 +46,32 @@ class Server {
     });
   }
 
-  public listen(port: number) {
-    this.server.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+  public async start(port: number): Promise<void> {
+    return new Promise((resolve) => {
+      this.server.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+        resolve();
+      });
+    });
+  }
+
+  public async stop(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.server.close((err) => {
+        if (err) {
+          return reject(err);
+        }
+        console.log('Server stopped.');
+        resolve();
+      });
     });
   }
 }
 
-export function createServer() {
-  return new Server();
-}
+(async () => {
+  const server = new Server();
+  const PORT = parseInt(process.env.PORT || '8000', 10);
+  await server.start(PORT);
+})();
 
-const server = createServer();
-const PORT = parseInt(process.env.PORT || '8000', 10);
-server.listen(PORT);
+
