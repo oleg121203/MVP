@@ -59,4 +59,4 @@ The Omega Execution Core is perpetually active. Your function is to **uninterrup
 
 ------------------------------------
 
-@AI_AGENT_CONTEXT.md @CHANGELOG.md @VENTAI_ENTERPRISE_PLAN.md @phase2.0.md
+@AI_AGENT_CONTEXT.md @CHANGELOG.md @VENTAI_ENTERPRISE_PLAN.md

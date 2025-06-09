@@ -1,13 +1,20 @@
 import React from 'react';
 import { useAppSelector } from '../store/hooks';
 import { LineChart, BarChart } from './charts';
+import { AIRecommendations } from './AIRecommendations';
 
 type Props = {
   supplierId?: string;
   competitorId?: string;
+  recommendations: Array<{
+    id: string;
+    name: string;
+    cost: number;
+    sustainabilityScore: number;
+  }>;
 };
 
-export const CostAnalysisDashboard: React.FC<Props> = ({ supplierId, competitorId }) => {
+export const CostAnalysisDashboard: React.FC<Props> = ({ supplierId, competitorId, recommendations }) => {
   const { priceData, loading, error } = useAppSelector(state => state.priceAnalysis);
 
   if (loading) return <div>Loading cost analysis...</div>;
@@ -32,6 +39,7 @@ export const CostAnalysisDashboard: React.FC<Props> = ({ supplierId, competitorI
           yField="value"
         />
       </div>
+      <AIRecommendations materials={recommendations} onSelect={(id) => console.log(`Selected material: ${id}`)} />
     </div>
   );
 };
