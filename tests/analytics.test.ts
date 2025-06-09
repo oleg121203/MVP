@@ -9,7 +9,7 @@ import { RedisConnectionManager } from '../services/redis/connectionManager';
 import type { RedisClientType } from 'redis';
 import { createClient } from 'redis';
 import { ProjectMetrics } from '../interfaces/analytics';
-import { webSocketService } from '../services/websocket';
+import { WebSocketService } from '../../services/websocket';
 
 // Mock msgpack directly in test file
 jest.mock('msgpack-lite', () => ({

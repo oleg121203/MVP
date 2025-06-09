@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { ProjectAnalytics } from '../interfaces/analytics';
+import type { ProjectAnalytics as AnalyticsInterface } from '../interfaces/analytics';
 
 interface AnalyticsState {
-  data: ProjectAnalytics | null;
+  data: AnalyticsInterface | null;
   loading: boolean;
   error: string | null;
 }
@@ -17,7 +17,7 @@ const analyticsSlice = createSlice({
   name: 'analytics',
   initialState,
   reducers: {
-    setAnalyticsData(state, action: PayloadAction<ProjectAnalytics>) {
+    setAnalyticsData(state, action: PayloadAction<AnalyticsInterface>) {
       state.data = action.payload;
     },
     setLoading(state, action: PayloadAction<boolean>) {
@@ -30,18 +30,4 @@ const analyticsSlice = createSlice({
 });
 
 export const { setAnalyticsData, setLoading, setError } = analyticsSlice.actions;
-export default analyticsSlice.reducer;// src/frontend/interfaces/analytics.d.ts
-interface AnalyticsMetric {
-  value: number;
-  trend: 'up' | 'down' | 'stable';
-  lastUpdated: string;
-}
-
-interface ProjectAnalytics {
-  completionRate: AnalyticsMetric;
-  budgetUtilization: AnalyticsMetric;
-  timeEfficiency: AnalyticsMetric;
-  insights: string[];
-}
-
-export type { ProjectAnalytics, AnalyticsMetric };
+export default analyticsSlice.reducer;

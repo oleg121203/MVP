@@ -51,6 +51,7 @@ export class RedisConnectionManager {
   }
 
   async getHistoricalData(projectId: string): Promise<any[]> {
-    // Implementation to retrieve historical data from Redis
+    // Implementation
+    return []; // Placeholder return
   }
 }

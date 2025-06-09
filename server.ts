@@ -1,38 +1,62 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import http from 'http';
 import { WebSocketService } from './services/websocket';
 import { RedisConnectionManager } from './services/redis/connectionManager';
 import { ProjectAnalyticsEngine } from './services/analytics/engine';
 import { collectDefaultMetrics } from 'prom-client';
+import * as metrics from 'prom-client';
 import { priceRouter } from './routes/price';
+import { OptimizationEngine } from './services/optimization/OptimizationEngine';
 
-const app = express();
-const server = http.createServer(app);
+class Server {
+  private app: express.Application;
+  private server: http.Server;
 
-// Initialize WebSocket
-const webSocketService = WebSocketService.initialize(server);
+  constructor() {
+    this.app = express();
+    this.server = http.createServer(this.app);
 
-// Initialize Analytics Engine
-const redisManager = new RedisConnectionManager();
-const analyticsEngine = new ProjectAnalyticsEngine(redisManager);
-webSocketService.setAnalyticsEngine(analyticsEngine);
+    // Initialize WebSocket
+    const webSocketService = WebSocketService.initialize(this.server);
 
-// Initialize metrics collection
-collectDefaultMetrics();
+    // Initialize Analytics Engine
+    const redisManager = new RedisConnectionManager();
+    const analyticsEngine = new ProjectAnalyticsEngine(redisManager);
+    webSocketService.setAnalyticsEngine(analyticsEngine);
 
-// Add health check endpoints
-app.get('/healthz', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
+    // Initialize metrics collection
+    collectDefaultMetrics();
 
-app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', 'text/plain');
-  res.send(await metrics.register.metrics());
-});
+    // Add health check endpoints
+    this.app.get('/healthz', (req: Request, res: Response) => {
+      res.status(200).json({ status: 'ok' });
+    });
 
-app.use('/api/price', priceRouter);
+    this.app.get('/metrics', async (req: Request, res: Response) => {
+      res.set('Content-Type', 'text/plain');
+      res.send(await metrics.register.metrics());
+    });
 
-const PORT = process.env.PORT || 8000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+    this.app.use('/api/price', priceRouter);
+
+    // Initialize Optimization Engine
+    const optimizationEngine = new OptimizationEngine();
+    this.app.get('/api/optimize/health', (req: Request, res: Response) => {
+      res.status(200).json({ status: 'Optimization Engine OK' });
+    });
+  }
+
+  public listen(port: number) {
+    this.server.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  }
+}
+
+export function createServer() {
+  return new Server();
+}
+
+const server = createServer();
+const PORT = parseInt(process.env.PORT || '8000', 10);
+server.listen(PORT);

@@ -1,14 +1,14 @@
 import io from 'socket.io-client';
-import { Server } from '../../server';
+import { createServer } from '../../server';
 import { RedisConnectionManager } from '../../services/redis/connectionManager';
 import { ProjectAnalyticsEngine } from '../../services/analytics/engine';
 
 describe('WebSocket Integration', () => {
-  let server: Server;
+  let server: any;
   let analyticsEngine: ProjectAnalyticsEngine;
   
   beforeAll(async () => {
-    server = new Server();
+    server = createServer();
     await server.start();
     const redisManager = new RedisConnectionManager();
     analyticsEngine = new ProjectAnalyticsEngine(redisManager);

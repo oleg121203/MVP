@@ -6,8 +6,8 @@
 
 import { RedisConnectionManager } from '../redis/connectionManager';
 import { ProjectMetrics } from '../../interfaces/analytics';
-import { webSocketService } from '../websocket';
-import { metrics } from 'prom-client';
+import { WebSocketService } from '../websocket';
+import * as metrics from 'prom-client';
 
 const analyticsDuration = new metrics.Histogram({
   name: 'analytics_calculation_duration_seconds',
@@ -208,8 +208,8 @@ export class ProjectAnalyticsEngine {
   }
 
   private async broadcastAlerts(projectId: string, alerts: AlertItem[]): Promise<void> {
-    if (webSocketService && alerts.length > 0) {
-      webSocketService.broadcastAlerts(projectId, alerts);
+    if (WebSocketService.getInstance()) {
+      WebSocketService.getInstance().broadcastAlerts(projectId, alerts);
     }
   }
 }

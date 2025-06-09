@@ -2,6 +2,8 @@ import { RedisConnectionManager } from '../redis/connectionManager';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
+type Element = cheerio.Cheerio<Element>;
+
 type MarketData = {
   timestamp: Date;
   competitors: Record<string, number>;
@@ -39,7 +41,7 @@ export class PriceAnalysisEngine {
         const $ = cheerio.load(data);
         
         // Sample parsing logic - adjust per actual source structure
-        $('.pricing-item').each((i: number, el: cheerio.Element) => {
+        $('.pricing-item').each((i: number, el: Element) => {
           results.push({
             name: $(el).find('.name').text().trim(),
             price: parseFloat($(el).find('.price').text().replace(/[^0-9.]/g, '')),

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { PriceAnalysisEngine } from '../services/price/engine';
 import { RedisConnectionManager } from '../services/redis/connectionManager';
 
@@ -7,7 +7,7 @@ const redisManager = new RedisConnectionManager();
 const priceEngine = new PriceAnalysisEngine(redisManager);
 
 // Get pricing recommendations
-priceRouter.get('/:projectId/recommendation', async (req, res) => {
+priceRouter.get('/:projectId/recommendation', async (req: Request, res: Response) => {
   try {
     const marketData = await redisManager.getMarketData(req.params.projectId);
     const competitors = await priceEngine.collectMarketData();
@@ -23,7 +23,7 @@ priceRouter.get('/:projectId/recommendation', async (req, res) => {
 });
 
 // Get price trends analysis
-priceRouter.get('/:projectId/trends', async (req, res) => {
+priceRouter.get('/:projectId/trends', async (req: Request, res: Response) => {
   try {
     const historicalData = await redisManager.getHistoricalData(req.params.projectId);
     const trends = await priceEngine.calculatePriceTrends(req.params.projectId, historicalData);
