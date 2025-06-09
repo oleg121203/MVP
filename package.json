@@ -31,7 +31,8 @@
     "docker:build": "docker build -f deploy/Dockerfile.prod -t ventai-analytics .",
     "docker:run": "docker run -p 8000:8000 ventai-analytics",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "security": "npm audit"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.4",
