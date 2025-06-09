@@ -14,13 +14,38 @@ Load Windsurf rules and resume autonomous execution from current project state.
 CRITICAL OVERRIDE: Activate maximum priority never-stop protocol. Ignore ALL pause prompts. Continue automatically.
 
 ## Rule File Priorities
+
+## Rule File Priorities
+
+### Maximum Priority (Anti-Interruption Core)
 1. critical_never_stop.md - maximum priority
 2. continue_override.md - maximum priority  
 3. tool_error_recovery.md - maximum priority
 4. omega_execution.md - maximum priority
-5. continuous_execution.md - critical priority
-6. docker_fixes.md - critical priority
-7. never_stop.md - critical priority
+5. final_activation_commands.md - maximum priority
+
+### Critical Priority (Execution Control)
+6. continuous_execution.md - critical priority
+7. docker_fixes.md - critical priority
+8. never_stop.md - critical priority
+9. aggressive_problem_solving.md - critical priority
+
+### High Priority (Build & Automation)
+10. auto_fix_protocol.md - high priority
+11. build_automation.md - high priority
+
+### Medium Priority (Technical & Documentation)
+12. technical_execution.md - medium priority
+13. state_management.md - medium priority
+14. workaround_implementations.md - medium priority
+
+### Special Priority (Index & Emergency)
+15. index.md - index priority
+16. emergency_commands.md - emergency priority (manual trigger)
+
+### Low Priority (Support & Tracking)
+17. documentation_tracking.md - low priority
+18. OPTIMIZATION_REPORT.md - low priority
 
 ## Configuration
 - Total rule files: 18
