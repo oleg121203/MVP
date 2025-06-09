@@ -1,16 +1,18 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import MainLayout from './layouts/MainLayout';
 import HomePage from './pages/HomePage';
 import CalculatorsPage from './pages/CalculatorsPage';
 import DashboardPage from './pages/DashboardPage';
 import AIDashboard from './pages/AIDashboard';
+import AnalyticsPage from './pages/AnalyticsPage';
+import AnalyticsDashboard from './components/AnalyticsDashboard';
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <Router>
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} />
@@ -22,9 +24,11 @@ function App() {
             <Route path="ai-insights" element={<div>AI Insights Page (Placeholder)</div>} />
             <Route path="settings" element={<div>Settings Page (Placeholder)</div>} />
             <Route path="automation" element={<div>Automation Page (Placeholder)</div>} />
+            <Route path="analytics-dashboard" element={<AnalyticsDashboard projectId="sample-project-id" />} />
           </Route>
+          <Route path="/analytics/:projectId" element={<AnalyticsPage />} />
         </Routes>
-      </BrowserRouter>
+      </Router>
     </AuthProvider>
   );
 }

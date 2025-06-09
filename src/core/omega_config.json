@@ -1,0 +1,22 @@
+{
+  "quality_gates": {
+    "test_coverage": 80,
+    "lint_score": 100,
+    "api_validation": true
+  },
+  "retry_policy": {
+    "max_attempts": 3,
+    "backoff_ms": 1000
+  },
+  "documentation": {
+    "auto_generate": true,
+    "update_changelog": true,
+    "update_api_docs": true
+  },
+  "paths": {
+    "master_plan": "VENTAI_ENTERPRISE_PLAN.md",
+    "changelog": "CHANGELOG.md",
+    "phase_templates": "docs/changelog/phase{}.md"
+  },
+  "current_phase": 2.0
+}

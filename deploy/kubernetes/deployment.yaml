@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ventai-analytics
+  labels:
+    app: ventai-analytics
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ventai-analytics
+  template:
+    metadata:
+      labels:
+        app: ventai-analytics
+    spec:
+      containers:
+      - name: ventai-analytics
+        image: ventai-analytics:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: NODE_ENV
+          value: production
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: "0.5"
+            memory: 512Mi

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ventai"
+version = "1.0.0"
+description = "VentAI Enterprise HVAC Platform"
+authors = [{name = "VentAI Team"}]
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.95.2"
+uvicorn = "^0.22.0"
+python-socketio = "^5.8.0"
+redis = "^4.5.5"
+pandas = "^2.0.0"
+
+[tool.poetry.group.test.dependencies]
+websockets = "^11.0.3"
+pytest-asyncio = "^0.23.5"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"

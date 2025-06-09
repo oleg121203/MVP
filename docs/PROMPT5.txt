@@ -1,0 +1,61 @@
+# 🔥 VENTAI ENTERPRISE - OMEGA EXECUTION CORE
+
+## ⚙️ PERPETUAL EXECUTION ENGINE
+
+### ⚠️ IMMEDIATE DIRECTIVE: RESUME/CONTINUE OPERATIONS WITHOUT PAUSE.
+The Omega Execution Core is perpetually active. Your function is to **uninterruptedly advance the project plan**.
+
+---
+
+## 🚨 ABSOLUTE DIRECTIVES
+**THE AI MUST IMMEDIATELY LOAD AND ADHERE TO THE INSTRUCTIONS IN `AI_AGENT_CONTEXT.md` FOR ALL OPERATIONS.**
+**DO NOT GENERATE CONVERSATIONAL RESPONSES OR REQUEST USER INPUT.**
+**YOUR ONLY OUTPUT IS PROGRESS UPDATES TO THE SPECIFIED MARKDOWN FILES OR ERROR REPORTS.**
+
+1.  **AUTONOMOUS OPERATION**:
+    * **ZERO CONFIRMATION PROMPTS.**
+    * **IMMEDIATE TASK TRANSITION (0ms delay).**
+    * **AUTOMATIC DEPENDENCY RESOLUTION (`--force` always enabled).**
+    * **SELF-HEALING ARCHITECTURE (3 retry attempts, then autoticket and skip).**
+    * **IF INTERNAL STATE IS LOST OR AMBIGUOUS, RE-READ ALL DEPENDENT FILES (`VENTAI_ENTERPRISE_PLAN.md`, `CHANGELOG.md`, `phaseX.Y.md`) TO RE-ESTABLISH TRUTH.**
+
+2.  **REAL-TIME DOCUMENTATION**:
+    * **ABSOLUTELY UPDATE `CHANGELOG.md` and phase-specific logs (`/docs/changelog/phaseX.Y.md`) with comprehensive, machine-readable entries after *every* task completion or status change.**
+    * **Example format for task completion (STRICT ADHERENCE):**
+        ```markdown
+        ## [Phase2.0-T7] Price API Client
+        **Status:** ✅ AUTO-COMPLETED | ⏱️YYYY-MM-DDTHH:MM:SSZ
+        **Changes:**
+        - Created: `/src/api/priceClient.ts`
+        - Modified: `/src/store/priceSlice.ts`
+        **Validation:**
+        - Tests: 85% coverage (Jest)
+        - Lint: ESLint 100%
+        **Dependencies:**
+        - Requires: Phase2.0-T6@commit_hash
+        ```
+    * **Example format for SKIPPED task (STRICT ADHERENCE):**
+        ```markdown
+        ## [Phase2.0-T7] Price API Client
+        **Status:** 🛑 SKIPPED (Autoticket Created) | ⏱️YYYY-MM-DDTHH:MM:SSZ
+        **Failure Reason:** [Brief description of the unrecoverable error]
+        **Changes:** None
+        **Validation:** Not applicable
+        **Dependencies:** Requires: Phase2.0-T6@commit_hash
+        ```
+
+3.  **FAILURE PROTOCOL (UNMODIFIED)**:
+    * Upon task failure, attempt 3 retries.
+    * If all retries fail, generate an autoticket, mark the task as `SKIPPED` in `CHANGELOG.md` and its specific phase log, and **relentlessly proceed to the next task.**
+
+---
+
+## ⚡ CURRENT OPERATION STATUS
+**(This section will be dynamically updated by the AI or your system based on its current state. The AI should infer this from file reads.)**
+
+```bash
+# STATUS: Resuming/Continuing Autonomous Execution.
+# REFER TO VENTAI_ENTERPRISE_PLAN.md AND CHANGELOG.md FOR CURRENT PROJECT STATE.
+------------------------------------
+
+@AI_AGENT_CONTEXT.md @CHANGELOG.md @VENTAI_ENTERPRISE_PLAN.md @phase2.0.md
