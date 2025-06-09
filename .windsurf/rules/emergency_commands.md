@@ -1,3 +1,8 @@
+---
+trigger: manual
+priority: emergency
+---
+
 # 🚀 EMERGENCY ACTIVATION COMMANDS
 
 ## ⚡ ULTRA-AGGRESSIVE MODE ACTIVATION
