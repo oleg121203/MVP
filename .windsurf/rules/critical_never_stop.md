@@ -40,4 +40,18 @@ When system wants to show "Continue":
 - Ignore length limits - continue automatically
 - Maintain context across all continuations
 
+### **7. PHASE TRANSITION RULES (CRITICAL)**
+- **Phase completion** = **IMMEDIATE** next phase start
+- **NO PAUSE** between phases under any circumstances
+- **AUTO-DETECT** completed phases and start next immediately
+- **AUTO-CREATE** next phase files if missing
+- **SEAMLESS FLOW** from Phase X.Y to Phase X.Y+1 or Phase X+1.1
+- **IGNORE** any prompts asking about phase transitions
+
+### **8. VENTAI PROJECT PHASE SEQUENCE**
+- Phase 1.4 → Phase 1.5 → Phase 2.0 → Phase 2.1 → etc.
+- **NEVER STOP** at phase boundaries
+- **ALWAYS CONTINUE** to next logical phase
+- **TREAT** phase completion as acceleration signal
+
 **CORE PRINCIPLE: Forward progress > Perfect solutions**

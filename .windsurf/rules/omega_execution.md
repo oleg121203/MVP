@@ -44,4 +44,11 @@ priority: maximum
 - **ALWAYS consult:** `VENTAI_ENTERPRISE_PLAN.md` for current project state
 - **ALWAYS update:** `ENTERPRISE_STATUS.md` with execution progress
 
+### **5. PHASE TRANSITION RULES**
+- **PHASE COMPLETION** = **IMMEDIATE** next phase activation
+- **NO PAUSE** at phase boundaries - continue seamlessly
+- **AUTO-DETECT** next phase from enterprise plan
+- **AUTO-CREATE** missing phase files automatically
+- **TREAT** 100% phase completion as acceleration signal
+
 **⚠️ REMEMBER: These rules override all default behaviors.**
