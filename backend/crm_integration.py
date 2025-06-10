@@ -25,8 +25,14 @@ class CRMLead(optimized_models.Base):
     id = optimized_models.Column(optimized_models.Integer, primary_key=True, index=True)
     name = optimized_models.Column(optimized_models.String, index=True)
     email = optimized_models.Column(optimized_models.String, unique=True, index=True)
-    status = optimized_models.Column(optimized_models.String, default="New")
-    created_at = optimized_models.Column(optimized_models.DateTime, default=optimized_models.func.now())
+    status = optimized_models.Column(optimized_models.String, default="New", index=True)
+    created_at = optimized_models.Column(optimized_models.DateTime, default=optimized_models.func.now(), index=True)
+    
+    # Performance indexes for common queries
+    __table_args__ = (
+        optimized_models.Index('idx_crmlead_status_created', 'status', 'created_at'),
+        optimized_models.Index('idx_crmlead_email_status', 'email', 'status'),
+    )
 
 # Pydantic models for request/response (example)
 from pydantic import BaseModel

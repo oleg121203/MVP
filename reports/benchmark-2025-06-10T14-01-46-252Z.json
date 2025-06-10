@@ -1,0 +1,51 @@
+{
+  "startTime": "2025-06-10T14:01:46.252Z",
+  "endTime": "2025-06-10T14:01:46.429Z",
+  "results": [
+    {
+      "endpoint": "Get Leads",
+      "averageLatency": "N/A",
+      "minLatency": "N/A",
+      "maxLatency": "N/A",
+      "successRate": 0,
+      "totalRequests": 100,
+      "successfulRequests": 0
+    },
+    {
+      "endpoint": "Get Lead Sources",
+      "averageLatency": "N/A",
+      "minLatency": "N/A",
+      "maxLatency": "N/A",
+      "successRate": 0,
+      "totalRequests": 100,
+      "successfulRequests": 0
+    },
+    {
+      "endpoint": "Get Lead Campaigns",
+      "averageLatency": "N/A",
+      "minLatency": "N/A",
+      "maxLatency": "N/A",
+      "successRate": 0,
+      "totalRequests": 100,
+      "successfulRequests": 0
+    },
+    {
+      "endpoint": "Get CRM Contacts",
+      "averageLatency": "N/A",
+      "minLatency": "N/A",
+      "maxLatency": "N/A",
+      "successRate": 0,
+      "totalRequests": 100,
+      "successfulRequests": 0
+    },
+    {
+      "endpoint": "Get CRM Deals",
+      "averageLatency": "N/A",
+      "minLatency": "N/A",
+      "maxLatency": "N/A",
+      "successRate": 0,
+      "totalRequests": 100,
+      "successfulRequests": 0
+    }
+  ]
+}
