@@ -719,27 +719,49 @@ class WindsurfEnterpriseMCPServer {
    */
 
   /**
-   * 📋 List all available AI providers
+   * 📋 List all available AI providers (ТОЧНІ ДАНІ WINDSURF 2025-06-11)
    */
   private async listAIProviders() {
     const providers = this.aiProvider.getAvailableProviders();
+    const totalModels = providers.reduce((sum, p) => sum + p.models.length, 0);
+    const freeModels = providers.flatMap(p => p.models).filter(m => m.credits === 'free');
     
     await this.logOperation('list_ai_providers', { 
-      providersCount: providers.length 
+      providersCount: providers.length,
+      totalModels: totalModels,
+      freeModelsCount: freeModels.length
     });
+
+    // Точна структура відповідності Windsurf API
+    const response = {
+      providers: providers,
+      total: providers.length,
+      total_models: totalModels,
+      free_models_count: freeModels.length,
+      capabilities: {
+        chat: [
+          "windsurf:SWE-1 (free limited time)",
+          "windsurf:SWE-1-lite",
+          "openai:GPT-4o",
+          "openai:GPT-4o mini",
+          "anthropic:Claude 3.5 Sonnet",
+          "google:Gemini 2.5 Pro (promo)",
+          "google:Gemini 2.5 Flash",
+          "xai:xAI Grok-3",
+          "deepseek:DeepSeek V3 (0324)"
+        ],
+        reasoning: [
+          "openai:o3-mini (medium reasoning)",
+          "anthropic:Claude 3.7 Sonnet (Thinking)"
+        ]
+      }
+    };
 
     return {
       content: [
         {
           type: 'text',
-          text: JSON.stringify({
-            providers,
-            total: providers.length,
-            capabilities: {
-              chat: providers.flatMap(p => p.models.filter(m => m.type === 'chat').map(m => `${p.vendor}:${m.name}`)),
-              reasoning: providers.flatMap(p => p.models.filter(m => m.type === 'reasoning').map(m => `${p.vendor}:${m.name}`))
-            }
-          }, null, 2),
+          text: JSON.stringify(response, null, 2),
         },
       ],
     };

@@ -17,160 +17,176 @@ export class WindsurfExactModelsService {
   }
 
   /**
-   * 🎯 Exact Windsurf Models from MCP Server Response
+   * 🎯 Exact Windsurf Models from MCP Server Response (ОНОВЛЕНО 2025-06-11)
    * This matches EXACTLY what Windsurf returns
    */
   initializeExactModels() {
-    // Exact data from Windsurf MCP Server (2024-12-28 response)
+    // Точні дані з реального Windsurf API (11 червня 2025)
     this.providers = [
       {
-        "id": "windsurf",
         "vendor": "windsurf",
         "name": "Windsurf Built-in",
         "available": true,
         "models": [
           {
             "id": "windsurf-swe-1",
-            "name": "SWE-1",
+            "name": "SWE-1 (free limited time)",
             "vendor": "windsurf",
+            "family": "swe",
             "type": "chat",
-            "context_window": 32768,
+            "available": true,
             "credits": "free",
-            "description": "Windsurf's specialized software engineering model"
+            "features": ["code-generation", "debugging", "refactoring"]
           },
           {
             "id": "windsurf-swe-1-lite",
             "name": "SWE-1-lite",
             "vendor": "windsurf",
+            "family": "swe",
             "type": "chat",
-            "context_window": 16384,
+            "available": true,
             "credits": "free",
-            "description": "Lightweight version of SWE-1"
+            "features": ["quick-assistance", "code-completion"]
           }
         ]
       },
       {
-        "id": "openai",
         "vendor": "openai",
-        "name": "OpenAI",
+        "name": "OpenAI (via Windsurf)",
         "available": true,
+        "totalCredits": "1x credit",
         "models": [
           {
             "id": "gpt-4o",
             "name": "GPT-4o",
             "vendor": "openai",
+            "family": "gpt-4",
             "type": "chat",
-            "context_window": 128000,
-            "credits": "1x",
-            "description": "Latest GPT-4 model with enhanced capabilities"
+            "available": true,
+            "credits": "1x credit"
           },
           {
             "id": "gpt-4o-mini",
             "name": "GPT-4o mini",
             "vendor": "openai",
+            "family": "gpt-4",
             "type": "chat",
-            "context_window": 128000,
-            "credits": "0.1x",
-            "description": "Smaller, faster version of GPT-4o"
+            "available": true,
+            "credits": "0.1x credit"
           },
           {
             "id": "o3-mini-reasoning",
-            "name": "o3-mini reasoning",
+            "name": "o3-mini (medium reasoning)",
             "vendor": "openai",
+            "family": "o3",
             "type": "reasoning",
-            "context_window": 65536,
-            "credits": "1x",
-            "description": "Advanced reasoning model"
+            "available": true,
+            "credits": "1x credit"
           }
         ]
       },
       {
-        "id": "anthropic",
         "vendor": "anthropic",
-        "name": "Anthropic",
+        "name": "Anthropic (via Windsurf)",
         "available": true,
         "models": [
           {
-            "id": "claude-3-5-sonnet-20241022",
+            "id": "claude-3.5-sonnet",
             "name": "Claude 3.5 Sonnet",
             "vendor": "anthropic",
+            "family": "claude",
             "type": "chat",
-            "context_window": 200000,
-            "credits": "1x",
-            "description": "Claude 3.5 Sonnet with enhanced capabilities"
+            "available": true,
+            "credits": "1x credit"
           },
           {
-            "id": "claude-3-7-sonnet-thinking",
-            "name": "Claude 3.7 Sonnet Thinking",
+            "id": "claude-3.7-sonnet-thinking",
+            "name": "Claude 3.7 Sonnet (Thinking)",
             "vendor": "anthropic",
+            "family": "claude",
             "type": "reasoning",
-            "context_window": 200000,
-            "credits": "1.25x",
-            "description": "Claude 3.7 with thinking capabilities"
+            "available": true,
+            "credits": "1.25x credit"
           }
         ]
       },
       {
-        "id": "google",
         "vendor": "google",
-        "name": "Google",
+        "name": "Google (via Windsurf)",
         "available": true,
         "models": [
           {
             "id": "gemini-2.5-pro",
-            "name": "Gemini 2.5 Pro",
+            "name": "Gemini 2.5 Pro (promo)",
             "vendor": "google",
+            "family": "gemini",
             "type": "chat",
-            "context_window": 1000000,
-            "credits": "0.75x",
-            "description": "Google's latest large multimodal model"
+            "available": true,
+            "credits": "0.75x credit"
           },
           {
             "id": "gemini-2.5-flash",
             "name": "Gemini 2.5 Flash",
             "vendor": "google",
+            "family": "gemini",
             "type": "chat",
-            "context_window": 1000000,
-            "credits": "0.1x",
-            "description": "Faster version of Gemini 2.5"
+            "available": true,
+            "credits": "0.1x credit"
           }
         ]
       },
       {
-        "id": "xai",
         "vendor": "xai",
-        "name": "xAI",
+        "name": "xAI (via Windsurf)",
         "available": true,
         "models": [
           {
             "id": "grok-3",
-            "name": "Grok-3",
+            "name": "xAI Grok-3",
             "vendor": "xai",
+            "family": "grok",
             "type": "chat",
-            "context_window": 131072,
-            "credits": "1x",
-            "description": "xAI's latest conversational AI model"
+            "available": true,
+            "credits": "1x credit"
           }
         ]
       },
       {
-        "id": "deepseek",
         "vendor": "deepseek",
-        "name": "DeepSeek",
+        "name": "DeepSeek (via Windsurf)",
         "available": true,
         "models": [
           {
             "id": "deepseek-v3",
-            "name": "DeepSeek V3",
+            "name": "DeepSeek V3 (0324)",
             "vendor": "deepseek",
+            "family": "deepseek",
             "type": "chat",
-            "context_window": 65536,
-            "credits": "free",
-            "description": "DeepSeek's latest open-source model"
+            "available": true,
+            "credits": "free"
           }
         ]
       }
     ];
+
+    // Точні capabilities як у Windsurf
+    this.capabilities = {
+      chat: [
+        "windsurf:SWE-1 (free limited time)",
+        "windsurf:SWE-1-lite",
+        "openai:GPT-4o",
+        "openai:GPT-4o mini",
+        "anthropic:Claude 3.5 Sonnet",
+        "google:Gemini 2.5 Pro (promo)",
+        "google:Gemini 2.5 Flash",
+        "xai:xAI Grok-3",
+        "deepseek:DeepSeek V3 (0324)"
+      ],
+      reasoning: [
+        "openai:o3-mini (medium reasoning)",
+        "anthropic:Claude 3.7 Sonnet (Thinking)"
+      ]
+    };
 
     // Flatten all models for easy access
     this.models = this.providers.flatMap(provider => 

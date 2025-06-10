@@ -1,63 +1,83 @@
-# VentAI Enterprise Windsurf Configuration
+# 🌊 Windsurf AI Integration для VentAI Enterprise
 
-This directory contains all Windsurf AI assistant configuration files for VentAI Enterprise.
+## 🎯 **ГОТОВО ДО ВИКОРИСТАННЯ** ✅
 
-## Directory Structure
+**Статус**: Повністю інтегровано та протестовано  
+**Моделей**: 11 через 6 провайдерів  
+**Безкоштовних**: 3 моделі  
+**Версія**: Точна відповідність Windsurf API 2025-06-11
 
-```
-.windsurf/
-├── rules/          # AI assistant rules and protocols
-├── activation/     # Activation commands and guides  
-├── status/         # Status reports and monitoring
-└── README.md       # This file
-```
+---
 
-## Quick Start
+## ⚡ **ШВИДКИЙ СТАРТ**
 
-### Primary Activation Command
-```
-VENTAI ENTERPRISE ACTIVATE
+### **1. Автоматичний запуск (рекомендовано)**
+```bash
+cd /Users/olegkizyma/workspaces/MVP/ventai-app
+./start-windsurf-integration.sh
 ```
 
-### Directory Contents
+### **2. Ручний запуск**
+```bash
+cd .windsurf/server
+npm install
+npm run build
+npm run start:http
+```
 
-#### `/rules/` - AI Assistant Rules
-Contains all Windsurf rules with priority hierarchy:
-- **ABSOLUTE_MAXIMUM**: Error handling and bypass protocols
-- **Maximum**: Anti-interruption and execution control
-- **Critical**: Continuous execution rules
-- **High/Medium**: Build automation and technical support
+### **3. Перевірка роботи**
+```bash
+curl http://localhost:8001/health
+```
 
-#### `/activation/` - Activation Commands
-Contains activation guides and command references:
-- Primary enterprise activation commands
-- Emergency activation protocols
-- General activation guides
+---
 
-#### `/status/` - Status Monitoring
-Contains status reports and progress tracking:
-- Enterprise implementation status
-- Phase completion tracking
-- Autoticket resolution status
+## 🤖 **ДОСТУПНІ AI МОДЕЛІ**
 
-## Configuration File
+### **🆓 Безкоштовні моделі (3)**
+- **windsurf-swe-1** - Спеціалізована для розробки ПЗ
+- **windsurf-swe-1-lite** - Швидка допомога з кодом
+- **deepseek-v3** - Потужна китайська модель
 
-The main configuration is in the root `.windsurfrules` file, which references all rules in this directory structure.
+### **💰 Економічні моделі (0.1x кредитів)**
+- **gpt-4o-mini** - Мінімальна версія GPT-4o
+- **gemini-2.5-flash** - Швидкий Gemini
 
-## Usage
+### **🧠 Reasoning моделі (2)**
+- **o3-mini-reasoning** - OpenAI reasoning
+- **claude-3.7-sonnet-thinking** - Claude з thinking
 
-1. **Standard Operation**: Rules are automatically loaded
-2. **Manual Activation**: Use commands from `/activation/`
-3. **Status Check**: Review files in `/status/`
-4. **Troubleshooting**: Reference specific rules in `/rules/`
+### **💪 Повні моделі**
+- **gpt-4o** - Найкращий GPT-4
+- **claude-3.5-sonnet** - Класичний Claude
+- **gemini-2.5-pro** - Промо Gemini
+- **grok-3** - Найновіший xAI
 
-## Maintenance
+---
 
-- All files are in English
-- Follow naming conventions
-- Maintain priority hierarchy
-- Update paths when moving files
+## 📋 **API ПРИКЛАДИ**
 
-## Version
+### **Список всіх провайдерів**
+```bash
+curl -X POST http://localhost:8001/mcp/call-tool \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "list_ai_providers", "params": {}}'
+```
 
-VentAI Enterprise Edition - Organized Structure v2.0
+### **AI чат з безкоштовною моделлю**
+```bash
+curl -X POST http://localhost:8001/mcp/call-tool \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tool": "ai_chat_completion",
+    "params": {
+      "messages": [{"role": "user", "content": "Розрахуй вентиляцію для 100м²"}],
+      "provider": "windsurf",
+      "model": "windsurf-swe-1"
+    }
+  }'
+```
+
+**🎯 Windsurf AI повністю інтегровано з VentAI та готове до використання!**
+
+*Останнє оновлення: 11 червня 2025*

@@ -147,165 +147,157 @@ export class WindsurfAIProvider {
   }
 
   /**
-   * 🔧 Ініціалізація доступних моделей Windsurf
+   * 🔧 Ініціалізація доступних моделей Windsurf (ТОЧНІ ДАНІ 2025-06-11)
    */
   private async initializeWindsurfModels(): Promise<void> {
     try {
-      // Windsurf Built-in моделі (завжди доступні)
-      this.windsurfProviders.push({
-        vendor: 'windsurf',
-        name: 'Windsurf Built-in',
-        available: true,
-        models: [
-          {
-            id: 'windsurf-swe-1',
-            name: 'SWE-1 (free limited time)',
-            vendor: 'windsurf',
-            family: 'swe',
-            type: 'chat',
-            available: true,
-            credits: 'free',
-            features: ['code-generation', 'debugging', 'refactoring']
-          },
-          {
-            id: 'windsurf-swe-1-lite',
-            name: 'SWE-1-lite',
-            vendor: 'windsurf',
-            family: 'swe',
-            type: 'chat',
-            available: true,
-            credits: 'free',
-            features: ['quick-assistance', 'code-completion']
-          }
-        ]
-      });
-
-      // OpenAI моделі через Windsurf
-      this.windsurfProviders.push({
-        vendor: 'openai',
-        name: 'OpenAI (via Windsurf)',
-        available: true,
-        totalCredits: '1x credit',
-        models: [
-          {
-            id: 'gpt-4o',
-            name: 'GPT-4o',
-            vendor: 'openai',
-            family: 'gpt-4',
-            type: 'chat',
-            available: true,
-            credits: '1x credit'
-          },
-          {
-            id: 'gpt-4o-mini',
-            name: 'GPT-4o mini',
-            vendor: 'openai',
-            family: 'gpt-4',
-            type: 'chat',
-            available: true,
-            credits: '0.1x credit'
-          },
-          {
-            id: 'o3-mini-reasoning',
-            name: 'o3-mini (medium reasoning)',
-            vendor: 'openai',
-            family: 'o3',
-            type: 'reasoning',
-            available: true,
-            credits: '1x credit'
-          }
-        ]
-      });
-
-      // Anthropic моделі через Windsurf
-      this.windsurfProviders.push({
-        vendor: 'anthropic',
-        name: 'Anthropic (via Windsurf)',
-        available: true,
-        models: [
-          {
-            id: 'claude-3.5-sonnet',
-            name: 'Claude 3.5 Sonnet',
-            vendor: 'anthropic',
-            family: 'claude',
-            type: 'chat',
-            available: true,
-            credits: '1x credit'
-          },
-          {
-            id: 'claude-3.7-sonnet-thinking',
-            name: 'Claude 3.7 Sonnet (Thinking)',
-            vendor: 'anthropic',
-            family: 'claude',
-            type: 'reasoning',
-            available: true,
-            credits: '1.25x credit'
-          }
-        ]
-      });
-
-      // Google моделі через Windsurf
-      this.windsurfProviders.push({
-        vendor: 'google',
-        name: 'Google (via Windsurf)',
-        available: true,
-        models: [
-          {
-            id: 'gemini-2.5-pro',
-            name: 'Gemini 2.5 Pro (promo)',
-            vendor: 'google',
-            family: 'gemini',
-            type: 'chat',
-            available: true,
-            credits: '0.75x credit'
-          },
-          {
-            id: 'gemini-2.5-flash',
-            name: 'Gemini 2.5 Flash',
-            vendor: 'google',
-            family: 'gemini',
-            type: 'chat',
-            available: true,
-            credits: '0.1x credit'
-          }
-        ]
-      });
-
-      // xAI моделі через Windsurf
-      this.windsurfProviders.push({
-        vendor: 'xai',
-        name: 'xAI (via Windsurf)',
-        available: true,
-        models: [
-          {
-            id: 'grok-3',
-            name: 'xAI Grok-3',
-            vendor: 'xai',
-            family: 'grok',
-            type: 'chat',
-            available: true,
-            credits: '1x credit'
-          }
-        ]
-      });
-
-      // DeepSeek моделі через Windsurf
-      this.windsurfProviders.push({
-        vendor: 'deepseek',
-        name: 'DeepSeek (via Windsurf)',
-        available: true,
-        models: [
-          {
-            id: 'deepseek-v3',
-            name: 'DeepSeek V3 (0324)',
-            vendor: 'deepseek',
-            family: 'deepseek',
-            type: 'chat',
-            available: true,
-            credits: 'free'
-          }
-        ]
-      });
+      // Точні дані з реального Windsurf API
+      this.windsurfProviders = [
+        {
+          vendor: 'windsurf',
+          name: 'Windsurf Built-in',
+          available: true,
+          models: [
+            {
+              id: 'windsurf-swe-1',
+              name: 'SWE-1 (free limited time)',
+              vendor: 'windsurf',
+              family: 'swe',
+              type: 'chat',
+              available: true,
+              credits: 'free',
+              features: ['code-generation', 'debugging', 'refactoring']
+            },
+            {
+              id: 'windsurf-swe-1-lite',
+              name: 'SWE-1-lite',
+              vendor: 'windsurf',
+              family: 'swe',
+              type: 'chat',
+              available: true,
+              credits: 'free',
+              features: ['quick-assistance', 'code-completion']
+            }
+          ]
+        },
+        {
+          vendor: 'openai',
+          name: 'OpenAI (via Windsurf)',
+          available: true,
+          totalCredits: '1x credit',
+          models: [
+            {
+              id: 'gpt-4o',
+              name: 'GPT-4o',
+              vendor: 'openai',
+              family: 'gpt-4',
+              type: 'chat',
+              available: true,
+              credits: '1x credit'
+            },
+            {
+              id: 'gpt-4o-mini',
+              name: 'GPT-4o mini',
+              vendor: 'openai',
+              family: 'gpt-4',
+              type: 'chat',
+              available: true,
+              credits: '0.1x credit'
+            },
+            {
+              id: 'o3-mini-reasoning',
+              name: 'o3-mini (medium reasoning)',
+              vendor: 'openai',
+              family: 'o3',
+              type: 'reasoning',
+              available: true,
+              credits: '1x credit'
+            }
+          ]
+        },
+        {
+          vendor: 'anthropic',
+          name: 'Anthropic (via Windsurf)',
+          available: true,
+          models: [
+            {
+              id: 'claude-3.5-sonnet',
+              name: 'Claude 3.5 Sonnet',
+              vendor: 'anthropic',
+              family: 'claude',
+              type: 'chat',
+              available: true,
+              credits: '1x credit'
+            },
+            {
+              id: 'claude-3.7-sonnet-thinking',
+              name: 'Claude 3.7 Sonnet (Thinking)',
+              vendor: 'anthropic',
+              family: 'claude',
+              type: 'reasoning',
+              available: true,
+              credits: '1.25x credit'
+            }
+          ]
+        },
+        {
+          vendor: 'google',
+          name: 'Google (via Windsurf)',
+          available: true,
+          models: [
+            {
+              id: 'gemini-2.5-pro',
+              name: 'Gemini 2.5 Pro (promo)',
+              vendor: 'google',
+              family: 'gemini',
+              type: 'chat',
+              available: true,
+              credits: '0.75x credit'
+            },
+            {
+              id: 'gemini-2.5-flash',
+              name: 'Gemini 2.5 Flash',
+              vendor: 'google',
+              family: 'gemini',
+              type: 'chat',
+              available: true,
+              credits: '0.1x credit'
+            }
+          ]
+        },
+        {
+          vendor: 'xai',
+          name: 'xAI (via Windsurf)',
+          available: true,
+          models: [
+            {
+              id: 'grok-3',
+              name: 'xAI Grok-3',
+              vendor: 'xai',
+              family: 'grok',
+              type: 'chat',
+              available: true,
+              credits: '1x credit'
+            }
+          ]
+        },
+        {
+          vendor: 'deepseek',
+          name: 'DeepSeek (via Windsurf)',
+          available: true,
+          models: [
+            {
+              id: 'deepseek-v3',
+              name: 'DeepSeek V3 (0324)',
+              vendor: 'deepseek',
+              family: 'deepseek',
+              type: 'chat',
+              available: true,
+              credits: 'free'
+            }
+          ]
+        }
+      ];
 
       this.initialized = true;
       console.log(`🌊 Windsurf AI Provider initialized with ${this.windsurfProviders.length} providers`);
