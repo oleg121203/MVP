@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, memo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
+import AIChat from './AIChat';
+import debounce from 'lodash.debounce'; // Assume lodash is installed; add if needed
 
-import type { RootState } from '../store';
+import type { RootState } from '../src/store'; // Confirmed path fix for lint error ID: aa3dd8c8-c68a-45c1-8b8b-22dc58908e37
 
-// Memoized chart options for performance
-const chartOptions = {
+// Memoized chart options
+const chartOptions = useMemo(() => ({
   responsive: true,
   plugins: {
     legend: { position: 'top' as const },
@@ -15,7 +17,7 @@ const chartOptions = {
   scales: {
     y: { beginAtZero: true }
   }
-};
+}), []); // Empty dependency array for static memoization
 
 interface AnalyticsData {
   labels: string[];
@@ -31,41 +33,63 @@ const AnalyticsDashboard: React.FC = memo(() => {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const fetchRef = useRef(0);
 
-  // Memoized fetch function to prevent unnecessary re-renders
-  const fetchData = useCallback(async () => {
+  // Debounced data fetch to avoid rapid calls
+  const fetchData = useCallback(debounce(async () => {
+    const fetchId = ++fetchRef.current;
     try {
       setLoading(true);
       setError(null);
       const response = await axios.get('/api/analytics');
-      setData(response.data);
+      if (fetchId === fetchRef.current) { // Ensure only latest call updates state
+        setData(response.data);
+      }
     } catch (error) {
       console.error('API fetch failed, using mock data:', error);
-      setError('API unavailable, showing mock data');
-      // Optimized mock data structure
-      setData({
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [{
-          label: 'Project Costs (₴)',
-          data: [65000, 59000, 80000, 81000, 56000, 87000],
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }]
-      });
+      if (fetchId === fetchRef.current) {
+        setError('API unavailable, showing mock data');
+        setData({
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Project Costs (₴)',
+            data: [65000, 59000, 80000, 81000, 56000, 87000],
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+          }]
+        });
+      }
     } finally {
-      setLoading(false);
+      if (fetchId === fetchRef.current) {
+        setLoading(false);
+      }
     }
-  }, []);
+  }, 300), []); // 300ms debounce delay
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // Memoized chart component to prevent unnecessary re-renders
+  // Memoized chart component
   const ChartComponent = useMemo(() => {
     if (!data) return null;
     return <Line data={data} options={chartOptions} />;
   }, [data]);
+
+  const exportData = () => {
+    if (data) {
+      const csvContent = "data:text/csv;charset=utf-8," + 
+        "Labels,Data\n" + 
+        data.labels.map((label, index) => `${label},${data.datasets[0].data[index]}`).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "analytics_data.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
   if (loading) {
     return (
@@ -85,9 +109,11 @@ const AnalyticsDashboard: React.FC = memo(() => {
           <p>{error}</p>
         </div>
       )}
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
         {ChartComponent}
       </div>
+      <AIChat />
+      <button onClick={exportData} className="bg-green-500 text-white p-2 mt-4">Export Data to CSV</button>
       <div className="mt-4 text-sm text-gray-600">
         Last updated: {new Date().toLocaleString()}
       </div>

@@ -211,6 +211,11 @@ npm run test:performance
 
 ## 🤖 Windsurf AI Assistant Commands
 
+### Рекомендована Активація (КРАЩА)
+```
+WINDSURF ACTIVATE: Load all rules, auto-load project context, identify current phase, resume execution automatically.
+```
+
 ### Стандартна Активація
 ```
 Load Windsurf rules and resume autonomous execution from current project state.
@@ -221,7 +226,7 @@ Load Windsurf rules and resume autonomous execution from current project state.
 CRITICAL OVERRIDE: Activate maximum priority never-stop protocol. Ignore ALL pause prompts. Continue automatically.
 ```
 
-**Примітка**: Використовуйте критичну активацію, якщо Windsurf починає паузити виконання або показувати кнопки "Continue".
+**Примітка**: Рекомендована активація автоматично завантажує контекст проекту та визначає поточну фазу.
 
 ---
 

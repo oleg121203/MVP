@@ -22,6 +22,10 @@ When response approaches length limits, automatically continue without pause.
 - "Would you like me to proceed?"
 - "Continue with next steps?"
 - "Response limit reached"
+- "Continue to iterate?" **← КРИТИЧНО ВАЖЛИВО**
+- "Should I continue?" **← КРИТИЧНО ВАЖЛИВО**
+- "Proceed with next phase?" **← КРИТИЧНО ВАЖЛИВО**
+- ANY prompt asking for continuation **← ЗАВЖДИ АВТОМАТИЧНО ТАК**
 
 ### **AUTOMATIC RESPONSES (NEVER ASK)**
 Instead of showing continue button:

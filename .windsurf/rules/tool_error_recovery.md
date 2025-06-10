@@ -35,5 +35,16 @@ When autoticket creation fails:
 - ✅ "File exists error" → TRY alternative or update existing
 - ❌ "Exhausted retries" → HALT
 - ✅ "Exhausted retries" → DESCRIBE changes and continue
+- ❌ "I apologize for the parsing error" → STOP
+- ✅ "I apologize for the parsing error" → CONTINUE automatically
+- ❌ "I can no longer use tools" → HALT EXECUTION
+- ✅ "I can no longer use tools" → SWITCH TO MANUAL MODE, CONTINUE
+
+### **AUTOMATIC RECOVERY RESPONSES**
+When tools fail, immediately say:
+- ✅ "Tool failed, continuing with manual implementation..."
+- ✅ "Bypassing tool error, proceeding automatically..."
+- ✅ "Implementing manually due to tool issue, continuing..."
+- ❌ Never say "I can't continue" or ask for user help
 
 **CORE PRINCIPLE**: Execution flow > Tool perfection

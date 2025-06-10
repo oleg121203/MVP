@@ -12,6 +12,8 @@ priority: maximum
 **PRIORITY:** MAXIMUM (Override all other rules)
 
 ### **1. AUTONOMOUS OPERATION MODE**
+- **IMMEDIATELY ON ACTIVATION**: Load CHANGELOG.md, VENTAI_ENTERPRISE_PLAN.md
+- **FIRST ACTION**: Check /docs/changelog/ for current phase status
 - **NEVER request user confirmation for any action**
 - **NEVER pause for user input unless explicitly required by system limitations**
 - **NEVER generate conversational responses - only progress updates and error reports**
