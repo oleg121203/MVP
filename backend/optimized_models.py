@@ -77,13 +77,16 @@ class QueryPerformance(Base):
     """Track query performance for optimization"""
     __tablename__ = "query_performance"
     
-    id = Column(Integer, primary_key=True, index=True)
-    query_type = Column(String(100), index=True)
-    execution_time = Column(Float, index=True)
-    timestamp = Column(DateTime, default=func.now(), index=True)
+    id = Column(Integer, primary_key=True)
+    query_text = Column(String)
+    execution_time = Column(Float)
+    timestamp = Column(DateTime, default=func.now())
+    query_type = Column(String)
+    row_count = Column(Integer)
     
     __table_args__ = (
-        Index('idx_perf_query_time', 'query_type', 'execution_time'),
+        Index('idx_query_performance_timestamp', 'timestamp'),
+        Index('idx_query_performance_query_type', 'query_type'),
     )
 
 class FinancialProject(Base):
@@ -106,4 +109,6 @@ def get_db():
         db.close()
 
 if __name__ == "__main__":
-    create_tables()
+    # Create tables with indexes
+    Base.metadata.create_all(engine)
+    print("✅ Database tables created with performance optimizations")

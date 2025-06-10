@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "activeDecomposition": false,
+  "currentTask": null,
+  "decompositionHistory": [],
+  "settings": {
+    "autoProgressEnabled": true,
+    "maxTokensPerPhase": 800,
+    "autoDetectionEnabled": true,
+    "pauseOverrideEnabled": true
+  },
+  "statistics": {
+    "totalTasksDecomposed": 0,
+    "averagePhasesPerTask": 0,
+    "successRate": 0,
+    "continueButtonHitsPrevented": 0
+  }
+}

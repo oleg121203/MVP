@@ -1,0 +1,17 @@
+# Auto-Decomposition Activated
+TIMESTAMP=2025-06-10T11:58:10Z
+STATUS=ACTIVE
+MODE=AUTO_DECOMPOSE
+PRIORITY=MAXIMUM
+
+# Commands
+DECOMPOSE_LARGE_TASKS=true
+AUTO_PROGRESS=true
+PAUSE_OVERRIDE=true
+CONTINUE_KILLER=true
+
+# Rules Active
+- task_decomposition_auto.md
+- continue_response_killer.md
+- cascade_error_override.md
+- auto_context_loader.md

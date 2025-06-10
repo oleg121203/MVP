@@ -11,12 +11,15 @@ import asyncio
 import aioredis
 
 class RedisCache:
-    """Optimized Redis caching system"""
+    """High-performance caching system for analytics data"""
     
     def __init__(self, redis_url: str = "redis://localhost:6379"):
         self.redis_url = redis_url
         self.redis_client = None
         self.async_redis = None
+        self.cache_ttl = 3600  # 1 hour default TTL
+        self.cache_hits = 0
+        self.cache_misses = 0
         
     async def connect(self):
         """Connect to Redis with connection pooling"""
@@ -53,7 +56,9 @@ class RedisCache:
         try:
             cached_data = await self.async_redis.get(cache_key)
             if cached_data:
+                self.cache_hits += 1
                 return json.loads(cached_data)
+            self.cache_misses += 1
         except Exception as e:
             print(f"Cache read error: {e}")
         
@@ -116,7 +121,9 @@ class RedisCache:
         try:
             cached_result = await self.async_redis.get(cache_key)
             if cached_result:
+                self.cache_hits += 1
                 return json.loads(cached_result)
+            self.cache_misses += 1
         except Exception as e:
             print(f"Query cache read error: {e}")
         
@@ -143,6 +150,58 @@ class RedisCache:
         except Exception as e:
             print(f"Query cache write error: {e}")
             return False
+
+    def get(self, key):
+        """Get data from cache"""
+        try:
+            data = self.redis_client.get(key)
+            if data:
+                self.cache_hits += 1
+                return json.loads(data)
+            self.cache_misses += 1
+            return None
+        except redis.RedisError as e:
+            print(f"Cache get error: {e}")
+            return None
+
+    def set(self, key, data, ttl=None):
+        """Store data in cache with optional TTL"""
+        try:
+            data_str = json.dumps(data)
+            self.redis_client.setex(key, ttl or self.cache_ttl, data_str)
+            return True
+        except redis.RedisError as e:
+            print(f"Cache set error: {e}")
+            return False
+
+    def invalidate(self, key_pattern):
+        """Invalidate cache keys matching pattern"""
+        try:
+            cursor = '0'
+            while cursor != 0:
+                cursor, keys = self.redis_client.scan(cursor=cursor, match=key_pattern, count=100)
+                if keys:
+                    self.redis_client.delete(*keys)
+            return True
+        except redis.RedisError as e:
+            print(f"Cache invalidate error: {e}")
+            return False
+
+    def get_stats(self):
+        """Get cache performance statistics"""
+        total_requests = self.cache_hits + self.cache_misses
+        hit_rate = (self.cache_hits / total_requests * 100) if total_requests > 0 else 0
+        return {
+            "cache_hits": self.cache_hits,
+            "cache_misses": self.cache_misses,
+            "hit_rate": hit_rate,
+            "total_requests": total_requests
+        }
+
+    def clear_stats(self):
+        """Reset cache performance statistics"""
+        self.cache_hits = 0
+        self.cache_misses = 0
 
 # Global cache instance
 cache = RedisCache()

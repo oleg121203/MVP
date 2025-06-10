@@ -1,0 +1,15 @@
+# WINDSURF ULTIMATE COMMANDS - COPY & PASTE
+
+## AUTO-DECOMPOSE & EXECUTE
+DECOMPOSE_AUTO: Create complete testing framework with Cypress, Jest, and API tests
+
+## FORCE COMPLETE WITHOUT STOPS  
+FORCE_COMPLETE: Implement full authentication system with login, registration, and JWT
+
+## BYPASS ALL LIMITATIONS
+BYPASS_ALL: Setup entire CI/CD pipeline with Docker, Kubernetes, and monitoring
+
+## EMERGENCY MAXIMUM PRIORITY
+EMERGENCY_EXECUTION: Build complete dashboard with analytics, charts, and real-time updates
+
+# Simply copy any command above, replace the task description, and paste!

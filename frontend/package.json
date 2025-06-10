@@ -27,13 +27,16 @@
     "zustand": "^5.0.5"
   },
   "scripts": {
-    "start": "react-scripts start --port 3000",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src --config eslint.config.js",
     "format": "prettier --write src",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "analyze:bundle": "react-scripts build --analyze",
+    "test:e2e": "cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -79,6 +82,7 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^30.0.0-beta.3",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "cypress": "^14.4.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-react-app": "^7.0.1",
@@ -95,6 +99,7 @@
     "prettier": "^3.2.5",
     "react-redux": "^9.2.0",
     "socket.io-client": "^4.8.1",
+    "source-map-explorer": "^2.5.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.1",
     "vercel": "^41.0.2"

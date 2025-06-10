@@ -9,6 +9,8 @@ from pydantic import BaseModel
 import json
 import gzip
 from datetime import datetime
+import time
+import pandas as pd
 
 class PaginatedResponse(BaseModel):
     """Standardized pagination response"""
@@ -23,6 +25,78 @@ class PaginatedResponse(BaseModel):
 class APIOptimizer:
     """API response optimization utilities"""
     
+    def __init__(self):
+        self._cache = {}
+        self._metrics = []
+
+    def optimize_response(self, data, request_url: str):
+        """Optimize API response based on request context"""
+        start_time = time.time()
+        
+        # Check cache first
+        cache_key = f"{request_url}:{hash(str(data))}"
+        if cache_key in self._cache:
+            cached_response = self._cache[cache_key]
+            latency = time.time() - start_time
+            self._metrics.append({
+                "url": request_url,
+                "cache_hit": True,
+                "latency": latency,
+                "timestamp": datetime.now().isoformat(),
+                "response_size": len(str(cached_response))
+            })
+            return cached_response
+
+        # Apply optimizations
+        optimized_data = self._apply_optimizations(data)
+        
+        # Store in cache
+        self._cache[cache_key] = optimized_data
+        
+        # Record metrics
+        latency = time.time() - start_time
+        self._metrics.append({
+            "url": request_url,
+            "cache_hit": False,
+            "latency": latency,
+            "timestamp": datetime.now().isoformat(),
+            "response_size": len(str(optimized_data)),
+            "optimizations_applied": len(optimized_data) < len(str(data))
+        })
+        return optimized_data
+
+    def _apply_optimizations(self, data):
+        """Apply various optimization techniques"""
+        if isinstance(data, dict):
+            return {k: self._apply_optimizations(v) for k, v in data.items() if v is not None}
+        elif isinstance(data, list):
+            return [self._apply_optimizations(item) for item in data]
+        return data
+
+    def get_performance_metrics(self):
+        """Get API performance metrics"""
+        if not self._metrics:
+            return {"message": "No metrics available yet", "count": 0}
+
+        df = pd.DataFrame(self._metrics)
+        cache_hit_rate = len(df[df['cache_hit'] == True]) / len(df) if 'cache_hit' in df.columns else 0
+        avg_latency = df['latency'].mean() if 'latency' in df.columns else 0
+        avg_response_size = df['response_size'].mean() if 'response_size' in df.columns else 0
+        optimizations_rate = len(df[df['optimizations_applied'] == True]) / len(df) if 'optimizations_applied' in df.columns else 0
+
+        return {
+            "total_requests": len(self._metrics),
+            "cache_hit_rate": cache_hit_rate,
+            "average_latency": avg_latency,
+            "average_response_size": avg_response_size,
+            "optimizations_rate": optimizations_rate,
+            "detailed_metrics": self._metrics[-10:]  # Last 10 requests
+        }
+
+    def clear_cache(self):
+        """Clear the response cache"""
+        self._cache.clear()
+
     @staticmethod
     def compress_response(data: Dict[str, Any]) -> bytes:
         """Compress JSON response using gzip"""
