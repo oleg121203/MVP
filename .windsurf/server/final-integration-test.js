@@ -72,9 +72,14 @@ async function testWindsurfIntegration() {
           body: JSON.stringify({ 
             tool: 'ai_chat_completion', 
             params: {
-              message: `Hi! Please respond in exactly 10 words about your identity.`,
-              model_id: model.id,
-              vendor: model.vendor
+              messages: [
+                {
+                  role: 'user',
+                  content: `Hi! Please respond in exactly 10 words about your identity.`
+                }
+              ],
+              provider: model.vendor,
+              model: model.id
             }
           })
         });
@@ -83,8 +88,8 @@ async function testWindsurfIntegration() {
         const response = JSON.parse(chatResult.content[0].text);
         
         console.log(`    ✅ Response: "${response.response.slice(0, 60)}..."`);
-        console.log(`    📊 Model: ${response.model_info.name} (${response.model_info.vendor})`);
-        console.log(`    💰 Credits: ${response.model_info.credits || 'N/A'}\n`);
+        console.log(`    📊 Model: ${response.model_info?.name || response.model || 'Unknown'} (${response.model_info?.vendor || response.provider || model.vendor})`);
+        console.log(`    💰 Credits: ${response.model_info?.credits || 'N/A'}\n`);
         
       } catch (error) {
         console.log(`    ❌ Error: ${error.message}\n`);
