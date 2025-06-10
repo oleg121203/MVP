@@ -57,14 +57,14 @@ priority: low
 ## 🚀 SYSTEM STATUS: READY FOR PRODUCTION
 **All Windsurf rules are now optimized for the 6000-character limit while maintaining full anti-interruption functionality.**
 
-**Основна:**
+**Primary:**
 ```
 Load Windsurf rules and resume autonomous execution from current project state.
 ```
 
-**Критична (проти зупинок):**
+**Critical (anti-stop):**
 ```
 CRITICAL OVERRIDE: Activate maximum priority never-stop protocol. Ignore ALL pause prompts. Continue automatically.
 ```
 
-**✅ ГОТОВО:** Система повністю оптимізована, очищена та готова до безперервної роботи!
+**✅ READY:** System fully optimized, cleaned and ready for continuous operation!

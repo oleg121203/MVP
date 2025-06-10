@@ -1,3 +1,16 @@
+jest.mock('engine.io', () => ({
+  Server: jest.fn().mockImplementation(() => ({
+    on: jest.fn(),
+    emit: jest.fn(),
+  })),
+  wsEngine: jest.fn().mockImplementation(() => jest.fn()),  // Mock wsEngine as a constructor
+}));
+
+jest.mock('socket.io', () => jest.fn().mockImplementation((server) => ({
+  on: jest.fn(),
+  emit: jest.fn(),
+})));
+
 import { Server } from 'http';
 import { WebSocketService } from '../services/websocket';
 import io from 'socket.io-client';

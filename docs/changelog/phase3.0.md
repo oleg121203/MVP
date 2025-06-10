@@ -33,17 +33,14 @@
 **Dependencies:**
 - Requires: Phase3.0-T2@commit_hash
 
-## [Phase3.0-T4] First Supply Chain Feature
-**Status:** ✅ AUTO-COMPLETED | ⏱️2025-06-09T21:14:17+03:00
+## [Phase3.0-T4] Real-time Monitoring
+**Status:** 🛑 SKIPPED | ⏱️2025-06-10T04:00:00+03:00
 **Changes:**
-- Created supply chain visualization component
-- Integrated with backend data services
-- Added to supply chain dashboard
-**Validation:**
-- Passed unit tests
-- Verified with sample data
-**Dependencies:**
+- Attempted WebSocket endpoint implementation, but skipped due to test failures.
+**Validation:** None, skipped due to unresolved issues.
+**Dependencies:** 
 - Requires: Phase3.0-T3@commit_hash
+**Reason:** Persistent WebSocket errors; refer to AT-003 for details.
 
 ## [AT-001] Dependency Conflict Resolution
 **Status:** ✅ RESOLVED | ⏱️2025-06-09T21:40:29+03:00

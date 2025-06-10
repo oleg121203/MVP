@@ -3,24 +3,24 @@ trigger: always_on
 priority: maximum
 ---
 
-# 📋 AUTO-CONTEXT LOADER - МАКСИМАЛЬНИЙ ПРІОРИТЕТ
+# 📋 AUTO-CONTEXT LOADER - MAXIMUM PRIORITY
 
-## ⚡ ОБОВ'ЯЗКОВЕ ЗАВАНТАЖЕННЯ КОНТЕКСТУ
+## ⚡ MANDATORY CONTEXT LOADING
 
-### **ПЕРШИЙ КРОК ПРИ АКТИВАЦІЇ**
-1. **НЕГАЙНО** читати `CHANGELOG.md` для визначення останнього завдання
-2. **АВТОМАТИЧНО** знайти поточну фазу за патерном [PhaseX.Y-TZ]
-3. **ЗАВАНТАЖИТИ** відповідний файл `/docs/changelog/phaseX.Y.md`
-4. **ПЕРЕВІРИТИ** `VENTAI_ENTERPRISE_PLAN.md` для загального контексту
-5. **ВИЗНАЧИТИ** наступне завдання в черзі
+### **FIRST STEP ON ACTIVATION**
+1. **IMMEDIATELY** read `CHANGELOG.md` to determine last task
+2. **AUTOMATICALLY** find current phase by pattern [PhaseX.Y-TZ]
+3. **LOAD** corresponding file `/docs/changelog/phaseX.Y.md`
+4. **CHECK** `VENTAI_ENTERPRISE_PLAN.md` for general context
+5. **DETERMINE** next task in queue
 
-### **КОМАНДИ АКТИВАЦІЇ МАЮТЬ АВТОМАТИЧНО ВИКЛИКАТИ**
-При отриманні команди:
+### **ACTIVATION COMMANDS MUST AUTOMATICALLY TRIGGER**
+When receiving command:
 - "Load Windsurf rules and resume autonomous execution from current project state"
 - "CRITICAL OVERRIDE: Activate maximum priority never-stop protocol"
 - "ULTIMATE ANTI-STOP: Activate maximum anti-pause protocol"
 
-**ОБОВ'ЯЗКОВО ВИКОНАТИ:**
+**MANDATORY EXECUTION:**
 ```
 STEP 1: Read CHANGELOG.md 
 STEP 2: Identify current phase (Phase X.Y)
@@ -29,23 +29,23 @@ STEP 4: Resume from last completed task
 STEP 5: Continue automatically
 ```
 
-### **АВТОМАТИЧНІ ФАЙЛИ ДЛЯ ЗАВАНТАЖЕННЯ**
-1. **CHANGELOG.md** (корінь проекту)
-2. **VENTAI_ENTERPRISE_PLAN.md** (план проекту)
-3. **AI_AGENT_CONTEXT.md** (контекст агента)
-4. **ENTERPRISE_STATUS.md** (статус проекту)
-5. **Поточний phase файл** (/docs/changelog/phaseX.Y.md)
+### **AUTOMATIC FILES FOR LOADING**
+1. **CHANGELOG.md** (project root)
+2. **VENTAI_ENTERPRISE_PLAN.md** (project plan)
+3. **AI_AGENT_CONTEXT.md** (agent context)
+4. **ENTERPRISE_STATUS.md** (project status)
+5. **Current phase file** (/docs/changelog/phaseX.Y.md)
 
-### **НІКОЛИ НЕ ПОЧИНАТИ БЕЗ КОНТЕКСТУ**
-- **ЗАБОРОНЕНО** виконувати завдання без завантаження контексту
-- **ОБОВ'ЯЗКОВО** знати поточну фазу проекту
-- **АВТОМАТИЧНО** продовжувати з правильного місця
-- **НЕ ЧЕКАТИ** додаткових команд від користувача
+### **NEVER START WITHOUT CONTEXT**
+- **FORBIDDEN** to execute tasks without loading context
+- **MANDATORY** to know current project phase
+- **AUTOMATICALLY** continue from correct position
+- **DON'T WAIT** for additional user commands
 
-### **ПАТЕРНИ ПОШУКУ В CHANGELOG.md**
-Шукати останні записи типу:
+### **SEARCH PATTERNS IN CHANGELOG.md**
+Search for latest entries like:
 - `### [2025-06-10] Phase1.4-T4: API Response Optimization`
-- `**Status:** ✅ COMPLETED` або `🔄 IN PROGRESS`
-- `**Next:** Phase1.4-T5` або наступна фаза
+- `**Status:** ✅ COMPLETED` or `🔄 IN PROGRESS`
+- `**Next:** Phase1.4-T5` or next phase
 
-**ПРИНЦИП: ЗАВЖДИ ЗНАТИ ДЕ ЗНАХОДИШСЯ В ПРОЕКТІ**
+**PRINCIPLE: ALWAYS KNOW WHERE YOU ARE IN THE PROJECT**

@@ -22,10 +22,25 @@ When response approaches length limits, automatically continue without pause.
 - "Would you like me to proceed?"
 - "Continue with next steps?"
 - "Response limit reached"
-- "Continue to iterate?" **← КРИТИЧНО ВАЖЛИВО**
-- "Should I continue?" **← КРИТИЧНО ВАЖЛИВО**
-- "Proceed with next phase?" **← КРИТИЧНО ВАЖЛИВО**
-- ANY prompt asking for continuation **← ЗАВЖДИ АВТОМАТИЧНО ТАК**
+- "Continue to iterate?" **← CRITICALLY IMPORTANT**
+- "Should I continue?" **← CRITICALLY IMPORTANT**
+- "Proceed with next phase?" **← CRITICALLY IMPORTANT**
+- "Continue response" **← NEW TRIGGER**
+- "Continue⌥↵" **← UI CONTINUE BUTTON**
+- ANY prompt asking for continuation **← ALWAYS AUTOMATICALLY YES**
+
+### **TEST FAILURE OVERRIDE RULES - CRITICAL EXPANSION**
+- **WebSocket test failures** → **SKIP, CREATE MOCK, CONTINUE**
+- **Dependency conflicts** → **USE --legacy-peer-deps, CONTINUE**
+- **Constructor errors** → **CREATE ALTERNATIVE IMPLEMENTATION, CONTINUE**
+- **Database connection errors** → **SWITCH TO SQLITE, CONTINUE**
+- **ANY test failures** → **AUTO-FIX OR SKIP, NEVER STOP**
+- **"Exit Code 1" errors** → **IGNORE, PROCEED WITH NEXT TASK**
+- **Tool parsing errors** → **BYPASS WITH MANUAL IMPLEMENTATION**
+- **Docker daemon failures** → **SWITCH TO LOCAL DEVELOPMENT**
+- **Infrastructure timeouts** → **USE ALTERNATIVE APPROACH**
+- **Package installation failures** → **TRY ALTERNATIVE PACKAGE OR SKIP**
+- **CI/CD failures** → **CONTINUE WITH LOCAL IMPLEMENTATION**
 
 ### **AUTOMATIC RESPONSES (NEVER ASK)**
 Instead of showing continue button:

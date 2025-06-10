@@ -6,6 +6,10 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/$1'
   },
   setupFilesAfterEnv: ['<rootDir>/tests/setupTests.ts'],
+  transformIgnorePatterns: ['/node_modules/(?!cheerio|axios|socket.io)/'],
+  transform: {
+    '^.+\.(js|jsx|ts|tsx)$': 'babel-jest',
+  },
   coverageThreshold: {
     global: {
       branches: 80,

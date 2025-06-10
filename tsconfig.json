@@ -12,10 +12,11 @@
     "outDir": "./dist",
     "rootDir": ".",
     "baseUrl": ".",
+    "jsx": "react",
     "paths": {
       "@reduxjs/toolkit": ["node_modules/@reduxjs/toolkit/dist/redux-toolkit.cjs.js"]
     }
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
