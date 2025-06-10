@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from socketio import AsyncServer
 from socketio.asgi import ASGIApp
-from ventai.backend.routers import analytics_router, price_intelligence_router
+from ventai.backend.routers import analytics_router, price_intelligence_router, workflow_router, mobile_router, webhook_router
 
 app = FastAPI()
 
@@ -22,6 +22,9 @@ app.mount("/socket.io", socketio_app)
 # Include routers
 app.include_router(analytics_router)
 app.include_router(price_intelligence_router)
+app.include_router(workflow_router)
+app.include_router(mobile_router)
+app.include_router(webhook_router)
 
 @app.get("/")
 def read_root():
