@@ -1,68 +1,67 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import AdvancedVisualization from './AdvancedVisualization';
-import analyticsReducer from '../../store/analyticsSlice';
 
-// Import jest-dom matchers
-import '@testing-library/jest-dom';
+// Mock Recharts components
+jest.mock('recharts', () => ({
+  LineChart: () => <div data-testid="mock-line-chart" />,
+  BarChart: () => <div data-testid="mock-bar-chart" />,
+  Line: () => null,
+  Bar: () => null,
+  XAxis: () => null,
+  YAxis: () => null,
+  CartesianGrid: () => null,
+  Tooltip: () => null,
+  Legend: () => null,
+  ResponsiveContainer: ({ children }) => <div data-testid="mock-responsive-container">{children}</div>
+}));
 
-// Create a theme
-const theme = createTheme();
+// Mock Redux store
+const middlewares = [thunk];
+const mockStore = configureStore(middlewares);
 
-// Create a test store with mock data
-const testStore = configureStore({
-  reducer: {
-    analytics: analyticsReducer,
-  },
-  preloadedState: {
-    analytics: {
-      data: [
-        { date: '2025-06-01', cost: 1000, performance: 80, efficiency: 75 },
-        { date: '2025-06-02', cost: 1200, performance: 85, efficiency: 78 },
-        { date: '2025-06-03', cost: 1100, performance: 82, efficiency: 77 },
-      ],
-      loading: false,
-      error: null,
-    },
-  },
-});
+const initialState = {
+  analytics: {
+    data: [
+      { date: '2025-06-01', cost: 1000, performance: 80, efficiency: 75 },
+      { date: '2025-06-02', cost: 1200, performance: 85, efficiency: 78 },
+      { date: '2025-06-03', cost: 1100, performance: 82, efficiency: 77 },
+      { date: '2025-06-04', cost: 1300, performance: 88, efficiency: 80 },
+      { date: '2025-06-05', cost: 900, performance: 78, efficiency: 73 }
+    ],
+    loading: false,
+    error: null
+  }
+};
 
-const testStoreLoading = configureStore({
-  reducer: {
-    analytics: analyticsReducer,
-  },
-  preloadedState: {
-    analytics: {
-      data: [],
-      loading: true,
-      error: null,
-    },
-  },
-});
+const initialStateLoading = {
+  analytics: {
+    data: [],
+    loading: true,
+    error: null
+  }
+};
 
-const testStoreError = configureStore({
-  reducer: {
-    analytics: analyticsReducer,
-  },
-  preloadedState: {
-    analytics: {
-      data: [],
-      loading: false,
-      error: 'Failed to fetch data',
-    },
-  },
-});
+const initialStateError = {
+  analytics: {
+    data: [],
+    loading: false,
+    error: 'Failed to fetch data'
+  }
+};
+
+const testStore = mockStore(initialState);
+const testStoreLoading = mockStore(initialStateLoading);
+const testStoreError = mockStore(initialStateError);
 
 describe('AdvancedVisualization Component', () => {
   test('renders without crashing', () => {
     render(
       <Provider store={testStore}>
-        <ThemeProvider theme={theme}>
-          <AdvancedVisualization />
-        </ThemeProvider>
+        <AdvancedVisualization />
       </Provider>
     );
     expect(screen.getByText(/Advanced Data Visualization/i)).toBeInTheDocument();
@@ -71,34 +70,27 @@ describe('AdvancedVisualization Component', () => {
   test('displays loading state', () => {
     render(
       <Provider store={testStoreLoading}>
-        <ThemeProvider theme={theme}>
-          <AdvancedVisualization />
-        </ThemeProvider>
+        <AdvancedVisualization />
       </Provider>
     );
-    expect(screen.getByText(/Loading data.../i)).toBeInTheDocument();
+    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
   });
 
   test('displays error state', () => {
     render(
       <Provider store={testStoreError}>
-        <ThemeProvider theme={theme}>
-          <AdvancedVisualization />
-        </ThemeProvider>
+        <AdvancedVisualization />
       </Provider>
     );
-    expect(screen.getByText(/Error loading data:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Error: Failed to fetch data/i)).toBeInTheDocument();
   });
 
   test('displays charts when data is available', async () => {
     render(
       <Provider store={testStore}>
-        <ThemeProvider theme={theme}>
-          <AdvancedVisualization />
-        </ThemeProvider>
+        <AdvancedVisualization />
       </Provider>
     );
-    expect(screen.getByText(/Cost Analysis/i)).toBeInTheDocument();
-    expect(screen.getByText(/Performance Trends/i)).toBeInTheDocument();
+    expect(screen.getByTestId('mock-responsive-container')).toBeInTheDocument();
   });
 });

@@ -1,9 +1,15 @@
 import pytest
+import sys
+import os
+
+# Add the parent directory to sys.path to resolve imports
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 try:
-    from backend.analytics.predictive_models import PredictiveAnalytics
+    from analytics.predictive_models import PredictiveAnalytics
 except ImportError:
     # Fallback for different directory structure
-    from analytics.predictive_models import PredictiveAnalytics
+    from backend.analytics.predictive_models import PredictiveAnalytics
 
 # Mock data for testing
 mock_data = [
