@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+  # PostgreSQL з підтримкою векторів
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: windsurf-postgres
+    environment:
+      POSTGRES_DB: ventai_dev
+      POSTGRES_USER: ventai_dev
+      POSTGRES_PASSWORD: ventai_dev_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - windsurf-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ventai_dev -d ventai_dev"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis для кешування
+  redis:
+    image: redis:7-alpine
+    container_name: windsurf-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - windsurf-network
+    restart: unless-stopped
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Windsurf Enterprise MCP Server
+  windsurf-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: windsurf-mcp-server
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://ventai_dev:ventai_dev_password@postgres:5432/ventai_dev
+      - REDIS_URL=redis://redis:6379
+      - WINDSURF_ROOT=/app/data
+      - ENABLE_VECTOR_SEARCH=true
+      - ENABLE_GRAPH_RELATIONS=true
+      - MCP_LOG_LEVEL=info
+    volumes:
+      - ../:/app/data:ro  # Windsurf files read-only
+      - ./logs:/app/logs
+      - ./config:/app/config
+    networks:
+      - windsurf-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('MCP Server Health Check')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx для проксування (опціонально)
+  nginx:
+    image: nginx:alpine
+    container_name: windsurf-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/html:/usr/share/nginx/html:ro
+    networks:
+      - windsurf-network
+    depends_on:
+      - windsurf-mcp
+    restart: unless-stopped
+
+  # Grafana для моніторингу (опціонально)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: windsurf-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=windsurf_admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - windsurf-network
+    restart: unless-stopped
+
+  # Prometheus для метрик (опціонально)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: windsurf-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - windsurf-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  grafana_data:
+    driver: local
+  prometheus_data:
+    driver: local
+
+networks:
+  windsurf-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
