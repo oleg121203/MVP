@@ -1,0 +1,47 @@
+# 🐳 Windsurf Enterprise MCP Server - Масштабоване розгортання
+FROM node:18-alpine
+
+# Встановлюємо залежності системи
+RUN apk add --no-cache postgresql-client redis
+
+# Створюємо користувача
+RUN addgroup -g 1001 -S windsurf && \
+    adduser -S windsurf -u 1001
+
+# Створюємо робочу директорію
+WORKDIR /app
+
+# Копіюємо package files
+COPY package*.json ./
+COPY tsconfig.json ./
+
+# Встановлюємо залежності
+RUN npm ci --only=production
+
+# Копіюємо вихідний код
+COPY src/ ./src/
+COPY .env.example ./.env
+
+# Компілюємо TypeScript
+RUN npm run build
+
+# Змінюємо власника файлів
+RUN chown -R windsurf:windsurf /app
+
+# Переключаємося на користувача windsurf
+USER windsurf
+
+# Відкриваємо порт для health check (опціонально)
+EXPOSE 8080
+
+# Налаштування для MCP
+ENV NODE_ENV=production
+ENV REDIS_URL=redis://redis:6379
+ENV DATABASE_URL=postgresql://ventai_dev:ventai_dev_password@postgres:5432/ventai_dev
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD redis-cli -h ${REDIS_HOST:-redis} ping || exit 1
+
+# Запуск сервера
+CMD ["node", "dist/enterprise-index.js"]

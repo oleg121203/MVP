@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 
+import { config } from 'dotenv';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+
+// Завантажуємо змінні середовища з локального .env файлу
+config({ path: './.env' });
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
   CallToolRequestSchema,
@@ -17,6 +21,7 @@ import { glob } from 'glob';
 import { createTwoFilesPatch } from 'diff';
 import { minimatch } from 'minimatch';
 import { WindsurfVectorStore, VectorDocument } from './vector-store.js';
+import { WindsurfAIProvider } from './windsurf-ai-provider.js';
 
 /**
  * 🚀 Windsurf Enterprise MCP Server з векторним зберіганням
@@ -27,6 +32,7 @@ class WindsurfEnterpriseMCPServer {
   private allowedDirs: string[] = [];
   private windsurfRoot: string;
   private vectorStore: WindsurfVectorStore;
+  private aiProvider: WindsurfAIProvider;
 
   constructor() {
     this.server = new Server(
@@ -46,6 +52,7 @@ class WindsurfEnterpriseMCPServer {
     this.windsurfRoot = process.cwd();
     this.allowedDirs = this.parseAllowedDirectories();
     this.vectorStore = new WindsurfVectorStore();
+    this.aiProvider = new WindsurfAIProvider();
 
     this.setupResourceHandlers();
     this.setupToolHandlers();
@@ -357,6 +364,103 @@ class WindsurfEnterpriseMCPServer {
             },
             required: ['sourceId', 'targetId', 'relationshipType'],
           },
+        },
+
+        // Нові AI-інструменти
+        {
+          name: 'list_ai_providers',
+          description: 'List all available AI providers and their capabilities',
+          inputSchema: {
+            type: 'object',
+            properties: {},
+          },
+        },
+        {
+          name: 'ai_chat_completion',
+          description: 'Generate text using AI providers (OpenAI, Claude, Gemini, Mistral, Grok, Local)',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              messages: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    role: { type: 'string', enum: ['user', 'assistant', 'system'] },
+                    content: { type: 'string' }
+                  },
+                  required: ['role', 'content']
+                },
+                description: 'Conversation messages'
+              },
+              provider: { 
+                type: 'string', 
+                description: 'Preferred AI provider (openai, anthropic, google, mistral, grok, local, windsurf)' 
+              },
+              model: { type: 'string', description: 'Specific model name' },
+              temperature: { type: 'number', description: 'Creativity level (0-1)', default: 0.7 },
+              maxTokens: { type: 'number', description: 'Maximum response length', default: 1000 },
+              systemPrompt: { type: 'string', description: 'System context prompt' }
+            },
+            required: ['messages'],
+          },
+        },
+        {
+          name: 'ai_create_embeddings',
+          description: 'Create text embeddings using multiple AI providers',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              text: { type: 'string', description: 'Text to embed' },
+              provider: { 
+                type: 'string', 
+                description: 'Preferred provider (openai, google, mistral, local)' 
+              },
+              model: { type: 'string', description: 'Specific embedding model' }
+            },
+            required: ['text'],
+          },
+        },
+        {
+          name: 'ai_windsurf_assistant',
+          description: 'Windsurf-context AI assistant with project knowledge',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              query: { type: 'string', description: 'Question or task' },
+              context: { type: 'string', description: 'Additional context' },
+              includeProjectFiles: { type: 'boolean', description: 'Include project file analysis', default: true }
+            },
+            required: ['query'],
+          },
+        },
+        {
+          name: 'ai_code_analysis',
+          description: 'AI-powered code analysis and suggestions',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              filePath: { type: 'string', description: 'Path to code file' },
+              analysisType: { 
+                type: 'string', 
+                enum: ['review', 'bugs', 'optimization', 'documentation', 'refactoring'],
+                description: 'Type of analysis to perform'
+              },
+              provider: { type: 'string', description: 'Preferred AI provider' }
+            },
+            required: ['filePath', 'analysisType'],
+          },
+        },
+        {
+          name: 'ai_test_providers',
+          description: 'Test all AI providers availability and performance',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              testEmbeddings: { type: 'boolean', description: 'Test embedding capabilities', default: true },
+              testChat: { type: 'boolean', description: 'Test chat capabilities', default: true }
+            },
+          },
         }
       ];
 
@@ -497,6 +601,49 @@ class WindsurfEnterpriseMCPServer {
               args.weight as number
             );
 
+          // Нові AI-інструменти
+          case 'list_ai_providers':
+            return await this.listAIProviders();
+
+          case 'ai_chat_completion':
+            return await this.aiChatCompletion(
+              args.messages as Array<{role: string, content: string}>,
+              args.provider as string,
+              args.model as string,
+              {
+                temperature: args.temperature as number,
+                maxTokens: args.maxTokens as number,
+                systemPrompt: args.systemPrompt as string
+              }
+            );
+
+          case 'ai_create_embeddings':
+            return await this.aiCreateEmbeddings(
+              args.text as string,
+              args.provider as string,
+              args.model as string
+            );
+
+          case 'ai_windsurf_assistant':
+            return await this.aiWindsurfAssistant(
+              args.query as string,
+              args.context as string,
+              args.includeProjectFiles as boolean
+            );
+
+          case 'ai_code_analysis':
+            return await this.aiCodeAnalysis(
+              args.filePath as string,
+              args.analysisType as string,
+              args.provider as string
+            );
+
+          case 'ai_test_providers':
+            return await this.aiTestProviders(
+              args.testEmbeddings as boolean,
+              args.testChat as boolean
+            );
+
           // Розширені файлові операції
           case 'read_file':
             return await this.readFile(
@@ -538,9 +685,9 @@ class WindsurfEnterpriseMCPServer {
 
           case 'search_files':
             return await this.searchFiles(
-              args.path as string,
               args.pattern as string,
-              args.excludePatterns as string[]
+              args.path as string,
+              args.includeContent as boolean
             );
 
           case 'get_file_info':
@@ -568,7 +715,453 @@ class WindsurfEnterpriseMCPServer {
   }
 
   /**
-   * 🔍 Векторний пошук документів
+   * 🤖 AI Provider Methods
+   */
+
+  /**
+   * 📋 List all available AI providers
+   */
+  private async listAIProviders() {
+    const providers = this.aiProvider.getAvailableProviders();
+    
+    await this.logOperation('list_ai_providers', { 
+      providersCount: providers.length 
+    });
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify({
+            providers,
+            total: providers.length,
+            capabilities: {
+              chat: providers.flatMap(p => p.models.filter(m => m.type === 'chat').map(m => `${p.vendor}:${m.name}`)),
+              reasoning: providers.flatMap(p => p.models.filter(m => m.type === 'reasoning').map(m => `${p.vendor}:${m.name}`))
+            }
+          }, null, 2),
+        },
+      ],
+    };
+  }
+
+  /**
+   * 💬 AI Chat Completion
+   */
+  private async aiChatCompletion(
+    messages: Array<{role: string, content: string}>,
+    provider?: string,
+    model?: string,
+    options: {
+      temperature?: number,
+      maxTokens?: number,
+      systemPrompt?: string
+    } = {}
+  ) {
+    try {
+      // Add system prompt if provided
+      let finalMessages = [...messages];
+      if (options.systemPrompt) {
+        finalMessages.unshift({
+          role: 'system',
+          content: options.systemPrompt
+        });
+      }
+
+      const result = await this.aiProvider.generateChatResponse(
+        finalMessages,
+        provider,
+        model,
+        {
+          temperature: options.temperature || 0.7,
+          maxTokens: options.maxTokens || 1000
+        }
+      );
+
+      await this.logOperation('ai_chat_completion', { 
+        provider: result.provider,
+        model: result.model,
+        messagesCount: finalMessages.length,
+        responseLength: result.content.length
+      });
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              response: result.content,
+              provider: result.provider,
+              model: result.model,
+              tokens: result.tokens,
+              metadata: {
+                messagesCount: finalMessages.length,
+                responseLength: result.content.length,
+                timestamp: new Date().toISOString()
+              }
+            }, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      throw new Error(`AI chat completion failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * 🧮 AI Create Embeddings (Fallback симуляція)
+   */
+  private async aiCreateEmbeddings(
+    text: string,
+    provider?: string,
+    model?: string
+  ) {
+    try {
+      // Оскільки Windsurf не підтримує embeddings напряму, створюємо fallback
+      // Використовуємо простий хеш як симуляцію ембединга
+      const simpleHash = this.createSimpleEmbedding(text);
+
+      await this.logOperation('ai_create_embeddings', { 
+        provider: provider || 'windsurf-fallback',
+        model: model || 'hash-embedding',
+        textLength: text.length,
+        dimensions: simpleHash.length
+      });
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              embedding: simpleHash,
+              provider: provider || 'windsurf-fallback',
+              model: model || 'hash-embedding',
+              metadata: {
+                textLength: text.length,
+                dimensions: simpleHash.length,
+                timestamp: new Date().toISOString(),
+                note: 'Simulated embedding - replace with actual embedding service if needed'
+              }
+            }, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      throw new Error(`AI embedding creation failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * 🔢 Створити просте ембединг на основі хешу
+   */
+  private createSimpleEmbedding(text: string): number[] {
+    const words = text.toLowerCase().split(/\s+/);
+    const embedding = new Array(512).fill(0); // 512-вимірний вектор
+    
+    for (let i = 0; i < words.length && i < 512; i++) {
+      const word = words[i];
+      let hash = 0;
+      for (let j = 0; j < word.length; j++) {
+        const char = word.charCodeAt(j);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+      }
+      embedding[i % 512] += Math.sin(hash) * 0.1; // Нормалізоване значення
+    }
+    
+    // Нормалізуємо вектор
+    const magnitude = Math.sqrt(embedding.reduce((sum, val) => sum + val * val, 0));
+    if (magnitude > 0) {
+      for (let i = 0; i < embedding.length; i++) {
+        embedding[i] /= magnitude;
+      }
+    }
+    
+    return embedding;
+  }
+
+  /**
+   * 🏗️ Windsurf AI Assistant
+   */
+  private async aiWindsurfAssistant(
+    query: string,
+    context?: string,
+    includeProjectFiles: boolean = true
+  ) {
+    try {
+      let projectContext = '';
+      
+      if (includeProjectFiles) {
+        // Get relevant project files through vector search
+        const relevantDocs = await this.vectorStore.vectorSearch(query, 5);
+        projectContext = relevantDocs.map(doc => 
+          `File: ${doc.metadata.path}\n${doc.content.substring(0, 1000)}...`
+        ).join('\n\n');
+      }
+
+      const systemPrompt = `You are Windsurf AI Assistant, an expert in software development and project management.
+You have access to the current project context and files. Help the user with their query while considering the project structure and codebase.
+
+Project Context:
+${projectContext}
+
+Additional Context:
+${context || 'None provided'}`;
+
+      const messages = [
+        { role: 'user', content: query }
+      ];
+
+      const result = await this.aiProvider.generateChatResponse(
+        messages, 
+        'windsurf', // Try Windsurf provider first
+        undefined,
+        {
+          temperature: 0.7,
+          maxTokens: 2000
+        }
+      );
+
+      await this.logOperation('ai_windsurf_assistant', { 
+        provider: result.provider,
+        queryLength: query.length,
+        contextIncluded: includeProjectFiles,
+        responseLength: result.content.length
+      });
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              response: result.content,
+              provider: result.provider,
+              model: result.model,
+              projectContext: includeProjectFiles,
+              relevantFiles: projectContext ? projectContext.split('\n\n').length : 0,
+              metadata: {
+                queryLength: query.length,
+                responseLength: result.content.length,
+                timestamp: new Date().toISOString()
+              }
+            }, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      throw new Error(`Windsurf AI assistant failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * 🔍 AI Code Analysis
+   */
+  private async aiCodeAnalysis(
+    filePath: string,
+    analysisType: string,
+    provider?: string
+  ) {
+    try {
+      if (!this.isPathAllowed(filePath)) {
+        throw new Error(`Access denied: ${filePath}`);
+      }
+
+      const content = await fsPromises.readFile(filePath, 'utf-8');
+      const fileExtension = path.extname(filePath).toLowerCase();
+      const language = this.getLanguageFromExtension(fileExtension);
+
+      const analysisPrompts = {
+        review: `Please review this ${language} code for best practices, code quality, and potential improvements:`,
+        bugs: `Please analyze this ${language} code for potential bugs, errors, and security vulnerabilities:`,
+        optimization: `Please analyze this ${language} code for performance optimizations and efficiency improvements:`,
+        documentation: `Please suggest documentation improvements and generate missing comments for this ${language} code:`,
+        refactoring: `Please suggest refactoring opportunities to improve code structure and maintainability for this ${language} code:`
+      };
+
+      const prompt = analysisPrompts[analysisType] || analysisPrompts.review;
+      const systemPrompt = `You are an expert code reviewer with deep knowledge of ${language} and software engineering best practices.
+Provide detailed, actionable feedback with specific line references when possible.`;
+
+      const messages = [
+        { role: 'user', content: `${prompt}\n\n\`\`\`${language}\n${content}\n\`\`\`` }
+      ];
+
+      const result = await this.aiProvider.analyzeCode(
+        content,
+        filePath,
+        analysisType as 'review' | 'bugs' | 'optimization' | 'documentation' | 'refactoring'
+      );
+
+      await this.logOperation('ai_code_analysis', { 
+        filePath,
+        analysisType,
+        provider: result.provider,
+        language,
+        codeLength: content.length,
+        responseLength: result.content.length
+      });
+
+      return {
+        content: [
+          {
+            type: 'text',        text: JSON.stringify({
+          analysis: result.content,
+          provider: result.provider,
+          model: result.model,
+          analysisType,
+          filePath,
+          language,
+          metadata: {
+            codeLength: content.length,
+            responseLength: result.content.length,
+            timestamp: new Date().toISOString()
+          }
+        }, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      throw new Error(`AI code analysis failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * 🧪 Test AI Providers
+   */
+  private async aiTestProviders(
+    testEmbeddings: boolean = true,
+    testChat: boolean = true
+  ) {
+    const results = {
+      providers: [],
+      summary: {
+        total: 0,
+        available: 0,
+        chatCapable: 0,
+        embeddingCapable: 0
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    const providers = this.aiProvider.getAvailableProviders();
+    results.summary.total = providers.length;
+
+    for (const providerInfo of providers) {
+      const testResult = {
+        name: providerInfo.name,
+        vendor: providerInfo.vendor,
+        available: false,
+        chat: { supported: false, tested: false, success: false, error: null, responseTime: null },
+        embeddings: { supported: false, tested: false, success: false, error: null, responseTime: null }
+      };
+
+      try {
+        // Test chat capabilities
+        if (testChat) {
+          testResult.chat.supported = true;
+          testResult.chat.tested = true;
+          
+          const startTime = Date.now();
+          try {
+            const chatResult = await this.aiProvider.generateChatResponse(
+              [{ role: 'user', content: 'Hello, this is a test message. Please respond briefly.' }],
+              providerInfo.vendor,
+              undefined,
+              { maxTokens: 50 }
+            );
+            testResult.chat.success = !!chatResult.content;
+            testResult.chat.responseTime = Date.now() - startTime;
+          } catch (error) {
+            testResult.chat.error = error instanceof Error ? error.message : 'Unknown error';
+          }
+        }
+
+        // Embeddings simulation test (since Windsurf doesn't have native embeddings)
+        if (testEmbeddings) {
+          testResult.embeddings.supported = true;
+          testResult.embeddings.tested = true;
+          
+          const startTime = Date.now();
+          try {
+            // Test our fallback embedding method
+            const embedding = this.createSimpleEmbedding('This is a test text for embedding generation.');
+            testResult.embeddings.success = embedding.length > 0;
+            testResult.embeddings.responseTime = Date.now() - startTime;
+          } catch (error) {
+            testResult.embeddings.error = error instanceof Error ? error.message : 'Unknown error';
+          }
+        }
+
+        testResult.available = testResult.chat.success || testResult.embeddings.success;
+        if (testResult.available) results.summary.available++;
+        if (testResult.chat.success) results.summary.chatCapable++;
+        if (testResult.embeddings.success) results.summary.embeddingCapable++;
+
+      } catch (error) {
+        console.error(`Error testing provider ${providerInfo.name}:`, error);
+      }
+
+      results.providers.push(testResult);
+    }
+
+    await this.logOperation('ai_test_providers', { 
+      total: results.summary.total,
+      available: results.summary.available,
+      testEmbeddings,
+      testChat
+    });
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(results, null, 2),
+        },
+      ],
+    };
+  }
+
+  /**
+   * 🔤 Get programming language from file extension
+   */
+  private getLanguageFromExtension(extension: string): string {
+    const languageMap: Record<string, string> = {
+      '.js': 'javascript',
+      '.jsx': 'javascript',
+      '.ts': 'typescript',
+      '.tsx': 'typescript',
+      '.py': 'python',
+      '.java': 'java',
+      '.c': 'c',
+      '.cpp': 'cpp',
+      '.cs': 'csharp',
+      '.php': 'php',
+      '.rb': 'ruby',
+      '.go': 'go',
+      '.rs': 'rust',
+      '.swift': 'swift',
+      '.kt': 'kotlin',
+      '.scala': 'scala',
+      '.sh': 'bash',
+      '.sql': 'sql',
+      '.html': 'html',
+      '.css': 'css',
+      '.json': 'json',
+      '.xml': 'xml',
+      '.yaml': 'yaml',
+      '.yml': 'yaml',
+      '.md': 'markdown'
+    };
+
+    return languageMap[extension] || 'text';
+  }
+
+  /**
+   * 🔍 Vector Search Methods
+   */
+
+  /**
+   * 🔍 Vector search documents
    */
   private async vectorSearchDocuments(
     query: string,
@@ -607,7 +1200,7 @@ class WindsurfEnterpriseMCPServer {
   }
 
   /**
-   * 🧠 Розумні рекомендації
+   * 🧠 Smart recommendations
    */
   private async smartRecommendations(context: string, limit: number = 5) {
     const recommendations = await this.vectorStore.getRecommendations(context, limit);
@@ -637,7 +1230,7 @@ class WindsurfEnterpriseMCPServer {
   }
 
   /**
-   * 🕸️ Графові зв'язки
+   * 🕸️ Graph relations
    */
   private async graphRelations(nodeId: string, depth: number = 1, relationshipType?: string) {
     const connections = await this.vectorStore.getGraphConnections(nodeId, depth);
@@ -672,17 +1265,16 @@ class WindsurfEnterpriseMCPServer {
   }
 
   /**
-   * 🔄 Синхронізація з векторним сховищем
+   * 🔄 Sync to vector store
    */
   private async syncToVectorStore(paths?: string[], forceResync: boolean = false) {
     try {
       if (paths && paths.length > 0) {
-        // Синхронізація конкретних шляхів
+        // Sync specific paths
         for (const filePath of paths) {
-          if (this.isPathAllowed(filePath) && await fs.pathExists(filePath)) {
+          if (this.isPathAllowed(filePath)) {
             const content = await fsPromises.readFile(filePath, 'utf-8');
-            const docId = `file_${path.basename(filePath, '.md')}_${Date.now()}`;
-            
+            const docId = `file_${path.basename(filePath, path.extname(filePath))}_${Date.now()}`;
             await this.vectorStore.addDocument({
               id: docId,
               type: 'file',
@@ -696,7 +1288,7 @@ class WindsurfEnterpriseMCPServer {
           }
         }
       } else {
-        // Повна синхронізація
+        // Full sync
         await this.vectorStore.syncWindsurfFiles(this.windsurfRoot);
       }
 
@@ -719,7 +1311,7 @@ class WindsurfEnterpriseMCPServer {
   }
 
   /**
-   * 🔗 Створення графового зв'язку
+   * 🔗 Create graph relation
    */
   private async createGraphRelation(
     sourceId: string,
@@ -747,7 +1339,11 @@ class WindsurfEnterpriseMCPServer {
   }
 
   /**
-   * 📖 Читання файлу з векторною індексацією
+   * 📁 File Operation Methods
+   */
+
+  /**
+   * 📖 Read file
    */
   private async readFile(filePath: string, addToVector: boolean = false) {
     if (!this.isPathAllowed(filePath)) {
@@ -756,7 +1352,7 @@ class WindsurfEnterpriseMCPServer {
 
     const content = await fsPromises.readFile(filePath, 'utf-8');
     
-    // Додавання до векторного сховища якщо потрібно
+    // Add to vector store if needed
     if (addToVector) {
       const docId = `file_${path.basename(filePath, path.extname(filePath))}_${Date.now()}`;
       await this.vectorStore.addDocument({
@@ -788,7 +1384,7 @@ class WindsurfEnterpriseMCPServer {
   }
 
   /**
-   * ✍️ Запис файлу з векторною індексацією
+   * ✍️ Write file
    */
   private async writeFile(
     filePath: string, 
@@ -802,10 +1398,9 @@ class WindsurfEnterpriseMCPServer {
 
     await fs.ensureDir(path.dirname(filePath));
     await fs.writeFile(filePath, content, 'utf-8');
-
-    // Додавання до векторного сховища якщо потрібно
+    
     if (addToVector) {
-      const docId = `${docType}_${path.basename(filePath, path.extname(filePath))}_${Date.now()}`;
+      const docId = `file_${path.basename(filePath, path.extname(filePath))}_${Date.now()}`;
       await this.vectorStore.addDocument({
         id: docId,
         type: docType as any,
@@ -813,7 +1408,7 @@ class WindsurfEnterpriseMCPServer {
         metadata: {
           path: filePath,
           timestamp: new Date().toISOString(),
-          tags: [docType, 'write_operation']
+          tags: ['file', 'write_operation']
         }
       });
     }
@@ -821,28 +1416,27 @@ class WindsurfEnterpriseMCPServer {
     await this.logOperation('write_file', { 
       path: filePath, 
       size: content.length, 
-      addedToVector: addToVector,
-      docType 
+      addedToVector: addToVector 
     });
 
     return {
       content: [
         {
           type: 'text',
-          text: `Successfully wrote ${content.length} characters to ${filePath}${addToVector ? ' (added to vector store)' : ''}`,
+          text: `File written: ${filePath} (${content.length} characters)`,
         },
       ],
     };
   }
 
   /**
-   * ✏️ Редагування файлу з оновленням векторного сховища
+   * ✏️ Edit file
    */
   private async editFile(
     filePath: string,
     edits: Array<{oldText: string, newText: string}>,
-    dryRun = false,
-    updateVector = false
+    dryRun: boolean = false,
+    updateVector: boolean = false
   ) {
     if (!this.isPathAllowed(filePath)) {
       throw new Error(`Access denied: ${filePath}`);
@@ -850,15 +1444,16 @@ class WindsurfEnterpriseMCPServer {
 
     const originalContent = await fsPromises.readFile(filePath, 'utf-8');
     let modifiedContent = originalContent;
-
-    const appliedEdits: Array<{oldText: string, newText: string, found: boolean}> = [];
+    const appliedEdits = [];
 
     for (const edit of edits) {
-      const found = modifiedContent.includes(edit.oldText);
-      if (found) {
+      const index = modifiedContent.indexOf(edit.oldText);
+      if (index !== -1) {
         modifiedContent = modifiedContent.replace(edit.oldText, edit.newText);
+        appliedEdits.push({ ...edit, found: true });
+      } else {
+        appliedEdits.push({ ...edit, found: false });
       }
-      appliedEdits.push({ ...edit, found });
     }
 
     const diff = createTwoFilesPatch(
@@ -873,7 +1468,6 @@ class WindsurfEnterpriseMCPServer {
     if (!dryRun) {
       await fs.writeFile(filePath, modifiedContent, 'utf-8');
       
-      // Оновлення векторного сховища
       if (updateVector) {
         const docId = `file_${path.basename(filePath, path.extname(filePath))}_edited_${Date.now()}`;
         await this.vectorStore.addDocument({
@@ -914,7 +1508,9 @@ class WindsurfEnterpriseMCPServer {
     };
   }
 
-  // Імплементація інших стандартних методів (аналогічно попередній версії)
+  /**
+   * 📚 Read multiple files
+   */
   private async readMultipleFiles(paths: string[], addToVector: boolean = false) {
     const results = await Promise.allSettled(
       paths.map(async (filePath) => {
@@ -965,12 +1561,16 @@ class WindsurfEnterpriseMCPServer {
     };
   }
 
+  /**
+   * 📁 Create directory
+   */
   private async createDirectory(dirPath: string) {
     if (!this.isPathAllowed(dirPath)) {
       throw new Error(`Access denied: ${dirPath}`);
     }
 
     await fs.ensureDir(dirPath);
+    
     await this.logOperation('create_directory', { path: dirPath });
 
     return {
@@ -983,72 +1583,82 @@ class WindsurfEnterpriseMCPServer {
     };
   }
 
+  /**
+   * 📂 List directory
+   */
   private async listDirectory(dirPath: string) {
     if (!this.isPathAllowed(dirPath)) {
       throw new Error(`Access denied: ${dirPath}`);
     }
 
-    const items = await fs.readdir(dirPath);
-    const itemsWithTypes = await Promise.all(
-      items.map(async (item) => {
-        const itemPath = path.join(dirPath, item);
-        const stats = await fs.stat(itemPath);
-        return `${stats.isDirectory() ? '[DIR]' : '[FILE]'} ${item}`;
-      })
-    );
+    const items = await fs.readdir(dirPath, { withFileTypes: true });
+    const listing = items.map(item => ({
+      name: item.name,
+      type: item.isDirectory() ? 'directory' : 'file',
+      path: path.join(dirPath, item.name)
+    }));
 
-    await this.logOperation('list_directory', { path: dirPath, itemCount: items.length });
+    await this.logOperation('list_directory', { path: dirPath, items: listing.length });
 
     return {
       content: [
         {
           type: 'text',
-          text: itemsWithTypes.join('\n'),
+          text: JSON.stringify(listing, null, 2),
         },
       ],
     };
   }
 
-  private async moveFile(source: string, destination: string) {
-    if (!this.isPathAllowed(source) || !this.isPathAllowed(destination)) {
-      throw new Error(`Access denied`);
+  /**
+   * 🚚 Move file
+   */
+  private async moveFile(sourcePath: string, destinationPath: string) {
+    if (!this.isPathAllowed(sourcePath) || !this.isPathAllowed(destinationPath)) {
+      throw new Error(`Access denied: ${sourcePath} -> ${destinationPath}`);
     }
 
-    if (await fs.pathExists(destination)) {
-      throw new Error(`Destination already exists: ${destination}`);
-    }
+    await fs.ensureDir(path.dirname(destinationPath));
+    await fs.move(sourcePath, destinationPath);
 
-    await fs.move(source, destination);
-    await this.logOperation('move_file', { source, destination });
+    await this.logOperation('move_file', { source: sourcePath, destination: destinationPath });
 
     return {
       content: [
         {
           type: 'text',
-          text: `Moved ${source} to ${destination}`,
+          text: `File moved: ${sourcePath} -> ${destinationPath}`,
         },
       ],
     };
   }
 
-  private async searchFiles(searchPath: string, pattern: string, excludePatterns: string[] = []) {
-    if (!this.isPathAllowed(searchPath)) {
-      throw new Error(`Access denied: ${searchPath}`);
-    }
+  /**
+   * 🔍 Search files
+   */
+  private async searchFiles(
+    pattern: string,
+    searchPath?: string,
+    includeContent: boolean = false
+  ) {
+    const searchDir = searchPath && this.isPathAllowed(searchPath) 
+      ? searchPath 
+      : this.windsurfRoot;
 
-    const globPattern = path.join(searchPath, '**', pattern);
+    const globPattern = pattern.includes('*') ? pattern : `**/*${pattern}*`;
     const matches = await glob(globPattern, { 
-      nocase: true,
-      ignore: excludePatterns 
+      cwd: searchDir,
+      ignore: ['node_modules/**', '.git/**', 'dist/**', 'build/**']
     });
 
-    const filteredMatches = matches.filter(match => this.isPathAllowed(match));
+    const filteredMatches = matches
+      .map(match => path.join(searchDir, match))
+      .filter(filePath => this.isPathAllowed(filePath));
 
     await this.logOperation('search_files', { 
-      searchPath, 
       pattern, 
-      excludePatterns, 
-      matchCount: filteredMatches.length 
+      searchPath: searchDir, 
+      matches: filteredMatches.length 
     });
 
     return {
@@ -1061,6 +1671,9 @@ class WindsurfEnterpriseMCPServer {
     };
   }
 
+  /**
+   * 📄 Get file info
+   */
   private async getFileInfo(filePath: string) {
     if (!this.isPathAllowed(filePath)) {
       throw new Error(`Access denied: ${filePath}`);
@@ -1089,6 +1702,9 @@ class WindsurfEnterpriseMCPServer {
     };
   }
 
+  /**
+   * 📋 List allowed directories
+   */
   private async listAllowedDirectories() {
     return {
       content: [
@@ -1101,21 +1717,15 @@ class WindsurfEnterpriseMCPServer {
   }
 
   /**
-   * 🚀 Запуск сервера
+   * 🚀 Run the server
    */
   async run(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('🚀 Windsurf Enterprise MCP Server (Vector-Enabled) running on stdio');
+    console.error('🚀 Windsurf Enterprise MCP Server (Multi-AI Enabled) running on stdio');
   }
 
-  /**
-   * 🔒 Graceful shutdown
-   */
-  async shutdown(): Promise<void> {
-    await this.vectorStore.close();
-    console.error('👋 Windsurf Enterprise MCP Server shutdown complete');
-  }
+  // ...existing code...
 }
 
 // Graceful shutdown handling

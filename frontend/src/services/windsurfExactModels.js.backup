@@ -1,0 +1,941 @@
+/**
+ * 🌊 Enhanced VentAI Service with Windsurf Native AI Support 
+ * Updated to match exact Windsurf models available (June 11, 2025)
+ * 
+ * Available Windsurf Models:
+ * - Windsurf: SWE-1, SWE-1-lite (FREE)
+ * - OpenAI: GPT-4o, GPT-4o mini, o3-mini reasoning
+ * - Anthropic: Claude 3.5 Sonnet, Claude 3.7 Sonnet (Thinking)
+ * - Google: Gemini 2.5 Pro, Gemini 2.5 Flash
+ * - xAI: Grok-3
+ * - DeepSeek: DeepSeek V3 (FREE)
+ */
+
+class EnhancedVentAIService {
+  constructor() {
+    this.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    this.mcpEndpoint = process.env.REACT_APP_MCP_URL || 'http://localhost:8001';
+    this.cache = new Map();
+    this.windsurfProviders = [];
+    this.windsurfCapabilities = {
+      chat: [],
+      reasoning: []
+    };
+    this.currentProvider = null;
+    
+    // Initialize Windsurf AI providers with exact models from real Windsurf
+    this.initializeWindsurfProviders();
+  }
+
+  /**
+   * 🌊 Initialize Windsurf Native AI Providers
+   * Updated with exact structure from Windsurf MCP Server response
+   */
+  async initializeWindsurfProviders() {
+    try {
+      // Try to fetch real providers from MCP server
+      const realProviders = await this.fetchWindsurfProviders();
+      if (realProviders && realProviders.providers) {
+        this.windsurfProviders = realProviders.providers;
+        this.windsurfCapabilities = realProviders.capabilities;
+        console.log('🌊 Real Windsurf AI Providers loaded:', realProviders.total, 'providers');
+        
+        // Set default to Claude 3.5 Sonnet (best general purpose)
+        this.currentProvider = this.windsurfProviders.find(p => p.vendor === 'anthropic');
+        return this.windsurfProviders;
+      }
+    } catch (error) {
+      console.warn('⚠️ Failed to fetch real providers, using fallback:', error.message);
+    }
+
+    // Fallback to exact structure from December 28, 2024 Windsurf MCP Server Response
+    this.windsurfProviders = [
+      {
+        "id": "windsurf",
+        "vendor": "windsurf", 
+        "name": "Windsurf Built-in",
+        "available": true,
+        "models": [
+          {
+            "id": "windsurf-swe-1",
+            "name": "SWE-1",
+            "vendor": "windsurf",
+            "type": "chat", 
+            "context_window": 32768,
+            "credits": "free",
+            "description": "Windsurf's specialized software engineering model"
+          },
+          {
+            "id": "windsurf-swe-1-lite", 
+            "name": "SWE-1-lite",
+            "vendor": "windsurf",
+            "type": "chat",
+            "context_window": 16384,
+            "credits": "free",
+            "description": "Lightweight version of SWE-1"
+          }
+        ]
+      },
+      {
+        "id": "openai",
+        "vendor": "openai",
+        "name": "OpenAI", 
+        "available": true,
+        "models": [
+          {
+            "id": "gpt-4o",
+            "name": "GPT-4o",
+            "vendor": "openai",
+            "type": "chat",
+            "context_window": 128000,
+            "credits": "1x",
+            "description": "Latest GPT-4 model with enhanced capabilities"
+          },
+          {
+            "id": "gpt-4o-mini",
+            "name": "GPT-4o mini", 
+            "vendor": "openai",
+            "type": "chat",
+            "context_window": 128000,
+            "credits": "0.1x",
+            "description": "Smaller, faster version of GPT-4o"
+          },
+          {
+            "id": "o3-mini-reasoning",
+            "name": "o3-mini reasoning",
+            "vendor": "openai", 
+            "type": "reasoning",
+            "context_window": 65536,
+            "credits": "1x",
+            "description": "Advanced reasoning model"
+          }
+        ]
+      },
+      {
+        "id": "anthropic",
+        "vendor": "anthropic",
+        "name": "Anthropic",
+        "available": true,
+        "models": [
+          {
+            "id": "claude-3-5-sonnet-20241022",
+            "name": "Claude 3.5 Sonnet",
+            "vendor": "anthropic",
+            "type": "chat",
+            "context_window": 200000,
+            "credits": "1x", 
+            "description": "Claude 3.5 Sonnet with enhanced capabilities"
+          },
+          {
+            "id": "claude-3-7-sonnet-thinking",
+            "name": "Claude 3.7 Sonnet Thinking",
+            "vendor": "anthropic",
+            "type": "reasoning",
+            "context_window": 200000,
+            "credits": "1.25x",
+            "description": "Claude 3.7 with thinking capabilities"
+          }
+        ]
+      },
+      {
+        "id": "google",
+        "vendor": "google", 
+        "name": "Google",
+        "available": true,
+        "models": [
+          {
+            "id": "gemini-2.5-pro",
+            "name": "Gemini 2.5 Pro",
+            "vendor": "google",
+            "type": "chat",
+            "context_window": 1000000,
+            "credits": "0.75x",
+            "description": "Google's latest large multimodal model"
+          },
+          {
+            "id": "gemini-2.5-flash",
+            "name": "Gemini 2.5 Flash",
+            "vendor": "google", 
+            "type": "chat",
+            "context_window": 1000000,
+            "credits": "0.1x",
+            "description": "Faster version of Gemini 2.5"
+          }
+        ]
+      },
+      {
+        "id": "xai",
+        "vendor": "xai",
+        "name": "xAI",
+        "available": true,
+        "models": [
+          {
+            "id": "grok-3",
+            "name": "Grok-3",
+            "vendor": "xai",
+            "type": "chat",
+            "context_window": 131072,
+            "credits": "1x",
+            "description": "xAI's latest conversational AI model"
+          }
+        ]
+      },
+      {
+        "id": "deepseek",
+        "vendor": "deepseek",
+        "name": "DeepSeek",
+        "available": true,
+        "models": [
+          {
+            "id": "deepseek-v3",
+            "name": "DeepSeek V3", 
+            "vendor": "deepseek",
+            "type": "chat",
+            "context_window": 65536,
+            "credits": "free",
+            "description": "DeepSeek's latest open-source model"
+          }
+        ]
+      }
+    ];
+
+    // Extract capabilities from exact model data
+    this.windsurfCapabilities = {
+      chat: this.windsurfProviders.flatMap(p => 
+        p.models.filter(m => m.type === 'chat')
+      ),
+      reasoning: this.windsurfProviders.flatMap(p => 
+        p.models.filter(m => m.type === 'reasoning')
+      )
+    };
+
+    // Set default to Anthropic Claude 3.5 Sonnet
+    this.currentProvider = this.windsurfProviders.find(p => p.vendor === 'anthropic');
+    
+    console.log('🌊 Exact Windsurf AI Providers initialized:', {
+      providers: this.windsurfProviders.length,
+      totalModels: this.windsurfProviders.reduce((sum, p) => sum + p.models.length, 0),
+      chatModels: this.windsurfCapabilities.chat.length,
+      reasoningModels: this.windsurfCapabilities.reasoning.length,
+      freeModels: this.windsurfProviders.flatMap(p => p.models).filter(m => m.credits === 'free').length
+    });
+  }
+
+  /**
+   * 🔍 Fetch real providers from MCP server
+   */
+        name: 'OpenAI (via Windsurf)',
+        available: true,
+        totalCredits: '1x credit',
+        models: [
+          {
+            id: 'gpt-4o',
+            name: 'GPT-4o',
+            vendor: 'openai',
+            family: 'gpt-4',
+            type: 'chat',
+            available: true,
+            credits: '1x credit'
+          },
+          {
+            id: 'gpt-4o-mini',
+            name: 'GPT-4o mini',
+            vendor: 'openai',
+            family: 'gpt-4',
+            type: 'chat',
+            available: true,
+            credits: '0.1x credit'
+          },
+          {
+            id: 'o3-mini-reasoning',
+            name: 'o3-mini (medium reasoning)',
+            vendor: 'openai',
+            family: 'o3',
+            type: 'reasoning',
+            available: true,
+            credits: '1x credit'
+          }
+        ]
+      },
+      {
+        vendor: 'anthropic',
+        name: 'Anthropic (via Windsurf)',
+        available: true,
+        models: [
+          {
+            id: 'claude-3.5-sonnet',
+            name: 'Claude 3.5 Sonnet',
+            vendor: 'anthropic',
+            family: 'claude',
+            type: 'chat',
+            available: true,
+            credits: '1x credit'
+          },
+          {
+            id: 'claude-3.7-sonnet-thinking',
+            name: 'Claude 3.7 Sonnet (Thinking)',
+            vendor: 'anthropic',
+            family: 'claude',
+            type: 'reasoning',
+            available: true,
+            credits: '1.25x credit'
+          }
+        ]
+      },
+      {
+        vendor: 'google',
+        name: 'Google (via Windsurf)',
+        available: true,
+        models: [
+          {
+            id: 'gemini-2.5-pro',
+            name: 'Gemini 2.5 Pro (promo)',
+            vendor: 'google',
+            family: 'gemini',
+            type: 'chat',
+            available: true,
+            credits: '0.75x credit'
+          },
+          {
+            id: 'gemini-2.5-flash',
+            name: 'Gemini 2.5 Flash',
+            vendor: 'google',
+            family: 'gemini',
+            type: 'chat',
+            available: true,
+            credits: '0.1x credit'
+          }
+        ]
+      },
+      {
+        vendor: 'xai',
+        name: 'xAI (via Windsurf)',
+        available: true,
+        models: [
+          {
+            id: 'grok-3',
+            name: 'xAI Grok-3',
+            vendor: 'xai',
+            family: 'grok',
+            type: 'chat',
+            available: true,
+            credits: '1x credit'
+          }
+        ]
+      },
+      {
+        vendor: 'deepseek',
+        name: 'DeepSeek (via Windsurf)',
+        available: true,
+        models: [
+          {
+            id: 'deepseek-v3',
+            name: 'DeepSeek V3 (0324)',
+            vendor: 'deepseek',
+            family: 'deepseek',
+            type: 'chat',
+            available: true,
+            credits: 'free'
+          }
+        ]
+      }
+    ];
+
+    // Set capabilities based on exact Windsurf response
+    this.windsurfCapabilities = {
+      chat: [
+        'windsurf:SWE-1 (free limited time)',
+        'windsurf:SWE-1-lite',
+        'openai:GPT-4o',
+        'openai:GPT-4o mini',
+        'anthropic:Claude 3.5 Sonnet',
+        'google:Gemini 2.5 Pro (promo)',
+        'google:Gemini 2.5 Flash',
+        'xai:xAI Grok-3',
+        'deepseek:DeepSeek V3 (0324)'
+      ],
+      reasoning: [
+        'openai:o3-mini (medium reasoning)',
+        'anthropic:Claude 3.7 Sonnet (Thinking)'
+      ]
+    };
+
+    // Set default to Claude 3.5 Sonnet (best general purpose)
+    this.currentProvider = this.windsurfProviders.find(p => p.vendor === 'anthropic');
+    
+    console.log('🌊 Windsurf AI Providers initialized:', this.windsurfProviders.length, 'providers');
+    console.log('📊 Chat models:', this.windsurfCapabilities.chat.length);
+    console.log('🧠 Reasoning models:', this.windsurfCapabilities.reasoning.length);
+    console.log('✅ Default provider:', this.currentProvider?.name);
+    
+    return this.windsurfProviders;
+  }
+
+  /**
+   * 🔗 Fetch real providers from MCP server
+   */
+  async fetchWindsurfProviders() {
+    try {
+      const response = await fetch(`${this.mcpEndpoint}/api/mcp/list-providers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'tools/call',
+          params: {
+            name: 'list_ai_providers',
+            arguments: {}
+          }
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.result?.content?.[0]?.text) {
+          return JSON.parse(data.result.content[0].text);
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to fetch real providers:', error);
+    }
+    return null;
+  }
+
+  /**
+   * 📞 Call MCP tool with error handling
+   */
+  async callMCPTool(toolName, params = {}) {
+    try {
+      const response = await fetch(`${this.mcpEndpoint}/mcp/call-tool`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tool: toolName, params })
+      });
+
+      if (!response.ok) {
+        throw new Error(`MCP call failed: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      return JSON.parse(result.content[0].text);
+    } catch (error) {
+      console.error(`MCP Tool Error (${toolName}):`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * 🧠 Enhanced AI Chat with Windsurf Native Models
+   * Uses exact model names and structure from Windsurf
+   */
+  async enhancedAIChat(message, options = {}) {
+    const {
+      vendor = null,
+      model = null,
+      includeProjectContext = true,
+      analysisType = 'general',
+      temperature = 0.7,
+      maxTokens = 1000
+    } = options;
+
+    try {
+      // Use Windsurf assistant for project-specific queries
+      if (includeProjectContext && this.isProjectSpecificQuery(message)) {
+        return await this.callMCPTool('ai_windsurf_assistant', {
+          query: message,
+          context: 'VentAI HVAC platform user interaction',
+          includeProjectFiles: true
+        });
+      }
+
+      // Determine best vendor for the task
+      const selectedVendor = vendor || this.selectOptimalVendor(analysisType);
+
+      // Use regular chat completion with Windsurf models
+      const messages = [
+        {
+          role: 'system',
+          content: 'You are an expert HVAC assistant for the VentAI platform. Provide accurate, helpful responses about ventilation, air conditioning, and HVAC calculations.'
+        },
+        { role: 'user', content: message }
+      ];
+
+      return await this.callMCPTool('ai_chat_completion', {
+        messages,
+        provider: selectedVendor,
+        model,
+        temperature,
+        maxTokens,
+        systemPrompt: 'Expert HVAC assistant for VentAI platform'
+      });
+    } catch (error) {
+      console.error('Enhanced AI Chat Error:', error);
+      return {
+        response: 'I apologize, but I encountered an issue accessing Windsurf models. Please try again.',
+        provider: 'Windsurf (Error)',
+        model: 'fallback',
+        vendor: 'windsurf',
+        error: true
+      };
+    }
+  }
+
+  /**
+   * 🔍 AI-Powered Code Analysis for VentAI Components
+   */
+  async analyzeVentAICode(filePath, analysisType = 'review') {
+    try {
+      return await this.callMCPTool('ai_code_analysis', {
+        filePath,
+        analysisType, // 'review', 'bugs', 'optimization', 'documentation', 'refactoring'
+        provider: 'anthropic' // Claude 3.5 Sonnet best for code analysis
+      });
+    } catch (error) {
+      console.error('Code Analysis Error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * 🧮 Enhanced Calculator AI with Windsurf Models
+   */
+  async enhancedCalculatorAssistance(calculatorType, inputData, userQuery) {
+    try {
+      // Create embeddings using fallback method (since Windsurf doesn't have native embeddings)
+      const queryEmbedding = await this.callMCPTool('ai_create_embeddings', {
+        text: `${calculatorType} calculation: ${userQuery}`,
+        provider: 'windsurf-fallback'
+      });
+
+      // Search for relevant documentation and examples
+      const relevantDocs = await this.callMCPTool('vector_search_documents', {
+        query: `${calculatorType} ${userQuery}`,
+        limit: 5,
+        includeContent: true
+      });
+
+      // Get AI assistance with full context using Claude 3.5 Sonnet (best for HVAC)
+      const assistance = await this.callMCPTool('ai_chat_completion', {
+        messages: [
+          {
+            role: 'system',
+            content: `You are an expert HVAC calculator assistant for VentAI. Help with ${calculatorType} calculations.
+            
+Relevant Context:
+${relevantDocs.results?.map(doc => doc.content?.substring(0, 200)).join('\n') || 'No relevant documents found'}
+
+Current Input Data:
+${JSON.stringify(inputData, null, 2)}`
+          },
+          { role: 'user', content: userQuery }
+        ],
+        provider: 'anthropic', // Claude 3.5 Sonnet через Windsurf для технічного аналізу
+        model: 'claude-3.5-sonnet',
+        temperature: 0.3, // Lower for technical accuracy
+        maxTokens: 1500
+      });
+
+      return {
+        success: true,
+        response: assistance.response,
+        provider: assistance.provider,
+        vendor: assistance.vendor,
+        model: 'claude-3.5-sonnet',
+        relevantDocs: relevantDocs.results?.length || 0,
+        embedding: queryEmbedding.embedding,
+        suggestions: this.parseCalculatorSuggestions(assistance.response),
+        optimizations: this.extractOptimizations(assistance.response)
+      };
+    } catch (error) {
+      console.error('Enhanced Calculator Assistance Error:', error);
+      return {
+        success: false,
+        error: error.message,
+        fallbackResponse: 'I can help with your calculation. Please provide more details.'
+      };
+    }
+  }
+
+  /**
+   * 🔧 Windsurf Provider Testing and Health Check
+   */
+  async testWindsurfProviders() {
+    try {
+      const testResults = await this.callMCPTool('ai_test_providers', {
+        testEmbeddings: true,
+        testChat: true
+      });
+
+      return {
+        success: true,
+        summary: testResults.summary,
+        providers: testResults.providers,
+        recommendations: this.generateWindsurfRecommendations(testResults)
+      };
+    } catch (error) {
+      console.error('Windsurf Provider Testing Error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * 🎯 Smart Vendor Selection for Windsurf
+   * Updated with exact Windsurf vendor priorities
+   */
+  selectOptimalVendor(taskType) {
+    const vendorPreferences = {
+      code: 'anthropic',        // Claude 3.5 Sonnet для аналізу коду
+      creative: 'xai',          // Grok-3 для креативності  
+      technical: 'openai',      // GPT-4o для технічних завдань
+      reasoning: 'anthropic',   // Claude 3.7 Sonnet (Thinking) для роздумів
+      hvac: 'anthropic',        // Claude для HVAC розрахунків
+      general: 'anthropic',     // Claude як універсальний
+      free: 'windsurf',         // SWE моделі для безкоштовного використання
+      fast: 'google'            // Gemini Flash для швидких відповідей
+    };
+
+    const preferred = vendorPreferences[taskType] || vendorPreferences.general;
+    
+    // Перевіряємо, чи доступний вибраний провайдер
+    const availableProvider = this.windsurfProviders.find(p => 
+      p.vendor === preferred && p.available
+    );
+    
+    if (availableProvider) {
+      return preferred;
+    }
+    
+    // Fallback hierarchy: anthropic -> openai -> google -> xai -> deepseek -> windsurf
+    const fallbackOrder = ['anthropic', 'openai', 'google', 'xai', 'deepseek', 'windsurf'];
+    for (const vendor of fallbackOrder) {
+      const provider = this.windsurfProviders.find(p => p.vendor === vendor && p.available);
+      if (provider) return vendor;
+    }
+    
+    return 'windsurf'; // Ultimate fallback
+  }
+
+  /**
+   * 🎯 Get Best Model for Specific Task Type
+   */
+  getBestModelForTask(taskType, vendorOverride = null) {
+    const vendor = vendorOverride || this.selectOptimalVendor(taskType);
+    const provider = this.windsurfProviders.find(p => p.vendor === vendor);
+    
+    if (!provider) return null;
+
+    const taskModelMap = {
+      reasoning: ['claude-3.7-sonnet-thinking', 'o3-mini-reasoning'],
+      code: ['claude-3.5-sonnet', 'windsurf-swe-1'],
+      creative: ['grok-3', 'claude-3.5-sonnet'],
+      technical: ['gpt-4o', 'claude-3.5-sonnet'],
+      fast: ['gemini-2.5-flash', 'gpt-4o-mini', 'windsurf-swe-1-lite'],
+      free: ['windsurf-swe-1', 'deepseek-v3', 'windsurf-swe-1-lite']
+    };
+
+    const preferredModels = taskModelMap[taskType] || ['claude-3.5-sonnet'];
+    
+    for (const modelId of preferredModels) {
+      const model = provider.models.find(m => m.id === modelId && m.available);
+      if (model) return model;
+    }
+    
+    // Return first available model from provider
+    return provider.models.find(m => m.available) || null;
+  }
+
+  /**
+   * 📊 Windsurf Performance Analytics
+   */
+  async getWindsurfPerformanceMetrics() {
+    try {
+      const providers = await this.callMCPTool('list_ai_providers');
+      const testResults = await this.testWindsurfProviders();
+      
+      const metrics = {
+        totalProviders: providers.total || 0,
+        availableProviders: testResults.providers?.filter(p => p.available).length || 0,
+        chatCapable: testResults.summary?.chatCapable || 0,
+        embeddingCapable: testResults.summary?.embeddingCapable || 0,
+        
+        // Model breakdown by vendor
+        modelsByVendor: this.windsurfProviders.reduce((acc, provider) => {
+          acc[provider.vendor] = {
+            name: provider.name,
+            available: provider.available,
+            modelCount: provider.models.length,
+            freeModels: provider.models.filter(m => m.credits === 'free').length,
+            chatModels: provider.models.filter(m => m.type === 'chat').length,
+            reasoningModels: provider.models.filter(m => m.type === 'reasoning').length
+          };
+          return acc;
+        }, {}),
+        
+        performance: {
+          chatAverageTime: this.calculateAverageResponseTime(testResults.providers, 'chat'),
+          embeddingAverageTime: this.calculateAverageResponseTime(testResults.providers, 'embeddings')
+        },
+        recommendations: testResults.recommendations || []
+      };
+      
+      return {
+        success: true,
+        metrics,
+        timestamp: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Performance Metrics Error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * 🔍 Calculate average response time
+   */
+  calculateAverageResponseTime(providers, type) {
+    const times = providers
+      ?.filter(p => p[type]?.success && p[type].responseTime)
+      .map(p => p[type].responseTime) || [];
+    
+    return times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
+  }
+
+  /**
+   * 💡 Generate Windsurf recommendations
+   */
+  generateWindsurfRecommendations(testResults) {
+    const recommendations = [];
+    
+    if (testResults.summary?.available === 0) {
+      recommendations.push({
+        type: 'critical',
+        message: 'No Windsurf AI providers are currently available. Check your Windsurf installation and permissions.'
+      });
+    }
+    
+    if (testResults.summary?.chatCapable < 2) {
+      recommendations.push({
+        type: 'warning',
+        message: 'Limited chat providers available. Consider checking your Windsurf model access.'
+      });
+    }
+    
+    // Recommend free models
+    const freeModels = this.windsurfProviders
+      .flatMap(p => p.models)
+      .filter(m => m.credits === 'free');
+    
+    if (freeModels.length > 0) {
+      recommendations.push({
+        type: 'info',
+        message: `${freeModels.length} free models available: ${freeModels.map(m => m.name).join(', ')}`
+      });
+    }
+    
+    const fastestProvider = testResults.providers
+      ?.filter(p => p.chat?.success)
+      .sort((a, b) => (a.chat.responseTime || 0) - (b.chat.responseTime || 0))[0];
+    
+    if (fastestProvider) {
+      recommendations.push({
+        type: 'info',
+        message: `${fastestProvider.name} is currently the fastest responding provider (${fastestProvider.chat.responseTime}ms)`
+      });
+    }
+    
+    return recommendations;
+  }
+
+  // Utility methods
+  isProjectSpecificQuery(message) {
+    const projectKeywords = [
+      'ventai', 'calculator', 'component', 'react', 'typescript', 
+      'code', 'optimize', 'performance', 'bug', 'refactor', 'hvac'
+    ];
+    return projectKeywords.some(keyword => 
+      message.toLowerCase().includes(keyword)
+    );
+  }
+
+  parseCodeSuggestions(response) {
+    // Extract actionable suggestions for code improvement
+    const suggestions = [];
+    if (response.includes('refactor')) suggestions.push('Refactoring opportunities identified');
+    if (response.includes('optimize')) suggestions.push('Performance optimization available');
+    if (response.includes('security')) suggestions.push('Security improvements needed');
+    if (response.includes('test')) suggestions.push('Testing improvements recommended');
+    return suggestions;
+  }
+
+  parseCalculatorSuggestions(response) {
+    // Extract actionable suggestions for calculator optimization
+    const suggestions = [];
+    if (response.includes('optimize')) suggestions.push('Performance optimization available');
+    if (response.includes('validate')) suggestions.push('Input validation recommended');
+    if (response.includes('accuracy')) suggestions.push('Accuracy improvements possible');
+    if (response.includes('energy')) suggestions.push('Energy efficiency considerations');
+    return suggestions;
+  }
+
+  extractOptimizations(response) {
+    // Extract optimization recommendations
+    const optimizations = {};
+    if (response.includes('energy efficient')) optimizations.energy = 'Energy efficiency improvements available';
+    if (response.includes('cost')) optimizations.cost = 'Cost optimization opportunities identified';
+    if (response.includes('performance')) optimizations.performance = 'Performance enhancements possible';
+    if (response.includes('accuracy')) optimizations.accuracy = 'Calculation accuracy improvements';
+    return optimizations;
+  }
+
+  /**
+   * 📊 Get Available Models by Type
+   */
+  getModelsByType(type = 'chat') {
+    return this.windsurfProviders
+      .flatMap(provider => 
+        provider.models
+          .filter(model => model.type === type && model.available)
+          .map(model => ({
+            ...model,
+            providerName: provider.name,
+            fullName: `${provider.name} - ${model.name}`
+          }))
+      );
+  }
+
+  /**
+   * 💰 Get Free Models
+   */
+  getFreeModels() {
+    return this.windsurfProviders
+      .flatMap(provider =>
+        provider.models
+          .filter(model => model.credits === 'free' && model.available)
+          .map(model => ({
+            ...model,
+            providerName: provider.name,
+            fullName: `${provider.name} - ${model.name}`
+          }))
+      );
+  }
+
+  /**
+   * 🧠 Get Reasoning Models
+   */
+  getReasoningModels() {
+    return this.getModelsByType('reasoning');
+  }
+
+  /**
+   * 💬 Get Chat Models
+   */
+  getChatModels() {
+    return this.getModelsByType('chat');
+  }
+}
+
+// Export enhanced service
+export default EnhancedVentAIService;
+
+// React Hook for easy integration
+export const useEnhancedWindsurfAI = () => {
+  const [aiService] = useState(() => new EnhancedVentAIService());
+  const [providers, setProviders] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    aiService.initializeWindsurfProviders().then(() => {
+      setProviders(aiService.windsurfProviders);
+    });
+  }, [aiService]);
+
+  const askAI = async (message, options = {}) => {
+    setLoading(true);
+    try {
+      const response = await aiService.enhancedAIChat(message, options);
+      return response;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const analyzeCode = async (filePath, analysisType = 'review') => {
+    setLoading(true);
+    try {
+      return await aiService.analyzeVentAICode(filePath, analysisType);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCalculatorHelp = async (calculatorType, inputData, query) => {
+    setLoading(true);
+    try {
+      return await aiService.enhancedCalculatorAssistance(calculatorType, inputData, query);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const testProviders = async () => {
+    setLoading(true);
+    try {
+      return await aiService.testWindsurfProviders();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getMetrics = async () => {
+    setLoading(true);
+    try {
+      return await aiService.getWindsurfPerformanceMetrics();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const selectBestModel = (taskType) => {
+    return aiService.getBestModelForTask(taskType);
+  };
+
+  const getFreeModels = () => {
+    return aiService.getFreeModels();
+  };
+
+  const getReasoningModels = () => {
+    return aiService.getReasoningModels();
+  };
+
+  return {
+    providers,
+    loading,
+    askAI,
+    analyzeCode,
+    getCalculatorHelp,
+    testProviders,
+    getMetrics,
+    selectBestModel,
+    getFreeModels,
+    getReasoningModels,
+    currentProvider: aiService.currentProvider,
+    capabilities: aiService.windsurfCapabilities
+  };
+};
+
+console.log('🌊 Enhanced VentAI Service with Exact Windsurf Models loaded!');
+console.log('📋 Available Models: Windsurf SWE, GPT-4o, Claude 3.5, Gemini 2.5, Grok-3, DeepSeek V3');
+console.log('🆓 Free Models: Windsurf SWE-1, SWE-1-lite, DeepSeek V3');
+console.log('🧠 Reasoning Models: o3-mini, Claude 3.7 Sonnet (Thinking)');

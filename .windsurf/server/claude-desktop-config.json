@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "windsurf-enterprise": {
+      "command": "node",
+      "args": [
+        "/Users/olegkizyma/workspaces/MVP/ventai-app/.windsurf/server/dist/enterprise-index.js"
+      ],
+      "env": {
+        "REDIS_URL": "redis://localhost:6380",
+        "DATABASE_URL": "postgresql://ventai_dev:ventai_dev_password@localhost:5433/ventai_dev",
+        "WINDSURF_ROOT": "/Users/olegkizyma/workspaces/MVP/ventai-app",
+        "ENABLE_VECTOR_SEARCH": "true",
+        "ENABLE_GRAPH_RELATIONS": "true",
+        "ENABLE_SMART_RECOMMENDATIONS": "true",
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}

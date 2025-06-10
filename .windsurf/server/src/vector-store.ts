@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 
+import { config } from 'dotenv';
 import { createClient } from 'redis';
+
+// Завантажуємо змінні середовища
+config({ path: './.env' });
 import { Pool } from 'pg';
 import fs from 'fs-extra';
 import { promises as fsPromises } from 'fs';
-import { OpenAI } from 'openai';
 import { createTwoFilesPatch } from 'diff';
 import { minimatch } from 'minimatch';
+import { MultiAIProvider } from './multi-ai-provider.js';
 
 /**
  * 🎯 Enterprise Vector Store для Windsurf MCP System
@@ -46,7 +50,7 @@ interface GraphNode {
 export class WindsurfVectorStore {
   private redis: any;
   private postgres: Pool;
-  private openai: OpenAI | null = null;
+  private aiProvider: MultiAIProvider;
   private vectorDimension = 1536; // OpenAI ada-002 dimensions
 
   constructor() {
@@ -63,12 +67,8 @@ export class WindsurfVectorStore {
       connectionTimeoutMillis: 2000,
     });
 
-    // OpenAI для створення embeddings (опціонально)
-    if (process.env.OPENAI_API_KEY) {
-      this.openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY
-      });
-    }
+    // Multi-AI Provider для роботи з різними AI моделями
+    this.aiProvider = new MultiAIProvider();
 
     this.initializeDatabase();
   }
@@ -125,19 +125,63 @@ export class WindsurfVectorStore {
   }
 
   /**
-   * 📄 Додавання документу до векторної бази
+   * 📄 Додавання документу до векторної бази з підтримкою великих файлів
    */
   async addDocument(doc: VectorDocument): Promise<void> {
     try {
-      // Генерація embedding якщо доступний OpenAI
+      // Перевірка розміру контенту (PostgreSQL tsvector ліміт: 1MB)
+      const contentSize = Buffer.byteLength(doc.content, 'utf8');
+      
+      if (contentSize > 800000) { // 800KB safety margin
+        console.log(`📄 Large document detected (${Math.round(contentSize/1024)}KB), splitting...`);
+        
+        // Розбиваємо великий документ на частини
+        const chunks = this.splitLargeDocument(doc.content);
+        
+        for (let i = 0; i < chunks.length; i++) {
+          const chunkDoc: VectorDocument = {
+            ...doc,
+            id: `${doc.id}_chunk_${i + 1}`,
+            content: chunks[i],
+            metadata: {
+              ...doc.metadata,
+              isChunk: true,
+              chunkNumber: i + 1,
+              totalChunks: chunks.length,
+              originalDocId: doc.id
+            }
+          };
+          
+          await this.addSingleDocument(chunkDoc);
+        }
+        
+        console.log(`✅ Split large document into ${chunks.length} chunks`);
+        return;
+      }
+      
+      // Звичайна обробка для невеликих документів
+      await this.addSingleDocument(doc);
+      
+    } catch (error) {
+      console.error(`❌ Failed to add document ${doc.id}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * 📝 Додавання одного документу (внутрішня функція)
+   */
+  private async addSingleDocument(doc: VectorDocument): Promise<void> {
+    try {
+      // Генерація embedding з Multi-AI Provider
       let embedding: number[] | null = null;
-      if (this.openai && doc.content.length > 10) {
+      if (doc.content.length > 10) {
         try {
-          const response = await this.openai.embeddings.create({
-            model: 'text-embedding-ada-002',
-            input: doc.content.substring(0, 8000) // OpenAI limit
-          });
-          embedding = response.data[0].embedding;
+          const embeddingResult = await this.aiProvider.createEmbeddings(
+            doc.content.substring(0, 8000) // Ліміт для більшості провайдерів
+          );
+          embedding = embeddingResult.embedding;
+          console.log(`✅ Embedding created using ${embeddingResult.provider} (${embeddingResult.model})`);
         } catch (embeddingError) {
           console.warn('⚠️ Embedding generation failed, storing without vector');
         }
@@ -183,17 +227,16 @@ export class WindsurfVectorStore {
    */
   async vectorSearch(query: string, limit: number = 10, type?: string): Promise<VectorDocument[]> {
     try {
-      if (!this.openai) {
-        // Fallback до текстового пошуку
+      // Спробуємо генерувати embedding для пошуку
+      let queryEmbedding: number[];
+      try {
+        const embeddingResult = await this.aiProvider.createEmbeddings(query);
+        queryEmbedding = embeddingResult.embedding;
+        console.log(`🔍 Search embedding created using ${embeddingResult.provider}`);
+      } catch (error) {
+        console.log('🔄 Embedding unavailable, using text search fallback');
         return this.textSearch(query, limit, type);
       }
-
-      // Генерація embedding для запиту
-      const queryResponse = await this.openai.embeddings.create({
-        model: 'text-embedding-ada-002',
-        input: query
-      });
-      const queryEmbedding = queryResponse.data[0].embedding;
 
       // Векторний пошук в PostgreSQL
       let sql = `
@@ -570,6 +613,34 @@ export class WindsurfVectorStore {
     } catch (error) {
       console.error('❌ Failed to close connections:', error);
     }
+  }
+
+  /**
+   * 📄 Розбиття великих документів на частини для уникнення tsvector ліміту
+   */
+  private splitLargeDocument(content: string, maxChunkSize: number = 800000): string[] {
+    const chunks: string[] = [];
+    const lines = content.split('\n');
+    let currentChunk = '';
+    
+    for (const line of lines) {
+      // Якщо додання лінії перевищить ліміт, зберігаємо поточний chunk
+      if (currentChunk.length + line.length + 1 > maxChunkSize) {
+        if (currentChunk.trim()) {
+          chunks.push(currentChunk.trim());
+        }
+        currentChunk = line;
+      } else {
+        currentChunk += (currentChunk ? '\n' : '') + line;
+      }
+    }
+    
+    // Додаємо останній chunk
+    if (currentChunk.trim()) {
+      chunks.push(currentChunk.trim());
+    }
+    
+    return chunks;
   }
 }
 
