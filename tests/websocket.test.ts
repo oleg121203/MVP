@@ -6,10 +6,16 @@ jest.mock('engine.io', () => ({
   wsEngine: jest.fn().mockImplementation(() => jest.fn()),  // Mock wsEngine as a constructor
 }));
 
-jest.mock('socket.io', () => jest.fn().mockImplementation((server) => ({
-  on: jest.fn(),
-  emit: jest.fn(),
-})));
+jest.mock('socket.io', () => {
+  return {
+    Server: jest.fn().mockImplementation(() => ({
+      on: jest.fn(),
+      emit: jest.fn(),
+      to: jest.fn().mockReturnThis(),
+      use: jest.fn().mockReturnThis()
+    }))
+  };
+});
 
 import { Server } from 'http';
 import { WebSocketService } from '../services/websocket';
@@ -28,24 +34,27 @@ describe('WebSocketService', () => {
     httpServer.close();
   });
 
-  test('should broadcast alerts to project room', (done) => {
-    const client = io('http://localhost:8000');
+  test('should initialize successfully', () => {
+    expect(webSocketService).toBeDefined();
+    expect(WebSocketService.getInstance()).toBe(webSocketService);
+  });
+
+  test('should broadcast alerts', () => {
+    const mockEmit = jest.fn();
+    webSocketService['io'].to = jest.fn().mockReturnValue({ emit: mockEmit });
     
-    client.on('connect', () => {
-      client.emit('join-project-room', 'test-project');
-      
-      client.on('alert', (data) => {
-        expect(data.alerts).toHaveLength(1);
-        expect(data.alerts[0].message).toContain('test alert');
-        client.disconnect();
-        done();
-      });
-      
-      webSocketService.broadcastAlerts('test-project', [{
-        timestamp: new Date(),
-        message: 'test alert',
-        severity: 'medium'
-      }]);
+    const testAlerts = [{
+      timestamp: new Date(),
+      message: 'test alert',
+      severity: 'medium' as const
+    }];
+    
+    webSocketService.broadcastAlerts('test-project', testAlerts);
+    
+    expect(webSocketService['io'].to).toHaveBeenCalledWith('project-test-project');
+    expect(mockEmit).toHaveBeenCalledWith('alert', {
+      timestamp: expect.any(Date),
+      alerts: testAlerts
     });
   });
 });

@@ -7,7 +7,40 @@ import gzip
 from datetime import datetime
 import asyncio
 
+from . import crm_integration
+from . import lead_scoring
+from . import email_processing
+from . import financial_router
+from . import project_integration
+from . import analytics
+from . import ml
+from .lead_nurturing import LeadNurturingWorkflow
+from .analytics.insights_router import router as insights_router
+
 app = FastAPI()
+
+# Include all routers
+app.include_router(crm_integration.router)
+app.include_router(lead_scoring.router)
+app.include_router(email_processing.router)
+app.include_router(financial_router.router)
+app.include_router(project_integration.router)
+app.include_router(analytics.router, prefix="/analytics")
+app.include_router(ml.router, prefix="/ml")
+app.include_router(insights_router, prefix="/insights")
+
+# Add lead scoring endpoint
+@app.get("/crm/leads/score", response_model=List[Dict[str, Any]])
+def get_scored_leads(db: Session = Depends(crm_integration.get_db)):
+    return lead_scoring.process_leads_for_scoring(db)
+
+# Add lead nurturing endpoint
+@app.post("/crm/leads/nurture", status_code=status.HTTP_200_OK)
+def run_lead_nurturing(db: Session = Depends(crm_integration.get_db)):
+    workflow = LeadNurturingWorkflow(db)
+    workflow.run_all_workflows()
+    return {"message": "Lead nurturing workflows initiated."}
+    return lead_scoring.process_leads_for_scoring(db)
 
 # Add GZip compression middleware
 app.add_middleware(GZipMiddleware, minimum_size=1000)

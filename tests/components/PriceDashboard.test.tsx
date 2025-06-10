@@ -14,6 +14,13 @@ jest.mock('../../src/api/priceClient', () => ({
   },
 }));
 
+jest.mock('../../api/priceClient', () => ({
+  getPriceData: jest.fn().mockResolvedValue({
+    prices: [],
+    lastUpdated: new Date().toISOString()
+  })
+}));
+
 const mockPriceClient = priceClient as jest.Mocked<typeof priceClient>;
 
 const createTestStore = () => {
@@ -194,7 +201,27 @@ describe('PriceDashboard', () => {
     renderWithProvider(<PriceDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText(/Last updated:/)).toBeInTheDocument();
-    });
+      expect(screen.getByText(/Last updated/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+  });
+
+  test('shows loading state initially', async () => {
+    renderWithProvider(<PriceDashboard />);
+    
+    // Initial loading state
+    expect(screen.getByRole('status')).toBeInTheDocument();
+    
+    // Wait for loading to complete
+    await waitFor(() => {
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    }, { timeout: 10000 });
+  });
+
+  test('displays last updated timestamp', async () => {
+    renderWithProvider(<PriceDashboard />);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/last updated/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
   });
 });

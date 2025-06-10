@@ -2,7 +2,7 @@
 Phase 1.4.1 - Database Query Optimization
 Enhanced database models with performance optimizations
 """
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float, Text, Index
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float, Text, Index, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.sql import func
@@ -33,6 +33,10 @@ class Project(Base):
     total_cost = Column(Float, index=True)
     created_at = Column(DateTime, default=func.now(), index=True)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), index=True)
+    financial_project_id = Column(Integer, ForeignKey('financial_projects.id'), index=True)  # New field
+    
+    # Relationships
+    financial_project = relationship("FinancialProject", backref="projects")  # New relationship
     
     # Performance indexes for common queries
     __table_args__ = (
@@ -81,6 +85,12 @@ class QueryPerformance(Base):
     __table_args__ = (
         Index('idx_perf_query_time', 'query_type', 'execution_time'),
     )
+
+class FinancialProject(Base):
+    """Financial project model"""
+    __tablename__ = "financial_projects"
+    
+    id = Column(Integer, primary_key=True, index=True)
 
 def create_tables():
     """Create all tables with optimized indexes"""
