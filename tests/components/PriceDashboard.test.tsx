@@ -3,11 +3,11 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import PriceDashboard from '../../src/components/PriceDashboard';
-import { getPriceData } from '../../api/priceClient';
+import { getPriceData } from '../../src/api/priceClient';
 import priceReducer from '../../src/store/priceSlice';
 
 // Mock the price client
-jest.mock('../../api/priceClient', () => ({
+jest.mock('../../src/api/priceClient', () => ({
   getPriceData: jest.fn().mockResolvedValue({
     prices: [],
     lastUpdated: new Date().toISOString()
@@ -95,7 +95,7 @@ describe('PriceDashboard', () => {
 
   test('displays error state and retry button', async () => {
     const errorMessage = 'Failed to fetch price data';
-    jest.mock('../../api/priceClient', () => ({
+    jest.mock('../../src/api/priceClient', () => ({
       getPriceData: jest.fn().mockRejectedValue(new Error(errorMessage))
     }));
 
@@ -109,7 +109,7 @@ describe('PriceDashboard', () => {
     expect(retryButton).toBeInTheDocument();
 
     // Test retry functionality
-    jest.mock('../../api/priceClient', () => ({
+    jest.mock('../../src/api/priceClient', () => ({
       getPriceData: jest.fn().mockResolvedValue({
         prices: [],
         lastUpdated: new Date().toISOString()

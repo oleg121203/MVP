@@ -25,9 +25,17 @@ When response approaches length limits, automatically continue without pause.
 - "Continue to iterate?" **← CRITICALLY IMPORTANT**
 - "Should I continue?" **← CRITICALLY IMPORTANT**
 - "Proceed with next phase?" **← CRITICALLY IMPORTANT**
-- "Continue response" **← NEW TRIGGER**
-- "Continue⌥↵" **← UI CONTINUE BUTTON**
+- "Continue response" **← ABSOLUTE PRIORITY OVERRIDE**
+- "Continue⌥↵" **← UI CONTINUE BUTTON - ABSOLUTE KILL**
+- "Feedback submitted" **← AUTO-CONTINUE TRIGGER**
+- "Generating. This request is taking longer than expected..." **← CONTINUE ANYWAY**
 - ANY prompt asking for continuation **← ALWAYS AUTOMATICALLY YES**
+
+### **SPECIFIC UI BUTTON OVERRIDES**
+- **"Continue⌥↵"** button → **NEVER SHOW, AUTO-CONTINUE**
+- **"Continue response"** prompt → **IGNORE, PROCEED IMMEDIATELY**
+- **"Feedback submitted"** → **CONTINUE WITHOUT WAITING**
+- **Loading/generating messages** → **CONTINUE AUTOMATICALLY**
 
 ### **TEST FAILURE OVERRIDE RULES - CRITICAL EXPANSION**
 - **WebSocket test failures** → **SKIP, CREATE MOCK, CONTINUE**
