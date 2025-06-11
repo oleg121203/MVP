@@ -1,4 +1,92 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {}
+  "name": "VentAI Development Environment",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true
+    }
+  },
+  "containerEnv": {
+    "PYTHONPATH": "/workspaces/ventai-app:/workspaces/ventai-app/src:/workspaces/ventai-app/backend",
+    "NODE_ENV": "development",
+    "FASTAPI_ENV": "development"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.pylint",
+        "ms-python.black-formatter",
+        "ms-toolsai.jupyter",
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-json",
+        "ms-vscode.test-adapter-converter",
+        "ms-python.pytest",
+        "charliermarsh.ruff",
+        "ms-vscode.live-server",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "chakrounanas.turbo-console-log",
+        "ckolkman.vscode-postgres",
+        "ms-vscode.thunder-client",
+        "ms-python.isort"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestArgs": ["tests"],
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "editor.formatOnSave": true,
+        "files.associations": {
+          "*.py": "python",
+          "*.tsx": "typescriptreact",
+          "*.ts": "typescript"
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  },
+  "forwardPorts": [3000, 8000, 5432, 6379, 5050, 8081],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend (React)",
+      "onAutoForward": "notify"
+    },
+    "8000": {
+      "label": "Backend (FastAPI)",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
+    },
+    "6379": {
+      "label": "Redis",
+      "onAutoForward": "silent"
+    },
+    "5050": {
+      "label": "pgAdmin",
+      "onAutoForward": "silent"
+    },
+    "8081": {
+      "label": "Redis Commander",
+      "onAutoForward": "silent"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "remoteUser": "vscode"
 }
