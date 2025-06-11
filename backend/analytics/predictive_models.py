@@ -45,9 +45,11 @@ class PredictiveAnalytics:
         future_days_range = np.array(range(last_day + 1, last_day + future_days + 1)).reshape(-1, 1)
         predictions = self.model.predict(future_days_range)
         
+        # Adjust predictions with a simple confidence interval
+        confidence = 0.1 * predictions  # 10% confidence interval for demonstration
         future_dates = pd.date_range(start=df['date'].max() + pd.Timedelta(days=1), periods=future_days, freq='D')
-        predicted_data = [{'date': date.strftime('%Y-%m-%d'), 'predicted_cost': pred} 
-                         for date, pred in zip(future_dates, predictions)]
+        predicted_data = [{'date': date.strftime('%Y-%m-%d'), 'predicted_cost': float(pred), 'confidence_lower': float(pred - conf), 'confidence_upper': float(pred + conf)} 
+                         for date, pred, conf in zip(future_dates, predictions, confidence)]
         return predicted_data, "Prediction successful"
 
     def analyze_patterns(self, data: List[Dict[str, Any]]) -> Tuple[Optional[Dict[str, Any]], str]:

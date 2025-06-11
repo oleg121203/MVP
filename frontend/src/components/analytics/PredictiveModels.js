@@ -18,7 +18,9 @@ function PredictiveModels() {
       // Process data for visualization
       const processedData = data.map(item => ({
         date: item.date,
-        predicted_cost: item.predicted_cost
+        predicted_cost: item.predicted_cost,
+        confidence_lower: item.confidence_lower,
+        confidence_upper: item.confidence_upper
       }));
       setChartData(processedData);
     }
@@ -43,6 +45,8 @@ function PredictiveModels() {
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="predicted_cost" stroke="#ff7300" name="Predicted Cost" />
+                <Line type="monotone" dataKey="confidence_lower" stroke="#ffcc00" name="Lower Confidence" strokeDasharray="5 5" />
+                <Line type="monotone" dataKey="confidence_upper" stroke="#ffcc00" name="Upper Confidence" strokeDasharray="5 5" />
               </LineChart>
             </ResponsiveContainer>
           </Paper>
