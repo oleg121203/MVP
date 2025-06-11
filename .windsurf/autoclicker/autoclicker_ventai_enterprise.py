@@ -31,7 +31,7 @@ SCREEN_SIMILARITY_THRESHOLD = 0.95  # Поріг схожості для дет�
 last_button_coordinates = {}
 script_running = True
 last_screen_hash = None
-last_activity_time = time.time()
+last_chat_activity_time = time.time()  # Час останньої активності в чаті
 activation_attempted = False
 
 # Шляхи до зображень
@@ -72,23 +72,23 @@ def validate_image_files():
     print(f"   - {CONTINUE_BUTTON}")
     return True
 
-def get_screen_hash():
-    """Отримує хеш поточного екрану для детекції змін."""
+def get_chat_area_hash():
+    """Отримує хеш всієї довжини чату для детекції нових повідомлень."""
     try:
-        # Робимо скріншот тільки області кнопок (більш стабільна зона)
+        # Робимо скріншот всієї довжини чату (оскільки скролінг не працює під час генерації)
         screen_width, screen_height = pyautogui.size()
         
-        # Фокусуємося на правому нижньому куті (де зазвичай кнопки)
-        button_area_x = screen_width - 300  # 300px від правого краю
-        button_area_y = screen_height - 200  # 200px від низу
-        button_area_width = 300
-        button_area_height = 200
+        # Розширюємо область чату - майже весь екран по висоті
+        chat_area_x = screen_width // 6  # Від 1/6 ширини екрану
+        chat_area_y = 100  # Від верху, пропускаючи тільки топ-бар
+        chat_area_width = screen_width * 2 // 3  # 2/3 ширини екрану
+        chat_area_height = screen_height - 200  # Майже вся висота екрану
         
-        button_area = pyautogui.screenshot(region=(button_area_x, button_area_y, button_area_width, button_area_height))
+        chat_area = pyautogui.screenshot(region=(chat_area_x, chat_area_y, chat_area_width, chat_area_height))
         
         # Конвертуємо в сірий для стабільності
         import numpy as np
-        gray_array = np.array(button_area.convert('L'))
+        gray_array = np.array(chat_area.convert('L'))
         
         # Робимо хеш
         img_hash = hashlib.md5(gray_array.tobytes()).hexdigest()
@@ -96,20 +96,20 @@ def get_screen_hash():
         return img_hash
     except Exception as e:
         if VERBOSE_LOGGING:
-            print(f"⚠️ Помилка при створенні хешу екрану: {e}")
+            print(f"⚠️ Помилка при створенні хешу чату: {e}")
         return None
 
-def has_screen_changed():
-    """Перевіряє чи змінився екран."""
+def has_chat_changed():
+    """Перевіряє чи змінилася нижня частина чату (нові повідомлення)."""
     global last_screen_hash
     
-    current_hash = get_screen_hash()
+    current_hash = get_chat_area_hash()
     if current_hash is None:
         return False
     
     if last_screen_hash is None:
         last_screen_hash = current_hash
-        return True
+        return False  # Перший запуск - не вважаємо зміною
     
     if current_hash != last_screen_hash:
         last_screen_hash = current_hash
@@ -170,6 +170,33 @@ def are_buttons_new(buttons):
     
     print("✅ Знайдено нові кнопки!")
     return True
+
+def are_buttons_close(button1_data, button2_data, proximity_threshold=100):
+    """Перевіряє чи знаходяться дві кнопки поблизу одна одної."""
+    if not button1_data or not button2_data:
+        return False
+    
+    center1 = button1_data['center']
+    center2 = button2_data['center']
+    
+    distance = ((center1.x - center2.x) ** 2 + (center1.y - center2.y) ** 2) ** 0.5
+    
+    return distance <= proximity_threshold
+
+def detect_continue_near_accept(buttons):
+    """Детекція появи Continue поблизу Accept All - тригер для активації."""
+    if 'continue' not in buttons or 'accept_all' not in buttons:
+        return False
+    
+    # Перевіряємо чи Continue з'явився поблизу Accept All
+    if are_buttons_close(buttons['continue'], buttons['accept_all'], proximity_threshold=150):
+        if VERBOSE_LOGGING:
+            continue_pos = buttons['continue']['center']
+            accept_pos = buttons['accept_all']['center']
+            print(f"🎯 Continue поблизу Accept All: Continue({continue_pos.x},{continue_pos.y}) Accept({accept_pos.x},{accept_pos.y})")
+        return True
+    
+    return False
 
 def update_button_coordinates(buttons):
     global last_button_coordinates
@@ -332,13 +359,13 @@ def execute_hands_free_sequence(buttons):
 
 def check_inactivity():
     """Перевіряє чи настав час активації VentAI Enterprise."""
-    global last_activity_time, activation_attempted
+    global last_chat_activity_time, activation_attempted
     
     current_time = time.time()
-    inactive_time = current_time - last_activity_time
+    inactive_time = current_time - last_chat_activity_time
     
     if inactive_time >= INACTIVITY_TIMEOUT and not activation_attempted:
-        print(f"\n⏰ НЕАКТИВНІСТЬ {inactive_time:.0f}с (>{INACTIVITY_TIMEOUT}с)")
+        print(f"\n⏰ НЕАКТИВНІСТЬ ЧАТУ {inactive_time:.0f}с (>{INACTIVITY_TIMEOUT}с)")
         print("🎯 Умови для активації VentAI Enterprise виконані!")
         return True
     
@@ -346,17 +373,17 @@ def check_inactivity():
 
 def main_ventai_enterprise_loop():
     """Основний VentAI Enterprise цикл з автоактивацією."""
-    global script_running, last_activity_time
+    global script_running, last_chat_activity_time
     
     print("🚀 VENTAI ENTERPRISE AUTOCLICKER запущено!")
     print("🖱️ Миша залишається ВІЛЬНОЮ")
     print("📜 БЕЗ прокрутки")
     print("⚡ Тільки швидкі кліки")
-    print(f"🎯 Автоактивація після {INACTIVITY_TIMEOUT}с неактивності")
+    print(f"🎯 Автоактивація після {INACTIVITY_TIMEOUT}с неактивності ЧАТУ")
     print("💡 Для зупинки: Ctrl+C або створіть stop.flag\n")
     
     cycle = 0
-    last_screen_check = time.time()
+    last_chat_check = time.time()
     
     while script_running:
         try:
@@ -368,23 +395,30 @@ def main_ventai_enterprise_loop():
             
             print(f"🔍 Цикл #{cycle}: VentAI Enterprise пошук...")
             
-            # Перевіряємо зміни екрану періодично (БЕЗ оновлення активності)
-            if current_time - last_screen_check >= SCREEN_CHECK_INTERVAL:
-                if has_screen_changed():
+            # ПАРАЛЕЛЬНИЙ МОНІТОРИНГ ЧАТУ (кожні 5 секунд)
+            if current_time - last_chat_check >= 5:
+                if has_chat_changed():
+                    last_chat_activity_time = current_time
                     if VERBOSE_LOGGING:
-                        print("📱 Екран змінився (моніторинг)")
-                last_screen_check = current_time
+                        print("💬 Нова активність в чаті виявлена!")
+                last_chat_check = current_time
             
-            # Шукаємо кнопки
+            # ОСНОВНИЙ ПОШУК КНОПОК (як завжди)
             buttons = find_buttons_hands_free()
             
+            # НОВИЙ АЛГОРИТМ: ДЕТЕКЦІЯ CONTINUE ПОБЛИЗУ ACCEPT ALL
             if 'continue' in buttons and 'accept_all' in buttons:
-                if are_buttons_new(buttons):
+                # Перевіряємо чи це нова позиція кнопок АБО Continue поблизу Accept All
+                buttons_are_new = are_buttons_new(buttons)
+                continue_near_accept = detect_continue_near_accept(buttons)
+                
+                if buttons_are_new or continue_near_accept:
+                    if continue_near_accept:
+                        print("🎯 ТРИГЕР: Continue з'явився поблизу Accept All!")
+                    
                     # Виконуємо швидку послідовність
                     if execute_hands_free_sequence(buttons):
-                        # ОНОВЛЮЄМО АКТИВНІСТЬ ТІЛЬКИ ПІСЛЯ УСПІШНИХ ДІЙН
-                        last_activity_time = time.time()
-                        print(f"✅ Активність оновлена! Новий відлік: 0с/{INACTIVITY_TIMEOUT}с")
+                        print(f"⚡ Успішно виконано послідовність кліків!")
                         print(f"⏰ Пауза {AFTER_CLICK_PAUSE}с...")
                         
                         # Довга пауза з рідкими повідомленнями
@@ -398,30 +432,48 @@ def main_ventai_enterprise_loop():
                     else:
                         time.sleep(NORMAL_PAUSE)
                 else:
-                    print("⏳ Старі координати, чекаю нові...")
+                    print("⏳ Старі координати і Continue не поблизу Accept All, чекаю...")
                     time.sleep(NORMAL_PAUSE)
             else:
-                # Перевіряємо неактивність
-                if check_inactivity():
+                # ПЕРЕВІРКА УМОВ АКТИВАЦІЇ: немає Continue + 60с без активності чату
+                continue_missing = 'continue' not in buttons
+                
+                if continue_missing and check_inactivity():
+                    print("🎯 УМОВИ АКТИВАЦІЇ:")
+                    print(f"   ❌ Continue відсутній")
+                    print(f"   ⏰ Чат неактивний {INACTIVITY_TIMEOUT}+ секунд")
+                    
                     if activate_ventai_enterprise():
                         # Після активації робимо довгу паузу
                         print(f"⏰ Пауза {AFTER_CLICK_PAUSE}с після активації...")
                         time.sleep(AFTER_CLICK_PAUSE)
-                        last_activity_time = time.time()  # Оновлюємо час активності
+                        last_chat_activity_time = time.time()  # Скидаємо лічильник
                     else:
                         time.sleep(NORMAL_PAUSE)
                 else:
-                    missing = []
-                    if 'continue' not in buttons:
-                        missing.append("Continue")
-                    if 'accept_all' not in buttons:
-                        missing.append("Accept All")
+                    # ДЕТАЛЬНЕ ЛОГУВАННЯ СТАТУСУ
+                    button_status = []
+                    if 'accept_all' in buttons:
+                        button_status.append("✅ Accept All")
+                    else:
+                        button_status.append("❌ Accept All")
                     
-                    inactive_time = current_time - last_activity_time
+                    if 'continue' in buttons:
+                        button_status.append("✅ Continue")
+                    else:
+                        button_status.append("❌ Continue")
+                    
+                    inactive_time = current_time - last_chat_activity_time
                     minutes, seconds = divmod(int(inactive_time), 60)
                     time_str = f"{minutes}м {seconds}с" if minutes > 0 else f"{seconds}с"
                     
-                    print(f"⏳ Очікую: {', '.join(missing)} (неактивність: {time_str}/{INACTIVITY_TIMEOUT}с)")
+                    print(f"📊 Статус: {' | '.join(button_status)}")
+                    
+                    if continue_missing:
+                        print(f"⏰ Лічильник активації: {time_str}/{INACTIVITY_TIMEOUT}с")
+                    else:
+                        print(f"✅ Continue присутній - лічильник НЕ працює")
+                    
                     time.sleep(NORMAL_PAUSE)
                 
         except KeyboardInterrupt:
